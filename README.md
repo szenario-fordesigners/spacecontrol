@@ -8,7 +8,25 @@ This plugin requires Craft CMS 4.3.5 or later, and PHP 8.0.2 or later.
 
 ## Installation
 
-You can install this plugin from the Plugin Store or with Composer.
+You can install this plugin from the Plugin Store or with Composer. (not yet)
+
+to install:  
+copy the spacecontrol folder <craft>/plugins/
+add the following code to your composer.json
+
+```
+"repositories": [{
+      "type": "path",
+      "url": "plugins/spacecontrol"
+    }]
+```
+
+execute:
+
+```
+composer require szenario/craft-spacecontrol
+php craft plugin/install spacecontrol
+```
 
 #### From the Plugin Store
 
