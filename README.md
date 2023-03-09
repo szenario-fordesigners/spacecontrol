@@ -11,7 +11,7 @@ This plugin requires Craft CMS 4.3.5 or later, and PHP 8.0.2 or later.
 You can install this plugin from the Plugin Store or with Composer. (not yet)
 
 to install:  
-copy the spacecontrol folder <craft>/plugins/
+copy the spacecontrol folder to your-craft-installation/plugins/
 add the following code to your composer.json
 
 ```
