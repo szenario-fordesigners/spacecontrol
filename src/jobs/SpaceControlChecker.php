@@ -17,16 +17,18 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         // 6. get lastSent
         // 7. compare
         // 8. if lastSent is smaller than time() - mailTimeTreshold, send mail
+        // 9. set lastSent to time()
 
-        // disk_free_space("/")
-        // disk_total_space("/")
+        $diskUsageAbsolute = disk_total_space("/") - disk_free_space("/");
+        $diskUsagePercent = $diskUsageAbsolute / disk_total_space("/") * 100;
+        $diskLimits = $this->diskLimits();
 
 
         $message = new Message();
 
         $message->setTo('s.wesp@gmx.net');
         $message->setSubject('Oh Hai');
-        $message->setTextBody('Hello from the queue system! 👋' . $this->getLastSent());
+        $message->setTextBody('Hello from the queue system! 👋' . $diskUsageAbsolute . ": " . $diskLimits['diskLimitAbsolute'] . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent']);
 
         Craft::$app->getMailer()->send($message);
 
