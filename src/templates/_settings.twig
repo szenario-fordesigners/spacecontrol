@@ -1,6 +1,17 @@
-{# @var plugin \szenario\craftspacecontrol\SpaceControl #}
-{# @var settings \szenario\craftspacecontrol\models\Settings #}
+{# {{ dump(settings) }} #}
+{# {{ dump(plugin) }} #}
 
 {% import '_includes/forms.twig' as forms %}
 
-{# ... #}
+{{ forms.textField({
+  first: true,
+  label: 'lastSent',
+  name: 'lastSent',
+  value: settings.lastSent
+}) }}
+
+{# {{ forms.textField({
+  label: 'Bar',
+  name: 'bar',
+  value: settings.bar
+}) }} #}

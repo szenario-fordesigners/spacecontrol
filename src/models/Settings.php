@@ -10,4 +10,12 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
+    public $lastSent = 0;
+
+    public function defineRules(): array
+    {
+        return [
+            [['lastSent'], 'required'],
+        ];
+    }
 }
