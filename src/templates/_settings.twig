@@ -10,6 +10,12 @@
   value: settings.lastSent
 }) }}
 
+{{ forms.textField({
+  label: 'Time in seconds between sending mails',
+  name: 'mailTimeTreshold',
+  value: settings.mailTimeTreshold
+}) }}
+
 {# {{ forms.textField({
   label: 'Bar',
   name: 'bar',

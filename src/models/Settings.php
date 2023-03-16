@@ -11,11 +11,13 @@ use craft\base\Model;
 class Settings extends Model
 {
     public $lastSent = 0;
+    // 1 day
+    public $mailTimeTreshold = 86400;
 
     public function defineRules(): array
     {
         return [
-            [['lastSent'], 'required'],
+            [['lastSent', 'mailTimeTreshold'], 'required'],
         ];
     }
 }

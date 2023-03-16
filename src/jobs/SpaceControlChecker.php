@@ -34,6 +34,12 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         } else return "0 bytes";
     }
 
+    private function getMailTimeTreshold()
+    {
+        $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        return $settings->mailTimeTreshold;
+    }
+
     private function getLastSent()
     {
         $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
