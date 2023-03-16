@@ -9,6 +9,19 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 {
     public function execute($queue): void
     {
+        // 1. get current disk usage
+        // 2. get current disk limit
+        // 3. compare
+        // 4. if limit is reached:
+        // 5. get mailTimeTreshold
+        // 6. get lastSent
+        // 7. compare
+        // 8. if lastSent is smaller than time() - mailTimeTreshold, send mail
+
+        // disk_free_space("/")
+        // disk_total_space("/")
+
+
         $message = new Message();
 
         $message->setTo('s.wesp@gmx.net');
@@ -32,6 +45,19 @@ class SpaceControlChecker extends \craft\queue\BaseJob
             $units = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"); //units of measurement
             return number_format(($bytes / pow(1024, floor($base))), 3) . " $units[$base]";
         } else return "0 bytes";
+    }
+
+
+
+
+    // SETTINGS - SETTERS AND GETTERS
+    private function diskLimits()
+    {
+        $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        return [
+            'diskLimitAbsolute' => $settings->diskLimitAbsolute,
+            'diskLimitPercent' => $settings->diskLimitPercent
+        ];
     }
 
     private function getMailTimeTreshold()

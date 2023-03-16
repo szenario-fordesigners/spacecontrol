@@ -16,8 +16,14 @@
   value: settings.mailTimeTreshold
 }) }}
 
-{# {{ forms.textField({
-  label: 'Bar',
-  name: 'bar',
-  value: settings.bar
-}) }} #}
+{{ forms.textField({
+  label: 'Min free space in bytes',
+  name: 'diskLimitAbsolute',
+  value: settings.diskLimitAbsolute
+}) }}
+
+{{ forms.textField({
+  label: 'Min free space in percent',
+  name: 'diskLimitPercent',
+  value: settings.diskLimitPercent
+}) }}
