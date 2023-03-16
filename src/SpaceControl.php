@@ -10,6 +10,9 @@ use yii\base\Event;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
+use szenario\craftspacecontrol\jobs\SpaceControlChecker;
+use craft\web\View;
+use craft\events\TemplateEvent;
 
 /**
  * spacecontrol plugin
@@ -41,7 +44,6 @@ class SpaceControl extends Plugin
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function () {
             $this->attachEventHandlers();
-            // ...
         });
     }
 
@@ -52,7 +54,7 @@ class SpaceControl extends Plugin
 
     protected function settingsHtml(): ?string
     {
-        return Craft::$app->view->renderTemplate('spacecontrol/_settings.twig', [
+        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
         ]);
@@ -67,6 +69,14 @@ class SpaceControl extends Plugin
             Dashboard::EVENT_REGISTER_WIDGET_TYPES,
             function (RegisterComponentTypesEvent $event) {
                 $event->types[] = SpaceControlWidget::class;
+            }
+        );
+
+        Event::on(
+            View::class,
+            View::EVENT_AFTER_RENDER_TEMPLATE,
+            function (TemplateEvent $event) {
+                \craft\helpers\Queue::push(new SpaceControlChecker());
             }
         );
     }
