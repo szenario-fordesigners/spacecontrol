@@ -12,18 +12,12 @@
 
 {{ forms.textField({
   label: 'Time in seconds between sending mails',
-  name: 'mailTimeTreshold',
-  value: settings.mailTimeTreshold
+  name: 'mailTimeThreshold',
+  value: settings.mailTimeThreshold
 }) }}
 
 {{ forms.textField({
-  label: 'Min free space in bytes',
-  name: 'diskLimitAbsolute',
-  value: settings.diskLimitAbsolute
-}) }}
-
-{{ forms.textField({
-  label: 'Min free space in percent',
+  label: 'Max disk usage in percent',
   name: 'diskLimitPercent',
   value: settings.diskLimitPercent
 }) }}

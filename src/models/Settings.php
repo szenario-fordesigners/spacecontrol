@@ -12,17 +12,14 @@ class Settings extends Model
 {
     public $lastSent = 0;
     // 1 day
-    public $mailTimeTreshold = 86400;
-
-    // 5 GB
-    public $diskLimitAbsolute = 5 * 1024 * 1024 * 1024;
+    public $mailTimeThreshold = 86400;
     // 10 %
-    public $diskLimitPercent = 10;
+    public $diskLimitPercent = 90;
 
     public function defineRules(): array
     {
         return [
-            [['lastSent', 'mailTimeTreshold', 'diskLimitAbsolute', 'diskLimitPercent'], 'required'],
+            [['lastSent', 'mailTimeThreshold', 'diskLimitPercent'], 'required'],
         ];
     }
 }

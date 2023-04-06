@@ -23,15 +23,26 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         $diskUsagePercent = $diskUsageAbsolute / disk_total_space("/") * 100;
         $diskLimits = $this->diskLimits();
 
+        // if we are below the usage limit, do not do anything
+        if ($diskUsagePercent < $diskLimits['diskLimitPercent']) {
+            return;
+        }
 
+        // if lastSent is close to now than specified in mailTimeThreshold, do not do anything
+        if ($this->getLastSent() > time() - $this->getMailTimeThreshold()) {
+            return;
+        }
+
+        // send the notification mail
         $message = new Message();
 
         $message->setTo('s.wesp@gmx.net');
         $message->setSubject('Oh Hai');
-        $message->setTextBody('Hello from the queue system! 👋' . $diskUsageAbsolute . ": " . $diskLimits['diskLimitAbsolute'] . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent']);
+        $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent']);
 
         Craft::$app->getMailer()->send($message);
 
+        // set lastSent to now
         $this->setLastSent(time());
     }
 
@@ -57,15 +68,14 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     {
         $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
         return [
-            'diskLimitAbsolute' => $settings->diskLimitAbsolute,
             'diskLimitPercent' => $settings->diskLimitPercent
         ];
     }
 
-    private function getMailTimeTreshold()
+    private function getMailTimeThreshold()
     {
         $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
-        return $settings->mailTimeTreshold;
+        return $settings->mailTimeThreshold;
     }
 
     private function getLastSent()
