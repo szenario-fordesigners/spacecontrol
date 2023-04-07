@@ -1,6 +1,3 @@
-{# {{ dump(settings) }} #}
-{# {{ dump(plugin) }} #}
-
 {% import '_includes/forms.twig' as forms %}
 
 {{ forms.textField({
@@ -19,5 +16,20 @@
 {{ forms.textField({
   label: 'Max disk usage in percent',
   name: 'diskLimitPercent',
-  value: settings.diskLimitPercent
+  value: settings.diskLimitPercent,
+  type: 'number',
+  min: 0,
+  max: 100
+}) }}
+
+{{ forms.textField({
+  label: 'Admin Recipients',
+  name: 'adminRecipients',
+  value: settings.adminRecipients,
+}) }}
+
+{{ forms.textField({
+  label: 'Client Recipients',
+  name: 'clientRecipients',
+  value: settings.clientRecipients,
 }) }}

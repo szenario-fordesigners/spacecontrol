@@ -48,7 +48,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 
     protected function defaultDescription(): string
     {
-        return Craft::t('app', 'Sending a worthless email');
+        return Craft::t('app', 'Spacecontrol');
     }
 
     private function getHumanReadableSize($bytes)
