@@ -16,12 +16,10 @@ class Settings extends Model
     // 90 %
     public $diskLimitPercent = 90;
 
-    private $admins = [];
-    private $adminEmails = [];
-
-
     public $adminRecipients = '';
     public $clientRecipients = '';
+
+    private $admins = [];
 
     function __construct($config = [])
     {
@@ -31,10 +29,9 @@ class Settings extends Model
             ->admin(true)
             ->all();
 
-        array_walk($this->admins, function($value, $key) {
-            $this->adminEmails[] = $value->email;
-            $this->adminRecipients .= $value->email . ', ';
-        });
+        foreach($this->admins as $admin) {
+            $this->adminRecipients .= $admin->email . ', ';
+        }
 
         $this->adminRecipients = substr($this->adminRecipients, 0, -2);
     }
@@ -42,7 +39,7 @@ class Settings extends Model
     public function defineRules(): array
     {
         return [
-            [['lastSent', 'mailTimeThreshold', 'diskLimitPercent', 'adminRecipients', 'clientRecipients'], 'required'],
+            [['lastSent', 'mailTimeThreshold', 'diskLimitPercent'], 'required'],
         ];
     }
 }
