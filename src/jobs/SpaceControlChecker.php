@@ -4,6 +4,7 @@ namespace szenario\craftspacecontrol\jobs;
 
 use Craft;
 use craft\mail\Message;
+use craft\helpers\App;
 
 class SpaceControlChecker extends \craft\queue\BaseJob
 {
@@ -33,11 +34,13 @@ class SpaceControlChecker extends \craft\queue\BaseJob
             return;
         }
 
+        $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
+
         // send the notification mail to admins if any mails are specified
         if (count($this->getAdminRecipients())) {
             $message = new Message();
 
-            $message->setFrom('aaaa@bbbbb.com');
+            $message->setFrom('spacecontrol@' . $domain);
             $message->setTo($this->getAdminRecipients());
             $message->setSubject('Oh Hai admin');
             $message->setTextBody('Hello from the queue system! 👋' . 'ADMINS: ' . count($this->getAdminRecipients()) . ' ' . 'CLIENTS: ' . count($this->getClientRecipients()));
@@ -50,6 +53,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         if (count($this->getClientRecipients())) {
             $message = new Message();
 
+            $message->setFrom('spacecontrol@' . $domain);
             $message->setTo($this->getClientRecipients());
             $message->setSubject('Oh Hai client');
             $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
