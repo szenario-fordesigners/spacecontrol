@@ -33,14 +33,28 @@ class SpaceControlChecker extends \craft\queue\BaseJob
             return;
         }
 
-        // send the notification mail
-        $message = new Message();
+        // send the notification mail to admins if any mails are specified
+        if (count($this->getAdminRecipients())) {
+            $message = new Message();
 
-        $message->setTo($this->getAdminRecipients());
-        $message->setSubject('Oh Hai');
-        $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+            $message->setTo($this->getAdminRecipients());
+            $message->setSubject('Oh Hai admin');
+            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
 
-        Craft::$app->getMailer()->send($message);
+            Craft::$app->getMailer()->send($message);
+        }
+
+
+        // send the notification mail to clients if any mails are specified
+        if (count($this->getClientRecipients())) {
+            $message = new Message();
+
+            $message->setTo($this->getClientRecipients());
+            $message->setSubject('Oh Hai client');
+            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+
+            Craft::$app->getMailer()->send($message);
+        }
 
         // set lastSent to now
         $this->setLastSent(time());
@@ -79,6 +93,13 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         $settings = $this->getSettings();
         $adminRecipients = $settings->adminRecipients;
         return explode(', ', $adminRecipients);
+    }
+
+    private function getClientRecipients()
+    {
+        $settings = $this->getSettings();
+        $clientRecipients = $settings->clientRecipients;
+        return explode(', ', $clientRecipients);
     }
 
     private function getMailTimeThreshold()
