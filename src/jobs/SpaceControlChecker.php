@@ -13,10 +13,10 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         // 2. get current disk limit
         // 3. compare
         // 4. if limit is reached:
-        // 5. get mailTimeTreshold
+        // 5. get mailTimeThreshold
         // 6. get lastSent
         // 7. compare
-        // 8. if lastSent is smaller than time() - mailTimeTreshold, send mail
+        // 8. if lastSent is smaller than time() - mailTimeThreshold, send mail
         // 9. set lastSent to time()
 
         $diskUsageAbsolute = disk_total_space("/") - disk_free_space("/");
@@ -34,27 +34,28 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         }
 
         // send the notification mail to admins if any mails are specified
-        if (count($this->getAdminRecipients())) {
+//        if (count($this->getAdminRecipients())) {
             $message = new Message();
 
+            $message->setFrom('aaaa@bbbbb.com');
             $message->setTo($this->getAdminRecipients());
             $message->setSubject('Oh Hai admin');
-            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+            $message->setTextBody('Hello from the queue system! 👋' . 'ADMINS: ' . count($this->getAdminRecipients()) . ' ' . 'CLIENTS: ' . count($this->getClientRecipients()));
 
             Craft::$app->getMailer()->send($message);
-        }
+//        }
 
 
-        // send the notification mail to clients if any mails are specified
-        if (count($this->getClientRecipients())) {
-            $message = new Message();
-
-            $message->setTo($this->getClientRecipients());
-            $message->setSubject('Oh Hai client');
-            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
-
-            Craft::$app->getMailer()->send($message);
-        }
+//        // send the notification mail to clients if any mails are specified
+//        if (count($this->getClientRecipients())) {
+//            $message = new Message();
+//
+//            $message->setTo($this->getClientRecipients());
+//            $message->setSubject('Oh Hai client');
+//            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+//
+//            Craft::$app->getMailer()->send($message);
+//        }
 
         // set lastSent to now
         $this->setLastSent(time());
@@ -72,6 +73,11 @@ class SpaceControlChecker extends \craft\queue\BaseJob
             $units = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"); //units of measurement
             return number_format(($bytes / pow(1024, floor($base))), 3) . " $units[$base]";
         } else return "0 bytes";
+    }
+
+    private function validateEmailAddresses($emails) {
+        // TODO: check if $emails are an actual email addresses
+        return $emails;
     }
 
 
@@ -92,14 +98,14 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     {
         $settings = $this->getSettings();
         $adminRecipients = $settings->adminRecipients;
-        return explode(', ', $adminRecipients);
+        return strlen($adminRecipients) ? explode(', ', $adminRecipients) : [];
     }
 
     private function getClientRecipients()
     {
         $settings = $this->getSettings();
         $clientRecipients = $settings->clientRecipients;
-        return explode(', ', $clientRecipients);
+        return strlen($clientRecipients) ? explode(', ', $clientRecipients) : [];
     }
 
     private function getMailTimeThreshold()
