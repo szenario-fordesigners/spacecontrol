@@ -34,7 +34,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         }
 
         // send the notification mail to admins if any mails are specified
-//        if (count($this->getAdminRecipients())) {
+        if (count($this->getAdminRecipients())) {
             $message = new Message();
 
             $message->setFrom('aaaa@bbbbb.com');
@@ -43,19 +43,19 @@ class SpaceControlChecker extends \craft\queue\BaseJob
             $message->setTextBody('Hello from the queue system! 👋' . 'ADMINS: ' . count($this->getAdminRecipients()) . ' ' . 'CLIENTS: ' . count($this->getClientRecipients()));
 
             Craft::$app->getMailer()->send($message);
-//        }
+        }
 
 
-//        // send the notification mail to clients if any mails are specified
-//        if (count($this->getClientRecipients())) {
-//            $message = new Message();
-//
-//            $message->setTo($this->getClientRecipients());
-//            $message->setSubject('Oh Hai client');
-//            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
-//
-//            Craft::$app->getMailer()->send($message);
-//        }
+        // send the notification mail to clients if any mails are specified
+        if (count($this->getClientRecipients())) {
+            $message = new Message();
+
+            $message->setTo($this->getClientRecipients());
+            $message->setSubject('Oh Hai client');
+            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+
+            Craft::$app->getMailer()->send($message);
+        }
 
         // set lastSent to now
         $this->setLastSent(time());
@@ -76,8 +76,15 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     }
 
     private function validateEmailAddresses($emails) {
-        // TODO: check if $emails are an actual email addresses
-        return $emails;
+        $validEmails = [];
+
+        foreach($emails as $email) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $validEmails[] = $email;
+            }
+        }
+
+        return $validEmails;
     }
 
 
@@ -97,15 +104,21 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     private function getAdminRecipients()
     {
         $settings = $this->getSettings();
-        $adminRecipients = $settings->adminRecipients;
-        return strlen($adminRecipients) ? explode(', ', $adminRecipients) : [];
+        $adminRecipientsStr = $settings->adminRecipients;
+        if (!strlen($adminRecipientsStr)) return [];
+
+        $adminRecipients = explode(', ', $adminRecipientsStr);
+        return $this->validateEmailAddresses($adminRecipients);
     }
 
     private function getClientRecipients()
     {
         $settings = $this->getSettings();
-        $clientRecipients = $settings->clientRecipients;
-        return strlen($clientRecipients) ? explode(', ', $clientRecipients) : [];
+        $clientRecipientsStr = $settings->clientRecipients;
+        if (!strlen($clientRecipientsStr)) return [];
+
+        $clientRecipients = explode(', ', $clientRecipientsStr);
+        return $this->validateEmailAddresses($clientRecipients);
     }
 
     private function getMailTimeThreshold()
