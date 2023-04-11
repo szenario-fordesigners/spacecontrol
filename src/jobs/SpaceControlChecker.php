@@ -36,9 +36,9 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         // send the notification mail
         $message = new Message();
 
-        $message->setTo('s.wesp@gmx.net');
+        $message->setTo($this->getAdminRecipients());
         $message->setSubject('Oh Hai');
-        $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent']);
+        $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
 
         Craft::$app->getMailer()->send($message);
 
@@ -61,26 +61,35 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     }
 
 
-
-
     // SETTINGS - SETTERS AND GETTERS
+    private function getSettings() {
+        return Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+    }
+
     private function diskLimits()
     {
-        $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        $settings = $this->getSettings();
         return [
             'diskLimitPercent' => $settings->diskLimitPercent
         ];
     }
 
+    private function getAdminRecipients()
+    {
+        $settings = $this->getSettings();
+        $adminRecipients = $settings->adminRecipients;
+        return explode(', ', $adminRecipients);
+    }
+
     private function getMailTimeThreshold()
     {
-        $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        $settings = $this->getSettings();
         return $settings->mailTimeThreshold;
     }
 
     private function getLastSent()
     {
-        $settings = Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        $settings = $this->getSettings();
         return $settings->lastSent;
     }
 
