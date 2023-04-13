@@ -34,11 +34,6 @@ class SpaceControlWidget extends Widget
         return Craft::t('spacecontrol', 'Space Control');
     }
 
-    public static function icon(): ?string
-    {
-        return Craft::getAlias("@szenario/craftspacecontrol/assetbundles/spacecontrol/dist/img/Plausible-icon.svg");
-    }
-
     /**
      * @inheritdoc
      */
