@@ -5,6 +5,7 @@ namespace szenario\craftspacecontrol\jobs;
 use Craft;
 use craft\mail\Message;
 use craft\helpers\App;
+use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlChecker extends \craft\queue\BaseJob
 {
@@ -22,7 +23,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 
         $diskUsageAbsolute = disk_total_space("/") - disk_free_space("/");
         $diskUsagePercent = $diskUsageAbsolute / disk_total_space("/") * 100;
-        $diskLimits = $this->diskLimits();
+        $diskLimits = SettingsHelper::getDiskLimitPercent();
 
         // if we are below the usage limit, do not do anything
         if ($diskUsagePercent < $diskLimits['diskLimitPercent']) {
@@ -30,119 +31,43 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         }
 
         // if lastSent is close to now than specified in mailTimeThreshold, do not do anything
-        if ($this->getLastSent() > time() - $this->getMailTimeThreshold()) {
+        if (SettingsHelper::getLastSent() > time() - SettingsHelper::getMailTimeThreshold()) {
             return;
         }
 
         $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
 
         // send the notification mail to admins if any mails are specified
-        if (count($this->getAdminRecipients())) {
+        if (count(SettingsHelper::getAdminRecipientsArray())) {
             $message = new Message();
 
             $message->setFrom('spacecontrol@' . $domain);
-            $message->setTo($this->getAdminRecipients());
+            $message->setTo(SettingsHelper::getAdminRecipientsArray());
             $message->setSubject('Oh Hai admin');
-            $message->setTextBody('Hello from the queue system! 👋' . 'ADMINS: ' . count($this->getAdminRecipients()) . ' ' . 'CLIENTS: ' . count($this->getClientRecipients()));
+            $message->setTextBody('Hello from the queue system! 👋' . 'ADMINS: ' . count(SettingsHelper::getAdminRecipientsArray()) . ' ' . 'CLIENTS: ' . count(SettingsHelper::getClientRecipientsArray()));
 
             Craft::$app->getMailer()->send($message);
         }
 
 
         // send the notification mail to clients if any mails are specified
-        if (count($this->getClientRecipients())) {
+        if (count(SettingsHelper::getClientRecipientsArray())) {
             $message = new Message();
 
             $message->setFrom('spacecontrol@' . $domain);
-            $message->setTo($this->getClientRecipients());
+            $message->setTo(SettingsHelper::getClientRecipientsArray());
             $message->setSubject('Oh Hai client');
-            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . $this->getAdminRecipients()[0]);
+            $message->setTextBody('Hello from the queue system! 👋' . " " . $diskUsagePercent . ": " . $diskLimits['diskLimitPercent'] . ' | ' . SettingsHelper::getAdminRecipientsArray()[0]);
 
             Craft::$app->getMailer()->send($message);
         }
 
         // set lastSent to now
-        $this->setLastSent(time());
+        SettingsHelper::setLastSent(time());
     }
 
     protected function defaultDescription(): string
     {
         return Craft::t('app', 'Spacecontrol');
-    }
-
-    private function getHumanReadableSize($bytes)
-    {
-        if ($bytes > 0) {
-            $base = floor(log($bytes) / log(1024));
-            $units = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"); //units of measurement
-            return number_format(($bytes / pow(1024, floor($base))), 3) . " $units[$base]";
-        } else return "0 bytes";
-    }
-
-    private function validateEmailAddresses($emails) {
-        $validEmails = [];
-
-        foreach($emails as $email) {
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $validEmails[] = $email;
-            }
-        }
-
-        return $validEmails;
-    }
-
-
-    // SETTINGS - SETTERS AND GETTERS
-    private function getSettings() {
-        return Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
-    }
-
-    private function diskLimits()
-    {
-        $settings = $this->getSettings();
-        return [
-            'diskLimitPercent' => $settings->diskLimitPercent
-        ];
-    }
-
-    private function getAdminRecipients()
-    {
-        $settings = $this->getSettings();
-        $adminRecipientsStr = $settings->adminRecipients;
-        if (!strlen($adminRecipientsStr)) return [];
-
-        $adminRecipients = explode(', ', $adminRecipientsStr);
-        return $this->validateEmailAddresses($adminRecipients);
-    }
-
-    private function getClientRecipients()
-    {
-        $settings = $this->getSettings();
-        $clientRecipientsStr = $settings->clientRecipients;
-        if (!strlen($clientRecipientsStr)) return [];
-
-        $clientRecipients = explode(', ', $clientRecipientsStr);
-        return $this->validateEmailAddresses($clientRecipients);
-    }
-
-    private function getMailTimeThreshold()
-    {
-        $settings = $this->getSettings();
-        return $settings->mailTimeThreshold;
-    }
-
-    private function getLastSent()
-    {
-        $settings = $this->getSettings();
-        return $settings->lastSent;
-    }
-
-    private function setLastSent($time)
-    {
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-        $settings = $plugin->getSettings();
-        $settings->lastSent = $time;
-
-        Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->toArray());
     }
 }

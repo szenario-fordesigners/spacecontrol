@@ -6,6 +6,7 @@ namespace szenario\craftspacecontrol\widgets;
 use Craft;
 use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
+use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlWidget extends Widget
 {
@@ -66,7 +67,8 @@ class SpaceControlWidget extends Widget
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
             [
                 "disk_free_space" => disk_free_space("/"),
-                "disk_total_space" => disk_total_space("/")
+                "disk_total_space" => disk_total_space("/"),
+                "admin_recipients" => SettingsHelper::getAdminRecipientsString()
             ]
         );
     }
