@@ -17,7 +17,7 @@
 	},
 	"require": {
 		"php": ">=8.2.5",
-		"craftcms/cms": "^4.4.7"
+		"craftcms/cms": "^4.4.8"
 	},
 	"require-dev": {
 		"craftcms/ecs": "dev-main",
