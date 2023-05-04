@@ -16,8 +16,8 @@
 		"rss": "https://github.com/thomasbendl/craft-spacecontrol/releases.atom"
 	},
 	"require": {
-		"php": ">=8.2.5",
-		"craftcms/cms": "^4.4.9"
+		"php": ">=8.0.2",
+		"craftcms/cms": "^4.3.5"
 	},
 	"require-dev": {
 		"craftcms/ecs": "dev-main",
