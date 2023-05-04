@@ -2,40 +2,33 @@
 
 namespace szenario\craftspacecontrol\assetbundles\spacecontrol;
 
-
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-/**
- * @author    Sean Hill
- * @package   Plausible
- * @since     1.0.0
- */
 class SpaceControlAsset extends AssetBundle
 {
-    // Public Methods
-    // =========================================================================
+    /**
+     * @inheritdoc
+     */
+    public $sourcePath = __DIR__ . '/dist';
 
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        $this->sourcePath = "@szenario/craftspacecontrol/assetbundles/spacecontrol/dist";
+    public $depends = [
+        CpAsset::class,
+    ];
 
-        $this->depends = [
-            CpAsset::class,
-        ];
+    /**
+     * @inheritdoc
+     */
+    public $js = [
+        'js/frappe-charts.min.iife.js',
+        'js/main.js',
+        'js/SpaceControl.js'
+    ];
 
-        $this->js = [
-            'js/frappe-charts.min.iife.js',
-            'js/main.js'
-        ];
-
-        $this->css = [
-            'css/SpaceControl.css'
-        ];
-
-        parent::init();
-    }
+    public $css = [
+        'css/SpaceControl.css'
+    ];
 }
