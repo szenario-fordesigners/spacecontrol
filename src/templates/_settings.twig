@@ -1,13 +1,6 @@
 {% import '_includes/forms.twig' as forms %}
 
 {{ forms.textField({
-  first: true,
-  label: 'lastSent',
-  name: 'lastSent',
-  value: settings.lastSent
-}) }}
-
-{{ forms.textField({
   label: 'Time in seconds between sending mails',
   name: 'mailTimeThreshold',
   value: settings.mailTimeThreshold
