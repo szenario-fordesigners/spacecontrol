@@ -8,6 +8,7 @@ use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\ConversionHelper;
+use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 
 class SpaceControlWidget extends Widget
 {
@@ -111,10 +112,14 @@ class SpaceControlWidget extends Widget
 
             $path = $fs->getSettings()['path'];
             $resolvedPath = ConversionHelper::craftPathToAbsolute($path);
+            $size = FolderSizeHelper::folderSize($resolvedPath);
+            $humanReadableSize = ConversionHelper::getHumanReadableSize($size);
 
             $volumes[] = [
                 "name" => $fs->name,
-                "path" => $resolvedPath
+                "path" => $resolvedPath,
+                "size" => $size,
+                "humanReadableSize" => $humanReadableSize
             ];
         }
 
