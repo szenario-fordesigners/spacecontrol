@@ -23,8 +23,6 @@ class SpaceControlAsset extends AssetBundle
      * @inheritdoc
      */
     public $js = [
-        'js/frappe-charts.min.iife.js',
-        'js/main.js',
         'js/SpaceControl.js'
     ];
 

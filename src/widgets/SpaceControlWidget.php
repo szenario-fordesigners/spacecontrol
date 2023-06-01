@@ -77,11 +77,7 @@ class SpaceControlWidget extends Widget
 
     public function getTitle(): ?string
     {
-        if (!isset($title)) {
-            $title = "Space Control";
-        }
-
-        return $title;
+        return "";
     }
 
 

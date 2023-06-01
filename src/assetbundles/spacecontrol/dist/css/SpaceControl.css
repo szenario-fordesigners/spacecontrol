@@ -1,128 +1,93 @@
-#spacecontrol {
-    background-color: red !important;
+/* set widget pane background color */
+div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .pane {
+    background: #0041b9;
 }
 
-#chart {
+/* white widget settings icon */
+div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.settings:before {
+    color: white;
+}
+
+.sCC {
+    background: #0041b9;
+    color: white;
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    position: relative;
+
+    font-family: Arial, sans-serif;
+}
+
+.sCC-label {
+    position: absolute;
+
+    right: 0;
+    top: 50%;
+    transform: translateX(50%) translateY(-50%) rotate(-90deg);
+}
+
+.sCC-topArea {
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+}
+
+.sCC-topArea, .sCC-bottomArea {
     width: 100%;
 }
 
-.chart-container {
-    position: relative;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif
+.sCC-topArea > *, .sCC-bottomArea > * {
+    height: 100%;
+    /*border: 1px solid white;*/
 }
 
-.chart-container .axis, .chart-container .chart-label {
-    fill: #555b51
+.sCC-topArea-left, .sCC-bottomArea-left {
+    width: 100px;
 }
 
-.chart-container .axis line, .chart-container .chart-label line {
-    stroke: #dadada
+.sCC-topArea-right, .sCC-bottomArea-right {
+    width: calc(100% - 100px);
 }
 
-.chart-container .dataset-units circle {
-    stroke: #fff;
-    stroke-width: 2
+.sCC-topArea-right {
+    display: flex;
+    align-items: center;
+
+    font-size: 100px;
+    /*font-weight: bold;*/
 }
 
-.chart-container .dataset-units path {
-    fill: none;
-    stroke-opacity: 1;
-    stroke-width: 2px
+.sCC-bottomArea {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
 }
 
-.chart-container .dataset-path {
-    stroke-width: 2px
+.sCC-circleContainer {
+    width: 100px;
+    height: 100px;
 }
 
-.chart-container .path-group path {
-    fill: none;
-    stroke-opacity: 1;
-    stroke-width: 2px
+.sCC-circle {
+    width:100%;
+    height:100%;
+    border:1px solid white;
+    border-radius:50%;
+    position:relative;
 }
 
-.chart-container line.dashed {
-    stroke-dasharray: 5, 3
-}
-
-.chart-container .axis-line .specific-value {
-    text-anchor: start
-}
-
-.chart-container .axis-line .y-line {
-    text-anchor: end
-}
-
-.chart-container .axis-line .x-line {
-    text-anchor: middle
-}
-
-.chart-container .legend-dataset-text {
-    fill: #6c7680;
-    font-weight: 600
-}
-
-.graph-svg-tip {
-    position: absolute;
-    z-index: 1;
-    padding: 10px;
-    font-size: 12px;
-    color: #959da5;
-    text-align: center;
-    background: rgba(0, 0, 0, .8);
-    border-radius: 3px
-}
-
-.graph-svg-tip ol, .graph-svg-tip ul {
-    padding-left: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex
-}
-
-.graph-svg-tip ul.data-point-list li {
-    min-width: 90px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    font-weight: 600
-}
-
-.graph-svg-tip strong {
-    color: #dfe2e5;
-    font-weight: 600
-}
-
-.graph-svg-tip .svg-pointer {
-    position: absolute;
-    height: 5px;
-    margin: 0 0 0 -5px;
-    content: " ";
-    border: 5px solid transparent;
-    border-top-color: rgba(0, 0, 0, .8)
-}
-
-.graph-svg-tip.comparison {
-    padding: 0;
-    text-align: left;
-    pointer-events: none
-}
-
-.graph-svg-tip.comparison .title {
+.sCC-circleInner {
     display: block;
-    padding: 10px;
-    margin: 0;
-    font-weight: 600;
-    line-height: 1;
-    pointer-events: none
-}
-
-.graph-svg-tip.comparison ul {
-    margin: 0;
-    white-space: nowrap;
-    list-style: none
-}
-
-.graph-svg-tip.comparison li {
-    display: inline-block;
-    padding: 5px 10px
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0%;
+    height: 0%;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    transform: translate(-50%, -50%);
 }
