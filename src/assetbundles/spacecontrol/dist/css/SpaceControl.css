@@ -3,6 +3,10 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .pane 
     background: #0041b9;
 }
 
+div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(.alert) .pane  {
+    background: #f15a24;
+}
+
 /* white widget settings icon */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.settings:before {
     color: white;
@@ -13,20 +17,20 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
     color: white;
     display: flex;
     flex-direction: column;
-
     width: 100%;
-
     position: relative;
-
     font-family: Arial, sans-serif;
+}
+.sCC.alert {
+    background:#f15a24;
 }
 
 .sCC-label {
     position: absolute;
-
-    right: 0;
-    top: 50%;
-    transform: translateX(50%) translateY(-50%) rotate(-90deg);
+    right: -10px;
+    bottom: -20px;
+    //transform: translateX(50%) translateY(-50%) rotate(-90deg);
+    //transform: translateX(50%) translateY(0%) rotate(0deg);
 }
 
 .sCC-topArea {
@@ -45,18 +49,18 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
 }
 
 .sCC-topArea-left, .sCC-bottomArea-left {
-    width: 100px;
+    width: 120px;
 }
 
 .sCC-topArea-right, .sCC-bottomArea-right {
-    width: calc(100% - 100px);
+    width: calc(100% - 120px);
 }
 
 .sCC-topArea-right {
     display: flex;
     align-items: center;
 
-    font-size: 100px;
+    font-size: 90px;
     /*font-weight: bold;*/
 }
 
@@ -90,4 +94,12 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
     border-radius: 50%;
     transition: all 0.5s ease;
     transform: translate(-50%, -50%);
+}
+
+.sCC-percentage {
+    opacity:0;
+    transition: opacity 0.5s ease;
+}
+.sCC-percentage.animate {
+    opacity:1;
 }
