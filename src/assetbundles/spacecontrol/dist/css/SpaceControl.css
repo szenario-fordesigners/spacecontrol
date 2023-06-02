@@ -51,6 +51,10 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
 .sCC-topArea-left, .sCC-bottomArea-left {
     width: 120px;
 }
+.sCC-topArea-left {
+    display:flex;
+    align-items:center;
+}
 
 .sCC-topArea-right, .sCC-bottomArea-right {
     width: calc(100% - 120px);
@@ -60,7 +64,7 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
     display: flex;
     align-items: center;
 
-    font-size: 90px;
+    font-size: 80px;
     /*font-weight: bold;*/
 }
 
@@ -71,8 +75,8 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
 }
 
 .sCC-circleContainer {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 }
 
 .sCC-circle {
