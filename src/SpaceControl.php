@@ -13,8 +13,6 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
-use craft\web\View;
-use craft\events\TemplateEvent;
 
 /**
  * spacecontrol plugin

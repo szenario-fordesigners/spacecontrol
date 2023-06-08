@@ -1,7 +1,7 @@
 <div class="sCC">
     <div class="sCC-topArea">
         <div class="sCC-topArea-left">
-            <div class="sCC-circleContainer" data-size="80">
+            <div class="sCC-circleContainer" data-size="{{ diskUsagePercent }}">
                 <div class="sCC-circle">
                     <div class="sCC-circleInner"></div>
                 </div>
@@ -9,14 +9,13 @@
         </div>
         <div class="sCC-topArea-right">
             <span class="sCC-percentage">
-                0
             </span>
         </div>
     </div>
     <div class="sCC-bottomArea">
         <div class="sCC-bottomArea-left">
             <div class="sCC-quota">
-                2GB
+                {{ diskUsageAbsolute }}
             </div>
             <div class="sCC-webspace">
                 Webspace
@@ -25,8 +24,6 @@
         <div class="sCC-bottomArea-right">
             <div class="sCC-used">used</div>
             <div class="sCC-info">plenty of space left</div>
-            <div>{{ diskUsageAbsolute }}</div>
-            <div>{{ diskUsagePercent }}</div>
         </div>
     </div>
     <div class="sCC-label">

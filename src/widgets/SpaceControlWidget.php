@@ -6,6 +6,7 @@ namespace szenario\craftspacecontrol\widgets;
 use Craft;
 use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
+use szenario\craftspacecontrol\helpers\ConversionHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlWidget extends Widget
@@ -29,7 +30,7 @@ class SpaceControlWidget extends Widget
     {
         return "";
     }
-    
+
     public function getBodyHtml(): ?string
     {
         Craft::$app->getView()->registerAssetBundle(SpaceControlAsset::class);
@@ -39,14 +40,17 @@ class SpaceControlWidget extends Widget
             "new Craft.SpaceControlWidget($this->id);"
         );
 
-        $diskUsageAbsolute = SettingsHelper::getSetting("diskUsageAbsolute");
-        $diskUsagePercent = SettingsHelper::getSetting("diskUsagePercent");
+        $diskUsageAbsoluteRaw = SettingsHelper::getSetting("diskUsageAbsolute");
+        $diskUsageAbsoluteHumanReadable = ConversionHelper::getHumanReadableSize($diskUsageAbsoluteRaw);
+
+        $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
+        $diskUsagePercentRounded = round($diskUsagePercentRaw);
 
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
             [
-                "diskUsageAbsolute" => $diskUsageAbsolute,
-                "diskUsagePercent" => $diskUsagePercent,
+                "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
+                "diskUsagePercent" => $diskUsagePercentRounded,
             ]
         );
     }

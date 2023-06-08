@@ -1,7 +1,9 @@
 <?php
 
 namespace szenario\craftspacecontrol\helpers;
+
 use Craft;
+
 class ConversionHelper
 {
     // SPACE STATISTICS DISPLAY
@@ -10,17 +12,18 @@ class ConversionHelper
         if ($bytes > 0) {
             $base = floor(log($bytes) / log(1024));
             $units = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"); //units of measurement
-            return number_format(($bytes / pow(1024, floor($base))), 3) . " $units[$base]";
+            return number_format(($bytes / pow(1024, floor($base))), 2) . " $units[$base]";
         } else return "0 bytes";
     }
 
     // convert aliases to paths
-    public static function craftPathToAbsolute(string $path): string {
+    public static function craftPathToAbsolute(string $path): string
+    {
         // split by alias prefix
         $splits = explode('@', $path);
 
         // drop empty splits (happens when path starts with an alias)
-        $splits = array_filter( $splits, 'strlen' );
+        $splits = array_filter($splits, 'strlen');
 
         $resolvedPath = '';
 
@@ -35,7 +38,7 @@ class ConversionHelper
                 $effectiveSplit = substr($split, 0, $slashPosition);
             }
 
-            $resolvedAlias = Craft::getAlias('@'. $effectiveSplit);
+            $resolvedAlias = Craft::getAlias('@' . $effectiveSplit);
 
             if ($slashPosition) {
                 // if we have cut the string, we need to append it again
