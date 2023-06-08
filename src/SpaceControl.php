@@ -17,8 +17,6 @@ use craft\events\TemplateEvent;
 /**
  * spacecontrol plugin
  *
- * @method static SpaceControl getInstance()
- * @method Settings getSettings()
  * @author szenario.design <support@szenario.design>
  * @copyright szenario.design
  * @license MIT
@@ -26,7 +24,7 @@ use craft\events\TemplateEvent;
 class SpaceControl extends Plugin
 {
     public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = true;
+    public bool $hasCpSettings = false;
 
     public static function config(): array
     {
@@ -50,14 +48,6 @@ class SpaceControl extends Plugin
     protected function createSettingsModel(): ?Model
     {
         return Craft::createObject(Settings::class);
-    }
-
-    protected function settingsHtml(): ?string
-    {
-        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
-            'plugin' => $this,
-            'settings' => $this->getSettings(),
-        ]);
     }
 
     private function attachEventHandlers(): void

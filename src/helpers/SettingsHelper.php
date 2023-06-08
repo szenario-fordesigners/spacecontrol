@@ -1,11 +1,21 @@
 <?php
 
 namespace szenario\craftspacecontrol\helpers;
+
 use Craft;
-class SettingsHelper {
+
+class SettingsHelper
+{
     // PLUGIN SETTINGS GETTER
-    public static function getPluginSettings() {
+    public static function getPluginSettings()
+    {
         return Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+    }
+
+    public static function getSetting($key)
+    {
+        $settings = SettingsHelper::getPluginSettings();
+        return $settings->$key;
     }
 
     public static function getDiskLimitPercent()
@@ -16,11 +26,13 @@ class SettingsHelper {
         ];
     }
 
-    public static function getAdminRecipientsString() {
+    public static function getAdminRecipientsString()
+    {
         $settings = SettingsHelper::getPluginSettings();
         return $settings->adminRecipients;
 
     }
+
     public static function getAdminRecipientsArray()
     {
         $settings = SettingsHelper::getPluginSettings();
@@ -31,10 +43,12 @@ class SettingsHelper {
         return ValidationHelper::validateEmailAddresses($adminRecipients);
     }
 
-    public static function getClientRecipientsString() {
+    public static function getClientRecipientsString()
+    {
         $settings = SettingsHelper::getPluginSettings();
         return $settings->clientRecipients;
     }
+
     public static function getClientRecipientsArray()
     {
         $settings = SettingsHelper::getPluginSettings();
@@ -58,12 +72,22 @@ class SettingsHelper {
     }
 
     // PLUGIN SETTINGS SETTER
-    public static function setLastSent($time)
+//    public static function setLastSent($time)
+//    {
+//        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
+//        if ($plugin === null) return;
+//        $settings = $plugin->getSettings();
+//        $settings->lastSent = $time;
+//
+//        Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->toArray());
+//    }
+
+    public static function setValue($key, $value)
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
         if ($plugin === null) return;
         $settings = $plugin->getSettings();
-        $settings->lastSent = $time;
+        $settings->$key = $value;
 
         Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->toArray());
     }

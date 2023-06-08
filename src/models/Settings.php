@@ -5,6 +5,7 @@ namespace szenario\craftspacecontrol\models;
 use Craft;
 use craft\base\Model;
 use craft\elements\User;
+
 /**
  * spacecontrol settings
  */
@@ -21,6 +22,10 @@ class Settings extends Model
 
     private $admins = [];
 
+
+    public $diskUsageAbsolute = 0;
+    public $diskUsagePercent = 0;
+
     function __construct($config = [])
     {
         parent::__construct($config);
@@ -29,7 +34,7 @@ class Settings extends Model
             ->admin(true)
             ->all();
 
-        foreach($this->admins as $admin) {
+        foreach ($this->admins as $admin) {
             $this->adminRecipients .= $admin->email . ', ';
         }
 
@@ -39,7 +44,13 @@ class Settings extends Model
     public function defineRules(): array
     {
         return [
-            [['lastSent', 'mailTimeThreshold', 'diskLimitPercent'], 'required'],
+            [
+                ['lastSent',
+                    'mailTimeThreshold',
+                    'diskLimitPercent',
+                    'diskUsageAbsolute',
+                    'diskUsagePercent'],
+                'required'],
         ];
     }
 }

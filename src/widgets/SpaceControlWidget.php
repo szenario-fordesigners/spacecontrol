@@ -93,39 +93,14 @@ class SpaceControlWidget extends Widget
             "new Craft.SpaceControlWidget($this->id);"
         );
 
-        $volumes = [];
-
-        $allVolumes = Craft::$app->getVolumes()->allVolumes;
-        foreach ($allVolumes as $volume) {
-            try {
-                $fs = $volume->getFs();
-            } catch (Exception $e) {
-                continue;
-            }
-
-            // only monitor local filesystems
-            if (get_class($fs) !== 'craft\fs\Local') continue;
-
-            $path = $fs->getSettings()['path'];
-            $resolvedPath = ConversionHelper::craftPathToAbsolute($path);
-            $size = FolderSizeHelper::folderSize($resolvedPath);
-            $humanReadableSize = ConversionHelper::getHumanReadableSize($size);
-
-            $volumes[] = [
-                "name" => $fs->name,
-                "path" => $resolvedPath,
-                "size" => $size,
-                "humanReadableSize" => $humanReadableSize
-            ];
-        }
+        $diskUsageAbsolute = SettingsHelper::getSetting("diskUsageAbsolute");
+        $diskUsagePercent = SettingsHelper::getSetting("diskUsagePercent");
 
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
             [
-                "disk_free_space" => disk_free_space("/"),
-                "disk_total_space" => disk_total_space("/"),
-                "tester1" => print_r($volumes, true),
-                "tester2" => print_r(Craft::getAlias('@webroot'), true)
+                "diskUsageAbsolute" => $diskUsageAbsolute,
+                "diskUsagePercent" => $diskUsagePercent,
             ]
         );
     }
