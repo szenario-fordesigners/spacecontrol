@@ -11,43 +11,44 @@ use craft\elements\User;
  */
 class Settings extends Model
 {
-    public $lastSent = 0;
-    // 1 day
-    public $mailTimeThreshold = 86400;
-    // 90 %
-    public $diskLimitPercent = 90;
-
-    public $adminRecipients = '';
-    public $clientRecipients = '';
-
-    private $admins = [];
+//    public $lastSent = 0;
+//    // 1 day
+//    public $mailTimeThreshold = 86400;
+//    // 90 %
+//    public $diskLimitPercent = 90;
+//
+//    public $adminRecipients = '';
+//    public $clientRecipients = '';
+//
+//    private $admins = [];
 
 
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
 
-    function __construct($config = [])
-    {
-        parent::__construct($config);
-
-        $this->admins = User::find()
-            ->admin(true)
-            ->all();
-
-        foreach ($this->admins as $admin) {
-            $this->adminRecipients .= $admin->email . ', ';
-        }
-
-        $this->adminRecipients = substr($this->adminRecipients, 0, -2);
-    }
+//    function __construct($config = [])
+//    {
+//        parent::__construct($config);
+//
+//        $this->admins = User::find()
+//            ->admin(true)
+//            ->all();
+//
+//        foreach ($this->admins as $admin) {
+//            $this->adminRecipients .= $admin->email . ', ';
+//        }
+//
+//        $this->adminRecipients = substr($this->adminRecipients, 0, -2);
+//    }
 
     public function defineRules(): array
     {
         return [
             [
-                ['lastSent',
-                    'mailTimeThreshold',
-                    'diskLimitPercent',
+                [
+//                    'lastSent',
+//                    'mailTimeThreshold',
+//                    'diskLimitPercent',
                     'diskUsageAbsolute',
                     'diskUsagePercent'],
                 'required'],

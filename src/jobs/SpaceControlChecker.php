@@ -3,8 +3,6 @@
 namespace szenario\craftspacecontrol\jobs;
 
 use Craft;
-use craft\mail\Message;
-use craft\helpers\App;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlChecker extends \craft\queue\BaseJob

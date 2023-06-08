@@ -18,21 +18,6 @@ class SettingsHelper
         return $settings->$key;
     }
 
-    public static function getDiskLimitPercent()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        return [
-            'diskLimitPercent' => $settings->diskLimitPercent
-        ];
-    }
-
-    public static function getAdminRecipientsString()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->adminRecipients;
-
-    }
-
     public static function getAdminRecipientsArray()
     {
         $settings = SettingsHelper::getPluginSettings();
@@ -41,12 +26,6 @@ class SettingsHelper
 
         $adminRecipients = explode(', ', $adminRecipientsStr);
         return ValidationHelper::validateEmailAddresses($adminRecipients);
-    }
-
-    public static function getClientRecipientsString()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->clientRecipients;
     }
 
     public static function getClientRecipientsArray()
@@ -59,17 +38,6 @@ class SettingsHelper
         return ValidationHelper::validateEmailAddresses($clientRecipients);
     }
 
-    public static function getMailTimeThreshold()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->mailTimeThreshold;
-    }
-
-    public static function getLastSent()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->lastSent;
-    }
 
     // PLUGIN SETTINGS SETTER
 //    public static function setLastSent($time)
