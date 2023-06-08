@@ -5,7 +5,9 @@ namespace szenario\craftspacecontrol;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\controllers\DashboardController;
 use szenario\craftspacecontrol\models\Settings;
+use yii\base\ActionEvent;
 use yii\base\Event;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
@@ -63,11 +65,19 @@ class SpaceControl extends Plugin
         );
 
         Event::on(
-            View::class,
-            View::EVENT_AFTER_RENDER_TEMPLATE,
-            function (TemplateEvent $event) {
+            DashboardController::class,
+            DashboardController::EVENT_AFTER_ACTION,
+            function (ActionEvent $event) {
                 \craft\helpers\Queue::push(new SpaceControlChecker());
             }
         );
+
+//        Event::on(
+//            Assets::class,
+//            Assets::EVENT_LOCATE_UPLOADED_FILES,
+//            function (LocateUploadedFilesEvent $event) {
+//                \craft\helpers\Queue::push(new SpaceControlChecker());
+//            }
+//        );
     }
 }
