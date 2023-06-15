@@ -55,6 +55,7 @@ class SpaceControlWidget extends Widget
                 "diskTotalSpace" => $diskTotalSpaceHumanReadable,
                 "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
                 "diskUsagePercent" => $diskUsagePercentRounded,
+                "alert" => $diskUsagePercentRounded >= 90
             ]
         );
     }
