@@ -40,6 +40,9 @@ class SpaceControlWidget extends Widget
             "new Craft.SpaceControlWidget($this->id);"
         );
 
+        $diskTotalSpaceRaw = SettingsHelper::getSetting("diskTotalSpace");
+        $diskTotalSpaceHumanReadable = ConversionHelper::getHumanReadableSize($diskTotalSpaceRaw);
+
         $diskUsageAbsoluteRaw = SettingsHelper::getSetting("diskUsageAbsolute");
         $diskUsageAbsoluteHumanReadable = ConversionHelper::getHumanReadableSize($diskUsageAbsoluteRaw);
 
@@ -49,6 +52,7 @@ class SpaceControlWidget extends Widget
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
             [
+                "diskTotalSpace" => $diskTotalSpaceHumanReadable,
                 "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
                 "diskUsagePercent" => $diskUsagePercentRounded,
             ]

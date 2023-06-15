@@ -12,9 +12,11 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         // 1. get current disk usage
         // 2. save to setting
 
-        $diskUsageAbsolute = disk_total_space("/") - disk_free_space("/");
-        $diskUsagePercent = $diskUsageAbsolute / disk_total_space("/") * 100;
-
+        $diskTotalSpace = disk_total_space("/");
+        $diskUsageAbsolute = $diskTotalSpace - disk_free_space("/");
+        $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpace * 100;
+        
+        SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);
         SettingsHelper::setValue("diskUsageAbsolute", $diskUsageAbsolute);
         SettingsHelper::setValue("diskUsagePercent", $diskUsagePercent);
     }

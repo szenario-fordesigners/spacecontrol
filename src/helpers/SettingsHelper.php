@@ -40,16 +40,6 @@ class SettingsHelper
 
 
     // PLUGIN SETTINGS SETTER
-//    public static function setLastSent($time)
-//    {
-//        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-//        if ($plugin === null) return;
-//        $settings = $plugin->getSettings();
-//        $settings->lastSent = $time;
-//
-//        Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->toArray());
-//    }
-
     public static function setValue($key, $value)
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');

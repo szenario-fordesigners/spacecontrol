@@ -23,6 +23,7 @@ class Settings extends Model
 //    private $admins = [];
 
 
+    public $diskTotalSpace = 0;
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
 
