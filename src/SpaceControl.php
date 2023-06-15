@@ -6,6 +6,8 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\controllers\DashboardController;
+use craft\events\LocateUploadedFilesEvent;
+use craft\fields\Assets;
 use szenario\craftspacecontrol\models\Settings;
 use yii\base\ActionEvent;
 use yii\base\Event;
@@ -70,12 +72,12 @@ class SpaceControl extends Plugin
             }
         );
 
-//        Event::on(
-//            Assets::class,
-//            Assets::EVENT_LOCATE_UPLOADED_FILES,
-//            function (LocateUploadedFilesEvent $event) {
-//                \craft\helpers\Queue::push(new SpaceControlChecker());
-//            }
-//        );
+        Event::on(
+            Assets::class,
+            Assets::EVENT_LOCATE_UPLOADED_FILES,
+            function (LocateUploadedFilesEvent $event) {
+                \craft\helpers\Queue::push(new SpaceControlChecker());
+            }
+        );
     }
 }
