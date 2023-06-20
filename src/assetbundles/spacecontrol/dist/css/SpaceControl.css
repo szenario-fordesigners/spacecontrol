@@ -96,7 +96,7 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"] .icon.
     height: 0%;
     background: white;
     border-radius: 50%;
-    transition: all 0.5s ease;
+    transition: all 1.5s ease;
     transform: translate(-50%, -50%);
 }
 
