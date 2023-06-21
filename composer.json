@@ -2,7 +2,7 @@
 	"name": "szenario/craft-spacecontrol",
 	"description": "Webspace Monitoring",
 	"type": "craft-plugin",
-	"license": "mit",
+	"license": "proprietary",
 	"version": "0.0.1",
 	"keywords": [
 		"monitoring",
@@ -10,10 +10,10 @@
 	],
 	"support": {
 		"email": "support@szenario.design",
-		"issues": "https://github.com/thomasbendl/craft-spacecontrol/issues?state=open",
-		"source": "https://github.com/thomasbendl/craft-spacecontrol",
-		"docs": "https://github.com/thomasbendl/craft-spacecontrol",
-		"rss": "https://github.com/thomasbendl/craft-spacecontrol/releases.atom"
+		"issues": "https://github.com/szenario-fordesigners/spacecontrol/issues?state=open",
+		"source": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
+		"docs": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
+		"rss": "https://github.com/szenario-fordesigners/spacecontrol/releases.atom"
 	},
 	"require": {
 		"php": ">=8.0.2",
@@ -32,7 +32,7 @@
 		"handle": "spacecontrol",
 		"name": "spacecontrol",
 		"developer": "szenario.design",
-		"documentationUrl": "https://github.com/thomasbendl/craft-spacecontrol",
+		"documentationUrl": "https://github.com/szenario-fordesigners/spacecontrol",
 		"class": "szenario\\craftspacecontrol\\SpaceControl"
 	},
 	"scripts": {
