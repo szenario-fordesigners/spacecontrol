@@ -8,19 +8,6 @@ use RecursiveIteratorIterator;
 
 class FolderSizeHelper
 {
-    public static function folderSize(string $dir): int
-    {
-        clearstatcache();
-
-        $size = 0;
-
-        foreach (glob(rtrim($dir, '/') . '/*', GLOB_NOSORT) as $each) {
-            $size += is_file($each) ? filesize($each) : FolderSizeHelper::folderSize($each);
-        }
-
-        return $size;
-    }
-
     public static function getDirectorySize($path)
     {
         clearstatcache();
@@ -32,25 +19,9 @@ class FolderSizeHelper
                 $path = $object->getRealPath();
                 $stats = stat($path);
 
-                $bytestotal += $stats['blocks'] * 512;
+                $bytestotal += $stats['blocks'] ? $stats['blocks'] * 512 : $object->getSize();
             }
         }
         return $bytestotal;
-    }
-
-    public static function getAllFiles($path)
-    {
-        clearstatcache();
-
-        $files = [];
-
-        $path = realpath($path);
-        if ($path !== false && $path != '' && file_exists($path)) {
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
-                $files[] = $object->getPathName();
-            }
-        }
-
-        return $files;
     }
 }
