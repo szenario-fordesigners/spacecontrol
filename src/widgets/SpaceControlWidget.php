@@ -51,7 +51,7 @@ class SpaceControlWidget extends Widget
         $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
         $diskUsagePercentRounded = round($diskUsagePercentRaw);
 
-        $t = FolderSizeHelper::folderSize(CRAFT_BASE_PATH);
+        $t = FolderSizeHelper::folderSize(CRAFT_BASE_PATH . '/vendor');
 
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
