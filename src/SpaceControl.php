@@ -7,7 +7,10 @@ use craft\base\Model;
 use craft\base\Plugin;
 use craft\controllers\DashboardController;
 use craft\events\LocateUploadedFilesEvent;
+use craft\events\PluginEvent;
 use craft\fields\Assets;
+use craft\helpers\UrlHelper;
+use craft\services\Plugins;
 use szenario\craftspacecontrol\models\Settings;
 use yii\base\ActionEvent;
 use yii\base\Event;
@@ -85,6 +88,28 @@ class SpaceControl extends Plugin
             Assets::EVENT_LOCATE_UPLOADED_FILES,
             function (LocateUploadedFilesEvent $event) {
                 \craft\helpers\Queue::push(new SpaceControlChecker());
+            }
+        );
+
+//        TODO: after login, after save CP run jon
+
+
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                    // Send them to our welcome screen
+                    $request = Craft::$app->getRequest();
+                    if ($request->isCpRequest) {
+                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl(
+                            'settings/plugins/spacecontrol',
+                            [
+                                'showWelcome' => true,
+                            ]
+                        ))->send();
+                    }
+                }
             }
         );
     }
