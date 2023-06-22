@@ -9,7 +9,9 @@ use craft\controllers\DashboardController;
 use craft\events\LocateUploadedFilesEvent;
 use craft\events\PluginEvent;
 use craft\fields\Assets;
+use craft\helpers\ElementHelper;
 use craft\helpers\UrlHelper;
+use craft\services\Elements;
 use craft\services\Plugins;
 use szenario\craftspacecontrol\models\Settings;
 use yii\base\ActionEvent;
@@ -91,7 +93,25 @@ class SpaceControl extends Plugin
             }
         );
 
+        Event::on(\yii\web\User::class,
+            \yii\web\User::EVENT_AFTER_LOGIN,
+            function (\yii\web\UserEvent $event) {
+                \craft\helpers\Queue::push(new SpaceControlChecker());
+            });
+
 //        TODO: after login, after save CP run jon
+
+
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                    Craft::info(print_r($event->name, true), 'spacecontrol-cp-save');
+//                    \craft\helpers\Queue::push(new SpaceControlChecker());
+                }
+            }
+        );
 
 
         Event::on(

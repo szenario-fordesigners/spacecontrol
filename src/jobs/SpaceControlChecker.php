@@ -15,7 +15,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 
         $diskTotalSpace = SettingsHelper::getSetting('diskTotalSpace');
         $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
-        $diskUsageAbsolute = FolderSizeHelper::folderSize(CRAFT_BASE_PATH);
+        $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
         $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpaceBytes * 100;
 
         SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);
