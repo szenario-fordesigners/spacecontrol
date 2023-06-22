@@ -51,8 +51,8 @@ class SpaceControlWidget extends Widget
         $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
         $diskUsagePercentRounded = round($diskUsagePercentRaw);
 
-        $t = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
-        $files = FolderSizeHelper::getAllFiles(CRAFT_BASE_PATH);
+        $t = FolderSizeHelper::folderSize(CRAFT_BASE_PATH);
+        $t2 = FolderSizeHelper::folderSizeNative(CRAFT_BASE_PATH);
 
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
@@ -61,8 +61,7 @@ class SpaceControlWidget extends Widget
                 "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
                 "diskUsagePercent" => $diskUsagePercentRounded,
                 "alert" => $diskUsagePercentRounded >= 90,
-                "tester" => $t,
-                "files" => print_r($files, true)
+                "tester" => 'php:' . $t . ' native: ' . $t2,
             ]
         );
     }

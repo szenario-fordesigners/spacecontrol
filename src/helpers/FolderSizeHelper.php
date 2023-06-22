@@ -50,4 +50,14 @@ class FolderSizeHelper
 
         return $files;
     }
+
+    public static function folderSizeNative($path)
+    {
+        $io = popen('/usr/bin/du -s ' . $path, 'r');
+        $size = fgets($io, 4096);
+        $size = substr($size, 0, strpos($size, "\t"));
+        pclose($io);
+
+        return $size;
+    }
 }
