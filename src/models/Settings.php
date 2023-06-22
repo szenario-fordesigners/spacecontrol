@@ -2,9 +2,7 @@
 
 namespace szenario\craftspacecontrol\models;
 
-use Craft;
 use craft\base\Model;
-use craft\elements\User;
 
 /**
  * spacecontrol settings
@@ -50,6 +48,7 @@ class Settings extends Model
 //                    'lastSent',
 //                    'mailTimeThreshold',
 //                    'diskLimitPercent',
+                    'diskTotalSpace',
                     'diskUsageAbsolute',
                     'diskUsagePercent'],
                 'required'],
