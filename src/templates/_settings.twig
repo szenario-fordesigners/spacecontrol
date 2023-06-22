@@ -1,0 +1,11 @@
+{% import '_includes/forms.twig' as forms %}
+
+{{ forms.textField({
+    label: 'Webspace (in GB)',
+    name: 'diskTotalSpace',
+    value: settings.diskTotalSpace,
+    type: 'number',
+    placeholder:'1',
+    min: 0,
+    size: 4
+}) }}

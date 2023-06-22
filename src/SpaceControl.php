@@ -26,7 +26,15 @@ use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 class SpaceControl extends Plugin
 {
     public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = false;
+    public bool $hasCpSettings = true;
+
+    protected function settingsHtml(): ?string
+    {
+        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
+            'plugin' => $this,
+            'settings' => $this->getSettings(),
+        ]);
+    }
 
     public static function config(): array
     {

@@ -7,6 +7,7 @@ use Craft;
 use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
 use szenario\craftspacecontrol\helpers\ConversionHelper;
+use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlWidget extends Widget
@@ -41,7 +42,8 @@ class SpaceControlWidget extends Widget
         );
 
         $diskTotalSpaceRaw = SettingsHelper::getSetting("diskTotalSpace");
-        $diskTotalSpaceHumanReadable = ConversionHelper::getHumanReadableSize($diskTotalSpaceRaw);
+        $diskTotalSpaceBytes = $diskTotalSpaceRaw * 1024 * 1024 * 1024;
+        $diskTotalSpaceHumanReadable = ConversionHelper::getHumanReadableSize($diskTotalSpaceBytes);
 
         $diskUsageAbsoluteRaw = SettingsHelper::getSetting("diskUsageAbsolute");
         $diskUsageAbsoluteHumanReadable = ConversionHelper::getHumanReadableSize($diskUsageAbsoluteRaw);
@@ -49,13 +51,16 @@ class SpaceControlWidget extends Widget
         $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
         $diskUsagePercentRounded = round($diskUsagePercentRaw);
 
+        $t = FolderSizeHelper::folderSize(CRAFT_BASE_PATH);
+
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/body',
             [
                 "diskTotalSpace" => $diskTotalSpaceHumanReadable,
                 "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
                 "diskUsagePercent" => $diskUsagePercentRounded,
-                "alert" => $diskUsagePercentRounded >= 90
+                "alert" => $diskUsagePercentRounded >= 90,
+                "tester" => $t
             ]
         );
     }
