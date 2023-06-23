@@ -3,14 +3,24 @@
     /** global: Garnish */
     Craft.SpaceControlWidget = Garnish.Base.extend({
         init: function (widgetId) {
-            let size = $('.sCC-circleContainer').data().size;
+            let usage = $('.sCC-circleContainer').data().usage;
             setTimeout(() => {
-                $('.sCC-circleInner').css({'width': size + '%', 'height': size + '%'});
+                let circularRadius = $('.sCC-circle').width()/2;
+                let circularArea = circularRadius*circularRadius*Math.PI;
+                let circularAreaPercent = circularArea / 100 * usage;
+                let radiusPercentualCircle = Math.sqrt(circularAreaPercent/Math.PI);
+                //console.log('Kreis Radius Gesamt: ' + circularRadius);
+                //console.log('Kreis Fläche Gesamt: ' + circularArea);
+                //console.log('Kreis Fläche Prozentuell: ' + circularAreaPercent);
+                //console.log('Kreis Radius Prozentuell: ' + radiusPercentualCircle);
+
+                $('.sCC-circleInner').css({'width': radiusPercentualCircle*2 + 'px', 'height': radiusPercentualCircle*2 + 'px'});
                 $('.sCC-percentage').addClass('animate');
+                //console.log('Percent: ' +  usage);
 
             }, 500);
-            $('.sCC-percentage').text(size + '%');
-            counter(size, 2000);
+            $('.sCC-percentage').text(usage + '%');
+            counter(usage, 2000);
             
         }
     });
@@ -24,7 +34,6 @@ function counter(targetValue, duration) {
     function updateCounter(timestamp) {
         var elapsedTime = timestamp - startTime;
         if (elapsedTime >= duration) {
-            console.log(targetValue); // Counter reached the target value
             $('.sCC-percentage').text(Math.round(targetValue)+'%');
         } else {
             var currentValue = easeInOutQuad(elapsedTime / duration) * targetValue;
