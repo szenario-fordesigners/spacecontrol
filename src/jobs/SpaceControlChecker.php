@@ -12,7 +12,16 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     {
         // 1. get current disk usage
         // 2. save to setting
+        self::calculateDiskUsage();
+    }
 
+    public static function executeImmediately(): void
+    {
+        self::calculateDiskUsage();
+    }
+
+    private static function calculateDiskUsage()
+    {
         $diskTotalSpace = SettingsHelper::getSetting('diskTotalSpace');
         $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
         $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
