@@ -18,6 +18,7 @@ use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use craft\web\View;
 use craft\events\TemplateEvent;
+use putyourlightson\sprig\Sprig;
 
 /**
  * spacecontrol plugin
@@ -52,6 +53,8 @@ class SpaceControl extends Plugin
     public function init()
     {
         parent::init();
+
+        Sprig::bootstrap();
 
         // override crafts 1000 bit base used for formatting
         Craft::$app->formatter->sizeFormatBase = 1024;
