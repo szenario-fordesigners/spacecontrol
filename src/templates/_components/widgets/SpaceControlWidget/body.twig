@@ -1,32 +1,49 @@
-<div class="sCC {{ alert ? "alert" : "" }}">
-    <div class="sCC-topArea">
-        <div class="sCC-topArea-left">
-            <div class="sCC-circleContainer" data-usage="{{ diskUsagePercent }}">
-                <div class="sCC-circle">
-                    <div class="sCC-circleInner"></div>
+{% set settings = plugin('spacecontrol').settings %}
+{% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1024) | filesize %}
+{% set diskUsageAbsolute = settings.diskUsageAbsolute | filesize(0) %}
+{% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
+{% set alert = diskUsagePercent >= 90 %}
+{% set isInitialized = settings.isInitialized %}
+{% set isInitialized = false %}
+
+<div class="sCC {{ alert ? "alert" : "" }}"
+     data-initialized={{ isInitialized }}>
+    {% if isInitialized == false %}
+        <div class="sCC-loading">
+            LOADING...
+        </div>
+    {% else %}
+        <div class="sCC-topArea">
+            <div class="sCC-topArea-left">
+                <div class="sCC-circleContainer" data-usage="{{ diskUsagePercent }}">
+                    <div class="sCC-circle">
+                        <div class="sCC-circleInner"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="sCC-topArea-right">
-            <span class="sCC-percentage">0
-            </span>
-        </div>
-    </div>
-    <div class="sCC-bottomArea">
-        <div class="sCC-bottomArea-left">
-            <div class="sCC-quota">
-                {{ diskTotalSpace }}
-            </div>
-            <div class="sCC-webspace">
-                Webspace
+            <div class="sCC-topArea-right">
+                <span class="sCC-percentage">
+                    0
+                </span>
             </div>
         </div>
-        <div class="sCC-bottomArea-right">
-            <div class="sCC-used">used</div>
-            <div class="sCC-info">{{ alert ? "time for action (TODO: info)" : "plenty of space left" }}</div>
+        <div class="sCC-bottomArea">
+            <div class="sCC-bottomArea-left">
+                <div class="sCC-quota">
+                    {{ diskTotalSpace }}
+                </div>
+                <div class="sCC-webspace">
+                    Webspace
+                </div>
+            </div>
+            <div class="sCC-bottomArea-right">
+                {{ diskUsageAbsolute }}
+                <div class="sCC-used">used</div>
+                <div class="sCC-info">{{ alert ? "time for action (TODO: info)" : "plenty of space left" }}</div>
+            </div>
         </div>
-    </div>
-    <div class="sCC-label">
-        SpaceControl
-    </div>
+        <div class="sCC-label">
+            SpaceControl
+        </div>
+    {% endif %}
 </div>

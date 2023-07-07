@@ -41,24 +41,18 @@ class SpaceControlWidget extends Widget
             "new Craft.SpaceControlWidget($this->id);"
         );
 
-        $diskTotalSpaceRaw = SettingsHelper::getSetting("diskTotalSpace");
-        $diskTotalSpaceBytes = $diskTotalSpaceRaw * 1024 * 1024 * 1024;
-        $diskTotalSpaceHumanReadable = ConversionHelper::getHumanReadableSize($diskTotalSpaceBytes);
-
-        $diskUsageAbsoluteRaw = SettingsHelper::getSetting("diskUsageAbsolute");
-        $diskUsageAbsoluteHumanReadable = ConversionHelper::getHumanReadableSize($diskUsageAbsoluteRaw);
-
-        $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
-        $diskUsagePercentRounded = round($diskUsagePercentRaw);
+//        $diskTotalSpaceRaw = SettingsHelper::getSetting("diskTotalSpace");
+//        $diskTotalSpaceBytes = $diskTotalSpaceRaw * 1024 * 1024 * 1024;
+//        $diskTotalSpaceHumanReadable = ConversionHelper::getHumanReadableSize($diskTotalSpaceBytes);
+//
+//        $diskUsageAbsoluteRaw = SettingsHelper::getSetting("diskUsageAbsolute");
+//        $diskUsageAbsoluteHumanReadable = ConversionHelper::getHumanReadableSize($diskUsageAbsoluteRaw);
+//
+//        $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
+//        $diskUsagePercentRounded = round($diskUsagePercentRaw);
 
         return Craft::$app->getView()->renderTemplate(
-            'spacecontrol/_components/widgets/SpaceControlWidget/body',
-            [
-                "diskTotalSpace" => $diskTotalSpaceHumanReadable,
-                "diskUsageAbsolute" => $diskUsageAbsoluteHumanReadable,
-                "diskUsagePercent" => $diskUsagePercentRounded,
-                "alert" => $diskUsagePercentRounded >= 90,
-            ]
+            'spacecontrol/_components/widgets/SpaceControlWidget/wrapper'
         );
     }
 }

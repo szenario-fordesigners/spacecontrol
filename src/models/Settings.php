@@ -24,6 +24,7 @@ class Settings extends Model
     public $diskTotalSpace = 1;
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
+    public $isInitialized = false;
 
 //    function __construct($config = [])
 //    {

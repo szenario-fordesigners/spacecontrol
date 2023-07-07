@@ -19,7 +19,6 @@ use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use craft\web\View;
 use craft\events\TemplateEvent;
 
-
 /**
  * spacecontrol plugin
  *
@@ -31,6 +30,7 @@ class SpaceControl extends Plugin
 {
     public string $schemaVersion = '1.0.0';
     public bool $hasCpSettings = true;
+
 
     protected function settingsHtml(): ?string
     {
@@ -52,6 +52,9 @@ class SpaceControl extends Plugin
     public function init()
     {
         parent::init();
+
+        // override crafts 1000 bit base used for formatting
+        Craft::$app->formatter->sizeFormatBase = 1024;
 
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function () {
@@ -89,7 +92,7 @@ class SpaceControl extends Plugin
         Event::on(\yii\web\User::class,
             \yii\web\User::EVENT_AFTER_LOGIN,
             function (\yii\web\UserEvent $event) {
-                SpaceControlChecker::executeImmediately();
+                \craft\helpers\Queue::push(new SpaceControlChecker());
             });
 
 

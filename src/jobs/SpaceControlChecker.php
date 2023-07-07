@@ -10,8 +10,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 {
     public function execute($queue): void
     {
-        // 1. get current disk usage
-        // 2. save to setting
         self::calculateDiskUsage();
     }
 
@@ -20,6 +18,8 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         self::calculateDiskUsage();
     }
 
+    // 1. get current disk usage
+    // 2. save to setting
     private static function calculateDiskUsage()
     {
         $diskTotalSpace = SettingsHelper::getSetting('diskTotalSpace');
@@ -30,6 +30,8 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);
         SettingsHelper::setValue("diskUsageAbsolute", $diskUsageAbsolute);
         SettingsHelper::setValue("diskUsagePercent", $diskUsagePercent);
+
+        SettingsHelper::setValue("isInitialized", true);
     }
 
     protected function defaultDescription(): string
