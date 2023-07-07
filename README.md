@@ -1,6 +1,9 @@
-# spacecontrol
+# SpaceControl
 
-Webspace Monitoring
+Webspace Usage Overview on point.
+
+![Screenshot](spacecontrol_demo-full.jpg)
+**Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 
 ## Requirements
 
@@ -8,41 +11,18 @@ This plugin requires Craft CMS 4.3.5 or later, and PHP 8.0.2 or later.
 
 ## Installation
 
-You can install this plugin from the Plugin Store or with Composer. (not yet)
+To install SpaceControl, follow these steps:
 
-to install:  
-copy the spacecontrol folder to your-craft-installation/plugins/
-add the following code to your composer.json
+1.  Open your terminal and go to your Craft project:
 
-```
-"repositories": [{
-      "type": "path",
-      "url": "plugins/spacecontrol"
-    }]
-```
+        cd /path/to/project
 
-execute:
+2.  Then tell Composer to load the plugin:
 
-```
-composer require szenario/craft-spacecontrol
-php craft plugin/install spacecontrol
-```
+        composer require szenario/craft-spacecontrol.
 
-#### From the Plugin Store
+3.  Install the plugin via `./craft install/plugin spacecontrol` via the CLI, or in the Control Panel, go to Settings → Plugins and click the “Install” button for SpaceControl.
 
-Go to the Plugin Store in your project’s Control Panel and search for “spacecontrol”. Then press “Install”.
+You can also install SpaceControl via the **Plugin Store** in the Craft Control Panel.
 
-#### With Composer
-
-Open your terminal and run the following commands:
-
-```bash
-# go to the project directory
-cd /path/to/my-project.test
-
-# tell Composer to load the plugin
-composer require szenario/craft-spacecontrol
-
-# tell Craft to install the plugin
-./craft plugin/install spacecontrol
-```
+Brought to you by [szenario](https://szenario.design/)
