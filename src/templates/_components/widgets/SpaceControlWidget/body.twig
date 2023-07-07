@@ -9,7 +9,9 @@
 <div class="sCC {{ alert ? "alert" : "" }}"
      data-initialized={{ isInitialized }}>
     {% if isConfigured == false %}
-        plz configure me
+        <div class="sCC-configure">
+            plz configure me
+        </div>
     {% elseif isInitialized == false %}
         <div class="sCC-loading">
             LOADING...
@@ -39,8 +41,7 @@
                 </div>
             </div>
             <div class="sCC-bottomArea-right">
-                {{ diskUsageAbsolute }}
-                <div class="sCC-used">used</div>
+                <div class="sCC-used">{{ diskUsageAbsolute }} used</div>
                 <div class="sCC-info">{{ alert ? "time for action (TODO: info)" : "plenty of space left" }}</div>
             </div>
         </div>

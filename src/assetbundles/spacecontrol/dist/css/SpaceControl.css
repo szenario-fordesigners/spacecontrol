@@ -1,131 +1,136 @@
 /* set widget pane background color */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
-  .pane {
-  background: #0041b9;
-  font-size: 10px;
-  padding: 12px;
-  padding-top: 17px;
+.pane {
+    background: #0041b9;
+    font-size: 10px;
+    padding: 12px;
+    padding-top: 17px;
 }
 
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
     .alert
   )
-  .pane {
-  background: #f15a24;
+.pane {
+    background: #f15a24;
 }
 
 /* white widget settings icon */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
-  .icon.settings:before {
-  color: white;
+.icon.settings:before {
+    color: white;
 }
 
 .sCC {
-  background: #0041b9;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  position: relative;
-  font-family: Arial, sans-serif;
+    background: #0041b9;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    font-family: Arial, sans-serif;
 }
 
 .sCC.alert {
-  background: #f15a24;
+    background: #f15a24;
 }
 
 .sCC-label {
-  position: absolute;
-  right: 0px;
-  top: 26px;
-  transform: translateX(50%) rotate(-90deg);
+    position: absolute;
+    right: 0px;
+    top: 26px;
+    transform: translateX(50%) rotate(-90deg);
 }
 
 .sCC-topArea {
-  height: 65px;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 10px;
+    height: 65px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
 }
 
 .sCC-topArea,
 .sCC-bottomArea {
-  width: 100%;
+    width: 100%;
 }
 
 .sCC-topArea > *,
 .sCC-bottomArea > * {
-  height: 100%;
-  /*border: 1px solid white;*/
+    height: 100%;
+    /*border: 1px solid white;*/
 }
 
 .sCC-topArea-left,
 .sCC-bottomArea-left {
-  width: 90px;
-  min-width: 90px;
+    width: 90px;
+    min-width: 90px;
 }
 
 .sCC-topArea-left {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .sCC-topArea-right,
 .sCC-bottomArea-right {
-  width: calc(100% - 120px);
+    width: calc(100% - 120px);
 }
 
 .sCC-topArea-right {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
-  font-size: 90px;
-  /*font-weight: bold;*/
+    font-size: 90px;
+    /*font-weight: bold;*/
 }
 
 .sCC-bottomArea {
-  height: 30px;
-  display: flex;
-  flex-direction: row;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
 }
 
 .sCC-circleContainer {
-  width: 65px;
-  height: 65px;
+    width: 65px;
+    height: 65px;
 }
 
 .sCC-circle {
-  width: 100%;
-  height: 100%;
-  border: 1px solid white;
-  border-radius: 50%;
-  position: relative;
-  box-sizing: content-box;
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    border-radius: 50%;
+    position: relative;
+    box-sizing: content-box;
 }
 
 .sCC-circleInner {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0%;
-  height: 0%;
-  background: white;
-  border-radius: 50%;
-  transition: all 1.5s ease;
-  transform: translate(-50%, -50%);
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0%;
+    height: 0%;
+    background: white;
+    border-radius: 50%;
+    transition: all 1.5s ease;
+    transform: translate(-50%, -50%);
 }
 
 .sCC-percentage {
-  opacity: 0;
-  transition: opacity 0.5s ease;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .sCC-percentage.animate {
-  opacity: 1;
+    opacity: 1;
 }
 
 .sCC-loading {
-  height: 95px;
-  width: 100%;
+    height: 95px;
+    width: 100%;
+}
+
+.sCC-configure {
+    height: 95px;
+    width: 100%;
 }
