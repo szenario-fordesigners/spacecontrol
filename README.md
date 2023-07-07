@@ -1,6 +1,6 @@
 # SpaceControl
 
-Webspace Usage Overview on point.
+Webspace monitoring on point.
 
 ![Screenshot](spacecontrol_demo-full.jpg)
 **Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
