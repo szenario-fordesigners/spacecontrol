@@ -25,4 +25,20 @@ To install SpaceControl, follow these steps:
 
 You can also install SpaceControl via the **Plugin Store** in the Craft Control Panel.
 
-Brought to you by [szenario](https://szenario.design/)
+## Settings
+
+An initial setup is obligatory to run the widget.
+
+![Screenshot](spacecontrol_demo-full-settings.jpg)
+
+<div align="center">
+  <sub>Made possible by</sub>
+  <sub><br />
+  <a href="https://szenario.design/" target="_blank">
+    <img src="szenario-logo.svg" style="width:140px;" alt="szenario.design logo" /></a>
+  </sub><br /><br />
+  <sub>The team behind the magic</sub><br />
+  <sub><a href="https://twitter.com/smonist">Simon Wesp</a>,</sub> 
+  <sub><a href="https://twitter.com/thomasbendl">Thomas Bendl</a>,</sub>
+  <sub>Erich Bendl</sub>  
+</div>
