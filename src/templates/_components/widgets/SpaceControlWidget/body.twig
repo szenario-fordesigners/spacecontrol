@@ -4,11 +4,13 @@
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
 {% set alert = diskUsagePercent >= 90 %}
 {% set isInitialized = settings.isInitialized %}
-{% set isInitialized = false %}
+{% set isConfigured = settings.diskTotalSpace != 0 %}
 
 <div class="sCC {{ alert ? "alert" : "" }}"
      data-initialized={{ isInitialized }}>
-    {% if isInitialized == false %}
+    {% if isConfigured == false %}
+        plz configure me
+    {% elseif isInitialized == false %}
         <div class="sCC-loading">
             LOADING...
         </div>

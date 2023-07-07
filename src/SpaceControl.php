@@ -114,6 +114,8 @@ class SpaceControl extends Plugin
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
+                    \craft\helpers\Queue::push(new SpaceControlChecker());
+                    
                     // Send them to our welcome screen
                     $request = Craft::$app->getRequest();
                     if ($request->isCpRequest) {
