@@ -39,9 +39,13 @@ function drawCircle() {
         //console.log('Kreis Fläche Prozentuell: ' + circularAreaPercent);
         //console.log('Kreis Radius Prozentuell: ' + radiusPercentualCircle);
 
+        if (radiusPercentualCircle > circularRadius) {
+            radiusPercentualCircle = circularRadius;
+        }
+
         $('.sCC-circleInner').css({
-            'width': radiusPercentualCircle * 2 + 'px',
-            'height': radiusPercentualCircle * 2 + 'px'
+            'width': radiusPercentualCircle * 2 + 1 + 'px',
+            'height': radiusPercentualCircle * 2 + 1 + 'px'
         });
         $('.sCC-percentage').addClass('animate');
         //console.log('Percent: ' +  usage);
