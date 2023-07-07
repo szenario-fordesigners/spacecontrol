@@ -14,6 +14,13 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
     background: #f15a24;
 }
 
+div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
+    .sCC-configure
+  )
+.pane {
+    background: #33404d;
+}
+
 /* white widget settings icon */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .icon.settings:before {
@@ -32,6 +39,10 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 
 .sCC.alert {
     background: #f15a24;
+}
+
+.sCC.configure {
+    background: #33404d;
 }
 
 .sCC-label {
@@ -133,4 +144,9 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .sCC-configure {
     height: 95px;
     width: 100%;
+}
+
+.sCC-configure > a {
+    color: white;
+    font-size: 70px;
 }

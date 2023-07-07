@@ -4,13 +4,15 @@
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
 {% set alert = diskUsagePercent >= 90 %}
 {% set isInitialized = settings.isInitialized %}
-{% set isConfigured = settings.diskTotalSpace != 0 %}
+{% set isConfigured = settings.diskTotalSpace >= 0 %}
 
-<div class="sCC {{ alert ? "alert" : "" }}"
+<div class="sCC {{ alert ? "alert" : "" }} {{ isConfigured ? '' : 'configure' }}"
      data-initialized={{ isInitialized }}>
     {% if isConfigured == false %}
         <div class="sCC-configure">
-            plz configure me
+            <a href="admin/settings/plugins/spacecontrol">
+                configure
+            </a>
         </div>
     {% elseif isInitialized == false %}
         <div class="sCC-loading">
