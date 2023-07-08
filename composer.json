@@ -18,7 +18,7 @@
 	"require": {
 		"php": ">=8.0.2",
 		"craftcms/cms": "^4.3.5",
-		"putyourlightson/craft-sprig-core": "^2.5"
+		"putyourlightson/craft-sprig-core": "^2.5.2"
 	},
 	"require-dev": {
 		"craftcms/ecs": "dev-main",
