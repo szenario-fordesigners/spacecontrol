@@ -14,13 +14,6 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
     background: #f15a24;
 }
 
-div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
-    .sCC-configure
-  )
-.pane {
-    background: #33404d;
-}
-
 /* white widget settings icon */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .icon.settings:before {
@@ -39,10 +32,6 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 
 .sCC.alert {
     background: #f15a24;
-}
-
-.sCC.configure {
-    background: #33404d;
 }
 
 .sCC-label {
@@ -101,29 +90,36 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 }
 
 .sCC-circleContainer {
-    width: 64px;
-    height: 64px;
+    width: 65px;
+    height: 65px;
+
+    position: relative;
 }
 
 .sCC-circle {
-    width: 100%;
-    height: 100%;
+    width: 65px;
+    height: 65px;
     border: 1px solid white;
     border-radius: 50%;
-    position: relative;
     box-sizing: content-box;
+
+    position: absolute;
+    top: calc(50% - 0px);
+    left: calc(50% - 0px);
+    transform: translate(-50%, -50%);
 }
 
 .sCC-circleInner {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
     width: 0%;
     height: 0%;
+
     background: white;
     border-radius: 50%;
     transition: all 1.5s ease;
+
+    position: absolute;
+    top: calc(50% - 0px);
+    left: calc(50% - 0px);
     transform: translate(-50%, -50%);
 }
 
@@ -139,14 +135,18 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .sCC-loading {
     height: 95px;
     width: 100%;
+    color: white;
 }
 
 .sCC-configure {
     height: 95px;
     width: 100%;
+    display: flex;
+    align-items: flex-start;
 }
 
 .sCC-configure > a {
     color: white;
     font-size: 70px;
+    line-height: 1.1;
 }

@@ -5,11 +5,14 @@ let refreshIntervalId = undefined;
     /** global: Garnish */
     Craft.SpaceControlWidget = Garnish.Base.extend({
         init: function (widgetId) {
-            let isInitalized = !!$('.sCC').data()?.initialized;
-            console.log('isInitalized', isInitalized);
+            let isConfigured = !!$('.sCC').data()?.configured;
+            console.log('isConfigured', isConfigured);
+            if (!isConfigured) return;
 
+            let isInitalized = !!$('.sCC').data()?.initialized;
             if (!isInitalized) {
                 refreshIntervalId = setInterval(() => {
+                    console.log('refresh');
                     htmx.trigger('.sCC', 'refresh');
                     isInitalized = !!$('.sCC').data()?.initialized;
 
@@ -34,21 +37,16 @@ function drawCircle() {
         let circularArea = circularRadius * circularRadius * Math.PI;
         let circularAreaPercent = circularArea / 100 * usage;
         let radiusPercentualCircle = Math.sqrt(circularAreaPercent / Math.PI);
-        //console.log('Kreis Radius Gesamt: ' + circularRadius);
-        //console.log('Kreis Fläche Gesamt: ' + circularArea);
-        //console.log('Kreis Fläche Prozentuell: ' + circularAreaPercent);
-        //console.log('Kreis Radius Prozentuell: ' + radiusPercentualCircle);
 
         if (radiusPercentualCircle > circularRadius) {
             radiusPercentualCircle = circularRadius;
         }
 
         $('.sCC-circleInner').css({
-            'width': radiusPercentualCircle * 2 + 1 + 'px',
-            'height': radiusPercentualCircle * 2 + 1 + 'px'
+            'width': radiusPercentualCircle * 2 + 'px',
+            'height': radiusPercentualCircle * 2 + 'px'
         });
         $('.sCC-percentage').addClass('animate');
-        //console.log('Percent: ' +  usage);
 
     }, 500);
     $('.sCC-percentage').text(usage + '%');

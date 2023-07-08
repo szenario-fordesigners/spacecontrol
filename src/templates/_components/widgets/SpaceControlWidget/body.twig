@@ -2,29 +2,38 @@
 {% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1024) | filesize %}
 {% set diskUsageAbsolute = settings.diskUsageAbsolute | filesize(0) %}
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
-{% set alert = diskUsagePercent >= 90 %}
-{% set isInitialized = settings.isInitialized %}
-{% set isConfigured = settings.diskTotalSpace >= 0 %}
 
-<div class="sCC {{ alert ? "alert" : "" }} {{ isConfigured ? '' : 'configure' }}"
-     data-initialized={{ isInitialized }}>
+{% set isInitialized = settings.isInitialized %}
+{% set isInitialized = true %}
+
+{% set isConfigured = settings.diskTotalSpace > 0 %}
+
+{# only set alert if the plugin has been initialized #}
+{% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}
+
+<div class="sCC {{ alert ? "alert" : "" }}"
+     data-initialized="{{ isInitialized }}"
+     data-configured="{{ isConfigured }}"
+>
     {% if isConfigured == false %}
         <div class="sCC-configure">
             <a href="admin/settings/plugins/spacecontrol">
                 configure
             </a>
+            <div class="sCC-label">
+                SpaceControl
+            </div>
         </div>
     {% elseif isInitialized == false %}
         <div class="sCC-loading">
-            LOADING...
+            calculating...
         </div>
     {% else %}
         <div class="sCC-topArea">
             <div class="sCC-topArea-left">
                 <div class="sCC-circleContainer" data-usage="{{ diskUsagePercent }}">
-                    <div class="sCC-circle">
-                        <div class="sCC-circleInner"></div>
-                    </div>
+                    <div class="sCC-circle"></div>
+                    <div class="sCC-circleInner"></div>
                 </div>
             </div>
             <div class="sCC-topArea-right">
