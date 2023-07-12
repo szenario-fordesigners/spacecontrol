@@ -11,6 +11,19 @@
 {# only set alert if the plugin has been initialized #}
 {% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}
 
+{% set messages =  ["it's plenty of space","still enough space","it's getting tight","time for action: get more space"]%}
+{% set messageIndex = 0 %}
+
+{% if diskUsagePercent < 50 %}
+    {% set messageIndex = 0 %}
+{% elseif diskUsagePercent < 80 %}
+    {% set messageIndex = 1 %}
+{% elseif diskUsagePercent < 90 %}
+    {% set messageIndex = 2 %}
+{% else %}
+    {% set messageIndex = 3 %}
+{% endif %}
+
 <div class="sCC {{ alert ? "alert" : "" }}"
      data-initialized="{{ isInitialized }}"
      data-configured="{{ isConfigured }}"
@@ -53,7 +66,7 @@
             </div>
             <div class="sCC-bottomArea-right">
                 <div class="sCC-used">{{ diskUsageAbsolute }} used</div>
-                <div class="sCC-info">{{ alert ? "time for action (TODO: info)" : "plenty of space left" }}</div>
+                <div class="sCC-info">{{ messages[messageIndex] }}</div>
             </div>
         </div>
         <div class="sCC-label">
