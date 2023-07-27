@@ -12,11 +12,13 @@ A few pixels on your Craft Dashboard, a big step for your website.
 
 ## Requirements
 
-This plugin requires Craft CMS 4.3.5 or later, and PHP 8.0.2 or later.
+This plugin requires Craft CMS 4.3.5 or later and PHP 8.0.2 or later.
 
 ## Installation
 
-To install SpaceControl, follow these steps:
+The **easiest way** to install SpaceControl is via the Craft **Plugin Store** in your control panel.  
+<br> 
+To install SpaceControl using Composer, follow these steps:
 
 1. Open your terminal and go to your Craft project:
 
@@ -26,10 +28,8 @@ To install SpaceControl, follow these steps:
 
        composer require szenario/craft-spacecontrol.
 
-3. Install the plugin via `./craft install/plugin spacecontrol` via the CLI, or in the Control Panel, go to Settings →
+3. Install the plugin via `craft install/plugin spacecontrol` via the CLI, or in the Control Panel, go to Settings →
    Plugins and click the “Install” button for SpaceControl.
-
-You can also install SpaceControl via the **Plugin Store** in the Craft Control Panel.
 
 ## Settings
 
