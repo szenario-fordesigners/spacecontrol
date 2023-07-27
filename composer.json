@@ -31,6 +31,7 @@
     "developer": "szenario.design",
     "developerUrl": "https://szenario.design/",
     "documentationUrl": "https://github.com/szenario-fordesigners/spacecontrol",
+    "changelogUrl": "https://github.com/szenario-fordesigners/spacecontrol/blob/main/CHANGELOG.md",
     "class": "szenario\\craftspacecontrol\\SpaceControl"
   },
   "scripts": {
