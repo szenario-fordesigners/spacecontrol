@@ -1,54 +1,43 @@
 {
-	"name": "szenario/craft-spacecontrol",
-	"description": "Webspace Monitoring On Point",
-	"type": "craft-plugin",
-	"license": "proprietary",
-	"version": "1.0.0",
-	"keywords": [
-		"monitoring",
-		"diskspace"
-	],
-	"support": {
-		"email": "support@szenario.design",
-		"issues": "https://github.com/szenario-fordesigners/spacecontrol/issues?state=open",
-		"source": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
-		"docs": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
-		"rss": "https://github.com/szenario-fordesigners/spacecontrol/releases.atom"
-	},
-	"require": {
-		"php": ">=8.0.2",
-		"craftcms/cms": "^4.3.5",
-		"putyourlightson/craft-sprig-core": "^2.5.2"
-	},
-	"require-dev": {
-		"craftcms/ecs": "dev-main",
-		"craftcms/phpstan": "dev-main"
-	},
-	"autoload": {
-		"psr-4": {
-			"szenario\\craftspacecontrol\\": "src/"
-		}
-	},
-	"extra": {
-		"handle": "spacecontrol",
-		"name": "SpaceControl",
-		"developer": "szenario.design",
-		"documentationUrl": "https://github.com/szenario-fordesigners/spacecontrol",
-		"class": "szenario\\craftspacecontrol\\SpaceControl"
-	},
-	"scripts": {
-		"check-cs": "ecs check --ansi",
-		"fix-cs": "ecs check --ansi --fix",
-		"phpstan": "phpstan --memory-limit=1G"
-	},
-	"config": {
-		"sort-packages": true,
-		"platform": {
-			"php": "8.0.2"
-		},
-		"allow-plugins": {
-			"yiisoft/yii2-composer": true,
-			"craftcms/plugin-installer": true
-		}
-	}
+  "name": "szenario/craft-spacecontrol",
+  "description": "Webspace Monitoring On Point.",
+  "type": "craft-plugin",
+  "license": "proprietary",
+  "version": "1.0.0",
+  "keywords": [
+    "monitoring",
+    "diskspace"
+  ],
+  "support": {
+    "email": "support@szenario.design",
+    "issues": "https://github.com/szenario-fordesigners/spacecontrol/issues?state=open",
+    "source": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
+    "docs": "https://github.com/szenario-fordesigners/spacecontrol/craft-spacecontrol",
+    "rss": "https://github.com/szenario-fordesigners/spacecontrol/releases.atom"
+  },
+  "require": {
+    "php": ">=8.0.2",
+    "craftcms/cms": "^4.3.5",
+    "putyourlightson/craft-sprig-core": "^2.5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "szenario\\craftspacecontrol\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "SpaceControl",
+    "handle": "spacecontrol",
+    "developer": "szenario.design",
+    "developerUrl": "https://szenario.design/",
+    "documentationUrl": "https://github.com/szenario-fordesigners/spacecontrol",
+    "class": "szenario\\craftspacecontrol\\SpaceControl"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
 }
