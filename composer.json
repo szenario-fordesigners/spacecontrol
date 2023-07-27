@@ -31,7 +31,7 @@
 	},
 	"extra": {
 		"handle": "spacecontrol",
-		"name": "spacecontrol",
+		"name": "SpaceControl",
 		"developer": "szenario.design",
 		"documentationUrl": "https://github.com/szenario-fordesigners/spacecontrol",
 		"class": "szenario\\craftspacecontrol\\SpaceControl"
