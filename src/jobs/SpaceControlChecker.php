@@ -27,7 +27,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob
         if ($diskTotalSpace == 0) {
             return;
         }
-        
+
         $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
         $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
         $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpaceBytes * 100;
@@ -41,6 +41,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob
 
     protected function defaultDescription(): string
     {
-        return Craft::t('app', 'Spacecontrol');
+        return Craft::t('app', 'SpaceControl Disk Usage Check');
     }
 }
