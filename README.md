@@ -2,11 +2,7 @@
 
 ### Webspace Monitoring On Point.
 
-SpaceControl is a powerful plugin crafted to ensure you never run out of webspace. With its visually pleasing interface,
-it offers perfect precision and unwavering reliability, allowing you to stay informed about your webspace usage at all
-times and receive visual alerts if specific thresholds are approached.
-
-But that's not all – we have exciting plans for even more enhancements in the pipeline!
+SpaceControl was made to ensure you never run out of webspace. With its minimal interface the widget provides an easy overview of the current webspace usage and displays a warning when it’s time for taking action. A few pixels on your Craft Dashboard, a big step for your website.
 
 ![Screenshot](spacecontrol_demo-full.jpg)
 **Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
