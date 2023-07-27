@@ -8,8 +8,9 @@ overview of the current webspace usage and displays a warning when it’s time f
 A few pixels on your Craft Dashboard, a big step for your website.
 <br><br>
 ![Screenshot](spacecontrol_demo-full.jpg)
-**Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 
+![Screenshot](spacecontrol_demo-alerts.jpg)
+**Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 ## Requirements
 
 This plugin requires Craft CMS 4.3.5 or later and PHP 8.0.2 or later.
