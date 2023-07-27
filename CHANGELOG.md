@@ -1,5 +1,5 @@
-# Plugin spacecontrol Changelog
+# Release Notes for SpaceControl
 
-## 1.0.0 6.7.2023
-### Added
+## 1.0.0 - 2023-07-27
+
 - Initial release 🎉
