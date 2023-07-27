@@ -1,6 +1,6 @@
 # SpaceControl
 
-### Webspace monitoring on point.
+### Webspace Monitoring On Point.
 
 SpaceControl is a powerful plugin crafted to ensure you never run out of webspace. With its visually pleasing interface,
 it offers perfect precision and unwavering reliability, allowing you to stay informed about your webspace usage at all

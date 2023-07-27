@@ -1,6 +1,6 @@
 {
 	"name": "szenario/craft-spacecontrol",
-	"description": "Webspace Monitoring on point",
+	"description": "Webspace Monitoring On Point",
 	"type": "craft-plugin",
 	"license": "proprietary",
 	"version": "1.0.0",
