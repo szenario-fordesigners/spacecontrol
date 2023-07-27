@@ -26,7 +26,7 @@ To install SpaceControl using Composer, follow these steps:
 
 2. Then tell Composer to load the plugin:
 
-       composer require szenario/craft-spacecontrol.
+       composer require szenario/craft-spacecontrol
 
 3. Install the plugin via `craft install/plugin spacecontrol` via the CLI, or in the Control Panel, go to Settings →
    Plugins and click the “Install” button for SpaceControl.
