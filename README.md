@@ -17,7 +17,7 @@ This plugin requires Craft CMS 4.3.5 or later and PHP 8.0.2 or later.
 
 ## Installation
 
-The **easiest way** to install SpaceControl is via the Craft **Plugin Store** in your control panel.  
+The **easiest way** to install SpaceControl is via the Craft **<a href="https://plugins.craftcms.com/spacecontrol?craft4" target="_blank">Plugin Store</a>** in your control panel.  
 <br> 
 To install SpaceControl using Composer, follow these steps:
 
