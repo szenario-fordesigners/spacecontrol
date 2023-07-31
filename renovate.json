@@ -1,6 +1,13 @@
 {
-	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": ["@nuxtjs", ":dependencyDashboard"],
-	"forkProcessing": "enabled",
-	"ignoreDeps": ["php", "craftcms/cms"]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:nonOfficeHours",
+    ":dependencyDashboard"
+  ],
+  "forkProcessing": "enabled",
+  "ignoreDeps": [
+    "php",
+    "craftcms/cms"
+  ]
 }
