@@ -119,15 +119,21 @@ class SpaceControl extends Plugin
                 if ($event->plugin === $this) {
                     \craft\helpers\Queue::push(new SpaceControlChecker());
 
-                    // add widget to dashboard
-                    Craft::$app->dashboard->saveWidget(
-                        Craft::$app->dashboard->createWidget([
-                            'type' => SpaceControlWidget::class,
-                            'settings' => [
-                                'colspan' => 1,
-                            ]
-                        ])
-                    );
+                    try {
+                        // add widget to dashboard
+                        Craft::$app->dashboard->saveWidget(
+                            Craft::$app->dashboard->createWidget([
+                                'type' => SpaceControlWidget::class,
+                                'settings' => [
+                                    'colspan' => 1,
+                                ]
+                            ])
+                        );
+                    } catch (\Throwable $e) {
+                        // when installing via CLI, the dashboard is not available and widget install will fail
+                        Craft::warning('Could not save widget: ' . $e->getMessage(), 'spacecontrol');
+                    }
+
 
                     // Send them to our welcome screen
                     $request = Craft::$app->getRequest();
