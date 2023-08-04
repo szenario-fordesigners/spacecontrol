@@ -51,7 +51,7 @@ function drawCircle() {
     }, 500);
 
     if (usage >= 99.5) {
-        $('.sCC-percentage').text('—');
+        $('.sCC-percentage').text('full');
     } else {
         $('.sCC-percentage').text(usage + '%');
         counter(usage, 2000);
