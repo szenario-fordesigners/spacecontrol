@@ -49,8 +49,15 @@ function drawCircle() {
         $('.sCC-percentage').addClass('animate');
 
     }, 500);
-    $('.sCC-percentage').text(usage + '%');
-    counter(usage, 2000);
+
+    if (usage >= 99.5) {
+        $('.sCC-percentage').text('—');
+    } else {
+        $('.sCC-percentage').text(usage + '%');
+        counter(usage, 2000);
+    }
+
+
 }
 
 /** countUp Function */

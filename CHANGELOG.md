@@ -1,9 +1,10 @@
 # Release Notes for SpaceControl
 
 
-## 1.0.2 - 2023-08-03
+## 1.0.2 - 2023-08-04
 ### Fixed
 - Widget disk usage output
+- Widget output as soon as the value reaches 3 digits
 
 
 ## 1.0.1 - 2023-08-01
