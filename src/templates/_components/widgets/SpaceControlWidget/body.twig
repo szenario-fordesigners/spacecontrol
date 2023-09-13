@@ -4,14 +4,13 @@
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
 
 {% set isInitialized = settings.isInitialized %}
-{% set isInitialized = true %}
 
 {% set isConfigured = settings.diskTotalSpace > 0 %}
 
 {# only set alert if the plugin has been initialized #}
 {% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}
 
-{% set messages =  ["it's plenty of space","still enough space","it's getting tight","time for action: get more space"]%}
+{% set messages =  ["plenty of space left","still enough space","it's getting tight","time for action: get more space"]%}
 {% set messageIndex = 0 %}
 
 {% if diskUsagePercent < 50 %}
