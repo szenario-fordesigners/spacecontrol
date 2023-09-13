@@ -26,12 +26,14 @@ class DatabaseSizeHelper
 
             }elseif ($dbDriver === "pgsql") {
                 // PostgreSQL Query
-                $dbName = strtolower(App::parseEnv('CRAFT_DB_DATABASE'));
+                $dbName = strtolower(App::env('CRAFT_DB_DATABASE'));
                 $query = (new Query())
                     ->select([
-                        "SELECT pg_size_pretty( pg_database_size($dbName) )"
+                        "pg_database_size('{$dbName}') as dbsize"
                     ]);
-                $dbSize = $query->all();
+
+                $dbSizeVal = $query->one();
+                $dbSize = $dbSizeVal['dbsize'] ?? 0;
             }
             else {
                 $dbSize = 0;
