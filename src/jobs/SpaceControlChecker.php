@@ -6,7 +6,7 @@ use Craft;
 use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
-class SpaceControlChecker extends \craft\queue\BaseJob
+class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
     public function execute($queue): void
     {
@@ -42,5 +42,17 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     protected function defaultDescription(): string
     {
         return Craft::t('app', 'SpaceControl Disk Usage Check');
+    }
+
+    public function getTtr()
+    {
+//        max execution time of 30 seconds
+        return 30;
+    }
+
+    public function canRetry($attempt, $error)
+    {
+//        2 retries
+        return ($attempt < 2) && ($error instanceof TemporaryException);
     }
 }
