@@ -12,3 +12,11 @@
 <p>
     Fill in the available webspace for this project.
 </p>
+
+
+{{ forms.lightswitchField({
+    label: 'Add Database Size to calculation',
+    name: 'dbSizeInCalc',
+    value: settings.dbSizeInCalc,
+    on: settings.dbSizeInCalc,
+}) }}

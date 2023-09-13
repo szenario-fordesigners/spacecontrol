@@ -5,6 +5,7 @@ namespace szenario\craftspacecontrol\jobs;
 use Craft;
 use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
+use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
 
 class SpaceControlChecker extends \craft\queue\BaseJob
 {
@@ -22,14 +23,23 @@ class SpaceControlChecker extends \craft\queue\BaseJob
     // 2. save to setting
     private static function calculateDiskUsage()
     {
+        $dbSizeInCalc = SettingsHelper::getSetting('dbSizeInCalc');
         $diskTotalSpace = SettingsHelper::getSetting('diskTotalSpace');
 
         if ($diskTotalSpace == 0) {
             return;
         }
 
+
+
         $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
         $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
+
+        if ($dbSizeInCalc) {
+            $dbSize = DatabaseSizeHelper::getDBSize();
+            $diskUsageAbsolute += $dbSize;
+        }
+
         $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpaceBytes * 100;
 
         SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);

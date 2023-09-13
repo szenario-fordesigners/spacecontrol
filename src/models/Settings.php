@@ -24,6 +24,9 @@ class Settings extends Model
     public $diskTotalSpace = 0;
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
+
+    public bool $dbSizeInCalc = false;
+
     public $isInitialized = false;
 
 //    function __construct($config = [])
@@ -51,8 +54,10 @@ class Settings extends Model
 //                    'diskLimitPercent',
                     'diskTotalSpace',
                     'diskUsageAbsolute',
-                    'diskUsagePercent'],
+                    'diskUsagePercent',
+                    'dbSizeInCalc'],
                 'required'],
+            [['dbSizeInCalc'],'boolean']
         ];
     }
 }
