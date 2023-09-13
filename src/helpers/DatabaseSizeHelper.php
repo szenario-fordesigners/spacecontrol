@@ -17,10 +17,9 @@ class DatabaseSizeHelper
                 // MYSQL Query
                 $query = (new Query())
                     ->select([
-                        'ROUND(SUM(data_length + index_length), 2) AS "dbsize"'
+                        'ROUND(SUM(data_length + index_length), 0) AS "dbsize"'
                     ])
                     ->from('information_schema.tables');
-
                 $dbSizeVal = $query->one();
                 $dbSize = $dbSizeVal['dbsize'] ?? 0;
 
