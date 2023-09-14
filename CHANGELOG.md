@@ -1,6 +1,13 @@
 # Release Notes for SpaceControl
 
 
+## 1.1.0 - 2023-09-14
+### Added
+- Option to include database size in space used ([#7](https://github.com/szenario-fordesigners/spacecontrol/issues/7))
+### Fixed
+- A bug where multiple queue jobs which calculate used space would run at the same time
+- UI bug when widget was not initialized yet
+
 ## 1.0.2 - 2023-08-04
 ### Fixed
 - Widget output 
