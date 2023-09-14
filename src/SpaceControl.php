@@ -35,6 +35,7 @@ class SpaceControl extends Plugin
 
     protected function settingsHtml(): ?string
     {
+
         return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
@@ -81,6 +82,7 @@ class SpaceControl extends Plugin
                 $event->types[] = SpaceControlWidget::class;
             }
         );
+
 
 //        check disk space after file upload
         Event::on(

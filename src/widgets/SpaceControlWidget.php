@@ -7,6 +7,7 @@ use Craft;
 use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
 use szenario\craftspacecontrol\helpers\ConversionHelper;
+use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
 use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
@@ -50,8 +51,9 @@ class SpaceControlWidget extends Widget
 //
 //        $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
 //        $diskUsagePercentRounded = round($diskUsagePercentRaw);
-
+        //return "<pre>" . print_r(DatabaseSizeHelper::getDBSize()) . "</pre>";
         return Craft::$app->getView()->renderTemplate(
+
             'spacecontrol/_components/widgets/SpaceControlWidget/wrapper'
         );
     }

@@ -36,7 +36,7 @@ To install SpaceControl using Composer, follow these steps:
 
 An initial setup is obligatory to run the widget.
 
-![Screenshot](spacecontrol_demo-full-settings.jpg)
+![Screenshot](spacecontrol_demo-full-settings-v2.jpg)
 
 <div align="center">
   <sub>Made possible by</sub>

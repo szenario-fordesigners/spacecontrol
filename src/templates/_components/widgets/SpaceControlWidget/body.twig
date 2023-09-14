@@ -7,6 +7,8 @@
 
 {% set isConfigured = settings.diskTotalSpace > 0 %}
 
+{% set dbSizeInCalc = settings.dbSizeInCalc %}
+
 {# only set alert if the plugin has been initialized #}
 {% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}
 
@@ -60,7 +62,7 @@
                     {{ diskTotalSpace }}
                 </div>
                 <div class="sCC-webspace">
-                    Webspace
+                    Webspace {{ dbSizeInCalc }}
                 </div>
             </div>
             <div class="sCC-bottomArea-right">
