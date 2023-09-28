@@ -63,6 +63,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
     public function canRetry($attempt, $error)
     {
 //        2 retries
-        return ($attempt < 2) && ($error instanceof TemporaryException);
+        return ($attempt < 2);
     }
 }
