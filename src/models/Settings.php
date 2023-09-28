@@ -9,49 +9,41 @@ use craft\elements\User;
  */
 class Settings extends Model
 {
-    public $lastSent = 0;
-    // 1 day
-//    public $mailTimeThreshold = 86400;
-
-    public $adminRecipients = [];
-    public $clientRecipients = [];
-
+    // general settings
     public $diskTotalSpace = 0;
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
-
     public bool $dbSizeInCalc = false;
-
     public $isInitialized = false;
 
-    function __construct($config = [])
-    {
-        parent::__construct($config);
 
-        $admins = User::find()
-            ->admin(true)
-            ->all();
+    // notification settings
+    public $lastSent = 0;
+    public $notificationTimeThreshold = 86400;
+    public $notificationLimit = 90;
 
-        foreach ($admins as $admin) {
-            $this->adminRecipients[] = $admin->email;
-        }
-    }
+    // email notification settings
+    public bool $emailNotificationsEnabled = false;
+    public $emailRecipients = [];
 
     public function defineRules(): array
     {
         return [
             [
                 [
-//                    'lastSent',
-//                    'mailTimeThreshold',
-//                    'diskLimitPercent',
-                    'adminRecipients',
                     'diskTotalSpace',
                     'diskUsageAbsolute',
                     'diskUsagePercent',
-                    'dbSizeInCalc'],
+                    'dbSizeInCalc',
+                    'isInitialized',
+                    'lastSent',
+                    'notificationTimeThreshold',
+                    'notificationLimit',
+                    'emailNotificationsEnabled',
+                    'emailRecipients',
+                    ],
                 'required'],
-            [['dbSizeInCalc'],'boolean']
+            [['dbSizeInCalc', 'emailNotificationsEnabled'],'boolean'],
         ];
     }
 }

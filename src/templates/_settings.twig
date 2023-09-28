@@ -23,29 +23,30 @@
 }) }}
 
 
-{{ forms.editableTableField({
-    label: 'Administrator Email Addresses',
-    instructions: 'Enter email addresses of administrators.',
-    id: 'adminEmails',
-    name: 'adminEmails',
-    allowAdd: true,
-    allowDelete: true,
-    addRowLabel: 'Add Email Address',
-    cols: [
-        {
-            heading : 'Email Address',
-            type: 'email',
-        },
-    ],
-    rows: settings.adminRecipients
+{{ forms.lightswitchField({
+    label: 'Email Notifications (FIXME: This is a placeholder for now)',
+    name: 'emailNotificationsEnabled',
+    value: settings.emailNotificationsEnabled,
+    on: settings.emailNotificationsEnabled,
+}) }}
+
+{{ forms.textField({
+    label: 'Notification Limit Percent (FIXME: This is a placeholder for now)',
+    name: 'notificationLimit',
+    value: settings.notificationLimit,
+    type: 'number',
+    placeholder:'90',
+    min: 0,
+    max: 100,
+    size: 3
 }) }}
 
 
 {{ forms.editableTableField({
-    label: 'Client Email Addresses',
-    instructions: 'Enter email addresses of clients.',
-    id: 'clientRecipients',
-    name: 'clientRecipients',
+    label: 'Email Addresses',
+    instructions: 'Enter email addresses.',
+    id: 'emailRecipients',
+    name: 'emailRecipients',
     allowAdd: true,
     allowDelete: true,
     addRowLabel: 'Add Email Address',
@@ -55,6 +56,5 @@
             type: 'email',
         },
     ],
-    rows: settings.clientRecipients,
-    initJs: true
+    rows: settings.emailRecipients
 }) }}
