@@ -2,10 +2,8 @@
 
 namespace szenario\craftspacecontrol\NotificationService;
 
-use Craft;
-use craft\helpers\App;
-use craft\mail\Message;
 
+use szenario\craftspacecontrol\NotificationService\EmailNotification;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class NotificationService
@@ -54,31 +52,11 @@ class NotificationService
 
         // check if notifications are enabled and send them
         if ($settings->emailNotificationsEnabled) {
-            self::sendEmailNotification($settings, $template);
+            EmailNotification::sendEmailNotification($settings, $template);
         }
 
         // TODO: add slack here :))
     }
 
-    private static function sendEmailNotification($settings, $template) {
-        // get email addresses
-        $recipients = $settings->emailRecipients;
 
-        foreach ($recipients as $recipient) {
-            $email = $recipient[0];
-            if (empty($email)) {
-                continue;
-            }
-
-            $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
-
-            $message = new Message();
-            $message->setFrom('spacecontrol@' . $domain);
-            $message->setTo($email);
-            $message->setSubject($template->subject);
-            $message->setTextBody($template->body);
-
-            Craft::$app->getMailer()->send($message);
-        }
-    }
 }
