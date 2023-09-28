@@ -160,17 +160,15 @@ class SpaceControl extends Plugin
                 function (TemplateEvent $event) {
 
                     if ($event->template == 'spacecontrol/_components/_settings.twig') {
-
-                    }
-
-                    // Get view
-                    $view = Craft::$app->getView();
+                        // Get view
+                        $view = Craft::$app->getView();
 
 
-                    // Load JS file
+                        // Load JS file
 //                    $view->registerAssetBundle(CustomAssets::class);
 
-                    $view->registerJs('simonjs', View::POS_END);
+                        $view->registerJs('simonjs', View::POS_END);
+                    }
                 }
             );
         }
