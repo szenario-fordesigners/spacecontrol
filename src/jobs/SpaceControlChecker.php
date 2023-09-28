@@ -6,12 +6,15 @@ use Craft;
 use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
+use szenario\craftspacecontrol\NotificationService\NotificationService;
 
 class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
     public function execute($queue): void
     {
         self::calculateDiskUsage();
+
+        NotificationService::start();
     }
 
     public static function executeImmediately(): void
