@@ -150,5 +150,31 @@ class SpaceControl extends Plugin
                 }
             }
         );
+
+        // only inject js on control panel requests
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            // Load JS before page template is rendered
+            Event::on(
+                View::class,
+                View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+                function (TemplateEvent $event) {
+
+                    if ($event->template == 'spacecontrol/_components/_settings.twig') {
+
+                    }
+
+                    // Get view
+                    $view = Craft::$app->getView();
+
+
+                    // Load JS file
+//                    $view->registerAssetBundle(CustomAssets::class);
+
+                    $view->registerJs('simonjs', View::POS_END);
+                }
+            );
+        }
+
+
     }
 }

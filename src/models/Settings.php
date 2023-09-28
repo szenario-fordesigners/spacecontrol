@@ -1,25 +1,20 @@
 <?php
 
 namespace szenario\craftspacecontrol\models;
-
 use craft\base\Model;
+use craft\elements\User;
 
 /**
  * spacecontrol settings
  */
 class Settings extends Model
 {
-//    public $lastSent = 0;
-//    // 1 day
+    public $lastSent = 0;
+    // 1 day
 //    public $mailTimeThreshold = 86400;
-//    // 90 %
-//    public $diskLimitPercent = 90;
-//
-//    public $adminRecipients = '';
-//    public $clientRecipients = '';
-//
-//    private $admins = [];
 
+    public $adminRecipients = [];
+    public $clientRecipients = [];
 
     public $diskTotalSpace = 0;
     public $diskUsageAbsolute = 0;
@@ -29,20 +24,18 @@ class Settings extends Model
 
     public $isInitialized = false;
 
-//    function __construct($config = [])
-//    {
-//        parent::__construct($config);
-//
-//        $this->admins = User::find()
-//            ->admin(true)
-//            ->all();
-//
-//        foreach ($this->admins as $admin) {
-//            $this->adminRecipients .= $admin->email . ', ';
-//        }
-//
-//        $this->adminRecipients = substr($this->adminRecipients, 0, -2);
-//    }
+    function __construct($config = [])
+    {
+        parent::__construct($config);
+
+        $admins = User::find()
+            ->admin(true)
+            ->all();
+
+        foreach ($admins as $admin) {
+            $this->adminRecipients[] = $admin->email;
+        }
+    }
 
     public function defineRules(): array
     {
@@ -52,6 +45,7 @@ class Settings extends Model
 //                    'lastSent',
 //                    'mailTimeThreshold',
 //                    'diskLimitPercent',
+                    'adminRecipients',
                     'diskTotalSpace',
                     'diskUsageAbsolute',
                     'diskUsagePercent',

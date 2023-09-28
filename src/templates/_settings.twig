@@ -21,3 +21,40 @@
     value: settings.dbSizeInCalc,
     on: settings.dbSizeInCalc,
 }) }}
+
+
+{{ forms.editableTableField({
+    label: 'Administrator Email Addresses',
+    instructions: 'Enter email addresses of administrators.',
+    id: 'adminEmails',
+    name: 'adminEmails',
+    allowAdd: true,
+    allowDelete: true,
+    addRowLabel: 'Add Email Address',
+    cols: [
+        {
+            heading : 'Email Address',
+            type: 'email',
+        },
+    ],
+    rows: settings.adminRecipients
+}) }}
+
+
+{{ forms.editableTableField({
+    label: 'Client Email Addresses',
+    instructions: 'Enter email addresses of clients.',
+    id: 'clientRecipients',
+    name: 'clientRecipients',
+    allowAdd: true,
+    allowDelete: true,
+    addRowLabel: 'Add Email Address',
+    cols: [
+        {
+            heading : 'Email Address',
+            type: 'email',
+        },
+    ],
+    rows: settings.clientRecipients,
+    initJs: true
+}) }}
