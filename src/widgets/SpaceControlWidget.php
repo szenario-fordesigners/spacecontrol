@@ -51,7 +51,7 @@ class SpaceControlWidget extends Widget
 //
 //        $diskUsagePercentRaw = SettingsHelper::getSetting("diskUsagePercent");
 //        $diskUsagePercentRounded = round($diskUsagePercentRaw);
-        return "<pre>" . print_r(SettingsHelper::getSetting('adminRecipients')) . "</pre>";
+        //return "<pre>" . print_r(SettingsHelper::getSetting('adminRecipients')) . "</pre>";
         return Craft::$app->getView()->renderTemplate(
             'spacecontrol/_components/widgets/SpaceControlWidget/wrapper'
         );

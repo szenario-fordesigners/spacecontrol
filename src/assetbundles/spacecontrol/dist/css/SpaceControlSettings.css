@@ -1,0 +1,40 @@
+.sCS h3,
+.sCS p,
+.sCS .field {margin-top:0;margin-bottom:0;}
+
+.sCS .intField {
+    width:75px;
+}
+
+.sCS p.notice {
+    margin-bottom:1rem;
+    width:100%;
+}
+
+.sCS h3 {
+    margin-bottom:0.2rem;
+}
+.sCS .blockFix {
+    margin-bottom:0.4rem;
+}
+
+.sCS .flexContainer-addon {
+    padding-left:6px;
+}
+.sCS .flexContainer {display:flex;align-items:center;}
+
+.sCS .setting-block{
+    margin-bottom:2.2rem;
+    padding-top:0.2rem;
+    padding-bottom:0.2rem
+}
+
+.sCS .setting-block-send-notifications {
+    margin-bottom:1rem;
+}
+.sCS .fieldset {
+    //background-color:lightgray;
+    padding:1rem;
+    border: 1px solid var(--hairline-color);
+    border-radius: var(--large-border-radius);
+}

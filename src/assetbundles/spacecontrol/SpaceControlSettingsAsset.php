@@ -5,7 +5,7 @@ namespace szenario\craftspacecontrol\assetbundles\spacecontrol;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-class SpaceControlAsset extends AssetBundle
+class SpaceControlSettingsAsset extends AssetBundle
 {
     /**
      * @inheritdoc
@@ -23,11 +23,11 @@ class SpaceControlAsset extends AssetBundle
      * @inheritdoc
      */
     public $js = [
-        'js/SpaceControl.js'
+        'js/SpaceControlSettings.js'
     ];
 
     public $css = [
-        'css/SpaceControl.css',
+      //  'css/SpaceControl.css',
         'css/SpaceControlSettings.css'
     ];
 }

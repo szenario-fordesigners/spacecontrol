@@ -1,50 +1,67 @@
 {% import '_includes/forms.twig' as forms %}
 
-{{ forms.textField({
-    label: 'Webspace (in GB)',
-    name: 'diskTotalSpace',
-    value: settings.diskTotalSpace,
-    type: 'number',
-    placeholder:'1',
-    min: 0,
-    size: 4
-}) }}
+<div class="sCS">
 
-<p>
+    <div class="setting-block">
+<h3>Webspace</h3>
+<p class="notice">
     Enter available webspace for this project.
 </p>
+    <div class="flexContainer">
+    <div>
+        {{ forms.textField({
+            name: 'diskTotalSpace',
+            value: settings.diskTotalSpace,
+            class:"diskTotalSpace intField",
+            type: 'number',
+            placeholder:'1',
+            min: 0,
+            size: 3
+        }) }}
+    </div>
+        <div class="flexContainer-addon">GB</div>
 
+    </div>
+    </div>
+    <div class="setting-block">
+<h3 class="blockFix">"Used Space" Calculation</h3>
+
+        <div>
+            {{ forms.lightswitchField({
+                name: 'dbSizeInCalc',
+                value: settings.dbSizeInCalc,
+                on: settings.dbSizeInCalc,
+                onLabel:'include database',
+            }) }}
+        </div>
+    </div>
+
+    <h3 class="blockFix">Notifications</h3>
+    <div class="fieldset">
+    <div class="setting-block setting-block-send-notifications">
+
+
+    <h3 >Status</h3>
+        <p class="notice">
+            As soon as the used web space reaches 90% of the available space, a notification email will be sent to the addresses listed below.
+        </p>
 
 {{ forms.lightswitchField({
-    label: 'Include database size',
-    name: 'dbSizeInCalc',
-    value: settings.dbSizeInCalc,
-    on: settings.dbSizeInCalc,
-}) }}
-
-
-{{ forms.lightswitchField({
-    label: 'Email Notifications (FIXME: This is a placeholder for now)',
     name: 'emailNotificationsEnabled',
     value: settings.emailNotificationsEnabled,
     on: settings.emailNotificationsEnabled,
+    onLabel:'active',
 }) }}
 
-{{ forms.textField({
-    label: 'Notification Limit Percent (FIXME: This is a placeholder for now)',
-    name: 'notificationLimit',
-    value: settings.notificationLimit,
-    type: 'number',
-    placeholder:'90',
-    min: 0,
-    max: 100,
-    size: 3
-}) }}
+    </div>
 
+        <div class="setting-block">
+            <h3>Recipients</h3>
+            <p class="notice">
+                Add all the email addresses of the people who should receive the notification message. For example Project Leader, Technical Partner, Webdeveloper, Hosting Provider ...
+            </p>
 
 {{ forms.editableTableField({
-    label: 'Email Addresses',
-    instructions: 'Enter email addresses.',
     id: 'emailRecipients',
     name: 'emailRecipients',
     allowAdd: true,
@@ -58,3 +75,8 @@
     ],
     rows: settings.emailRecipients
 }) }}
+</div>
+
+    </div>
+</div>
+</div>
