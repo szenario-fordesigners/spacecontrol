@@ -48,6 +48,7 @@ class NotificationService
     }
 
     public static function sendNotifications($settings) {
+        Craft::info("Building notification template", "spacecontrol");
         // build notification template
         $template = self::notificationTemplate(
             "admin",
@@ -58,6 +59,7 @@ class NotificationService
 
         // check if notifications are enabled and send them
         if ($settings->emailNotificationsEnabled) {
+            Craft::info("Start sending email notifications", "spacecontrol");
             EmailNotification::sendEmailNotification($settings, $template);
         }
 

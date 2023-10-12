@@ -23,7 +23,7 @@ class Settings extends Model
     public $notificationLimit = 90;
 
     // email notification settings
-    public bool $emailNotificationsEnabled = false;
+    public $emailNotificationsEnabled = false;
     public $emailRecipients = [];
 
     public function defineRules(): array

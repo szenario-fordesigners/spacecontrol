@@ -16,11 +16,11 @@ class EmailNotification {
                 continue;
             }
 
+            Craft::info("Email notification recipient: " . $email, "spacecontrol");
+
             $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
 
             try {
-
-
                 $message = new Message();
                 $message->setFrom('spacecontrol@' . $domain);
                 $message->setTo($email);
