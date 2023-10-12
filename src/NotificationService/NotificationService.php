@@ -22,9 +22,11 @@ class NotificationService
         $notificationTimeThreshold = $settings->notificationTimeThreshold;
 
         // check if enough time has passed since the last time we sent notifications
-        if ($lastSent > time() -  $notificationTimeThreshold) {
+        if (time() - $lastSent < $notificationTimeThreshold) {
             return;
         }
+
+
 
         // actually send notifications
         self::sendNotifications($settings);
