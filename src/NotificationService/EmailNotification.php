@@ -25,7 +25,7 @@ class EmailNotification {
                 $message->setSender('spacecontrol@' . $domain);
                 $message->setFrom(['spacecontrol@' . $domain => 'Spacecontrol']);
                 $message->setTo($email);
-                $message->setSubject($template['subject']);
+                $message->setSubject(Craft::$app->sites->currentSite->name . ' ' . $template['subject']);
                 $message->setTextBody($template['body']);
 
                 Craft::$app->getMailer()->send($message);
