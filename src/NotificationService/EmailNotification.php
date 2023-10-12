@@ -32,6 +32,7 @@ class EmailNotification {
 
             } catch (\Exception $e) {
                 Craft::error('Failed to send email to: ' . $email . ' - ' . $template['subject'], "spacecontrol");
+                Craft::error($e->getMessage(), "spacecontrol");
                 continue;
             }
         }
