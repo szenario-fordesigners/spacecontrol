@@ -23,7 +23,7 @@ class EmailNotification {
             try {
                 $message = new Message();
                 $message->setSender('spacecontrol@' . $domain);
-                $message->setFrom('Spacecontrol');
+                $message->setFrom(['spacecontrol@' . $domain => 'Spacecontrol']);
                 $message->setTo($email);
                 $message->setSubject($template['subject']);
                 $message->setTextBody($template['body']);
