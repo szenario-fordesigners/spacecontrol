@@ -22,7 +22,8 @@ class EmailNotification {
 
             try {
                 $message = new Message();
-                $message->setFrom('spacecontrol@' . $domain);
+                $message->setSender('spacecontrol@' . $domain);
+                $message->setFrom('Spacecontrol');
                 $message->setTo($email);
                 $message->setSubject($template['subject']);
                 $message->setTextBody($template['body']);
