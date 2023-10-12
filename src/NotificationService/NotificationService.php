@@ -3,6 +3,7 @@
 namespace szenario\craftspacecontrol\NotificationService;
 
 
+use Craft;
 use szenario\craftspacecontrol\NotificationService\EmailNotification;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
@@ -13,8 +14,11 @@ class NotificationService
         $notificationLimit = $settings->notificationLimit;
         $diskUsagePercent = $settings->diskUsagePercent;
 
+        Craft::info("Starting notification service", "spacecontrol");
+
         // check if disk usage is below the notification limit
         if ($diskUsagePercent < $notificationLimit) {
+            Craft::info("Disk usage is below the notification limit. No notifications will be sent.", "spacecontrol");
             return;
         }
 
@@ -23,9 +27,9 @@ class NotificationService
 
         // check if enough time has passed since the last time we sent notifications
         if (time() - $lastSent < $notificationTimeThreshold) {
+            Craft::info("Not enough time has passed since the last notification. No notifications will be sent.", "spacecontrol");
             return;
         }
-
 
 
         // actually send notifications
