@@ -1,5 +1,11 @@
 # Release Notes for SpaceControl
 
+## 1.1.2 - 2023-10-26
+
+### Fixed
+
+- Widget output bug
+
 ## 1.1.1 - 2023-10-25
 
 ### Fixed
