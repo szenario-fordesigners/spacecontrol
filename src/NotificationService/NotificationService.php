@@ -12,29 +12,73 @@ class NotificationService
 {
     public static function start() {
         $settings = SettingsHelper::getPluginSettings();
-        $notificationLimit = $settings->notificationLimit;
         $diskUsagePercent = $settings->diskUsagePercent;
 
+        if (!$settings === null) {
+            Craft::warning("Settings object not found", "spacecontrol");
+            return;
+        }
+
         Craft::info("Starting notification service", "spacecontrol");
+        // »»---------------------► HIGH LIMIT ◄---------------------««
 
-        // check if disk usage is below the notification limit
-        if ($diskUsagePercent < $notificationLimit) {
-            Craft::info("Disk usage is below the notification limit. No notifications will be sent.", "spacecontrol");
-            return;
+        if ($diskUsagePercent >= $settings->notificationLimitHigh) {
+            Craft::info("Disk usage is above {$settings->notificationLimitHigh}%.", "spacecontrol");
+
+            if (!$settings->notificationHighTriggered) {
+                Craft::info("High notification not triggered yet.", "spacecontrol");
+                SettingsHelper::setValue("notificationHighTriggered", true);
+                SettingsHelper::setValue("notificationMediumTriggered", true);
+                SettingsHelper::setValue("notificationLowTriggered", true);
+                self::sendNotifications($settings);
+                return;
+            }
         }
 
-        $lastSent = $settings->lastSent;
-        $notificationTimeThreshold = $settings->notificationTimeThreshold;
-
-        // check if enough time has passed since the last time we sent notifications
-        if (time() - $lastSent < $notificationTimeThreshold) {
-            Craft::info("Not enough time has passed since the last notification. No notifications will be sent.", "spacecontrol");
-            return;
+        // reset high trigger
+        if ($diskUsagePercent < $settings->notificationLimitHigh && $settings->notificationHighTriggered) {
+            Craft::info("Disk usage is below {$settings->notificationLimitHigh}%. Resetting trigger...", "spacecontrol");
+            SettingsHelper::setValue("notificationHighTriggered", false);
         }
 
 
-        // actually send notifications
-        self::sendNotifications($settings);
+        // »»---------------------► MEDIUM LIMIT ◄---------------------««
+        if ($diskUsagePercent >= $settings->notificationLimitMedium) {
+            Craft::info("Disk usage is above {$settings->notificationLimitMedium}%.", "spacecontrol");
+
+            if (!$settings->notificationMediumTriggered) {
+                Craft::info("Medium notification not triggered yet.", "spacecontrol");
+                SettingsHelper::setValue("notificationMediumTriggered", true);
+                SettingsHelper::setValue("notificationLowTriggered", true);
+                self::sendNotifications($settings);
+                return;
+            }
+        }
+
+        // reset medium trigger
+        if ($diskUsagePercent < $settings->notificationLimitMedium && $settings->notificationMediumTriggered) {
+            Craft::info("Disk usage is below {$settings->notificationLimitMedium}%. Resetting trigger...", "spacecontrol");
+            SettingsHelper::setValue("notificationMediumTriggered", false);
+        }
+
+
+        // »»---------------------► LOW LIMIT ◄---------------------««
+        if ($diskUsagePercent >= $settings->notificationLimitLow) {
+            Craft::info("Disk usage is above {$settings->notificationLimitLow}%.", "spacecontrol");
+
+            if (!$settings->notificationLowTriggered) {
+                Craft::info("Low notification not triggered yet.", "spacecontrol");
+                SettingsHelper::setValue("notificationLowTriggered", true);
+                self::sendNotifications($settings);
+                return;
+            }
+        }
+
+        // reset low trigger
+        if ($diskUsagePercent < $settings->notificationLimitLow && $settings->notificationLowTriggered) {
+            Craft::info("Disk usage is below {$settings->notificationLimitLow}%. Resetting trigger...", "spacecontrol");
+            SettingsHelper::setValue("notificationLowTriggered", false);
+        }
     }
 
     private static function notificationTemplate(string $name, int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
@@ -44,7 +88,7 @@ class NotificationService
             "body" => "Notification
             
 Webspace: martinschnur.com
-91% of 1GB used
+{$percentUsed}% of {$totalDiskSpace}GB used
 
 To maintain optimal website performance please contact your hosting provider.            
           
@@ -75,6 +119,4 @@ developed by szenario"
 
         // TODO: add slack here :))
     }
-
-
 }

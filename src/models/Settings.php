@@ -18,9 +18,13 @@ class Settings extends Model
 
 
     // notification settings
-    public $lastSent = 0;
-    public $notificationTimeThreshold = 86400; // = 1 day
-    public $notificationLimit = 90;
+    public $notificationLimitLow = 90;
+    public $notificationLimitMedium = 95;
+    public $notificationLimitHigh = 99;
+
+    public $notificationLowTriggered = false;
+    public $notificationMediumTriggered = false;
+    public $notificationHighTriggered = false;
 
     // email notification settings
     public $emailNotificationsEnabled = false;
@@ -36,9 +40,6 @@ class Settings extends Model
                     'diskUsagePercent',
                     'dbSizeInCalc',
                     'isInitialized',
-                    'lastSent',
-                    'notificationTimeThreshold',
-                    'notificationLimit',
                     'emailNotificationsEnabled',
                     'emailRecipients',
                     ],
