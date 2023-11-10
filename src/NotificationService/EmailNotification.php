@@ -22,10 +22,9 @@ class EmailNotification {
 
             try {
                 $message = new Message();
-                $message->setSender('spacecontrol@' . $domain);
-                $message->setFrom(['spacecontrol@' . $domain => 'Spacecontrol']);
-                $message->setTo($email);
-                $message->setSubject(Craft::$app->sites->currentSite->name . ' ' . $template['subject']);
+                $message->setFrom(['no-reply@' . $domain => 'SpaceControl']);
+                $message->setSender('no-reply@' . $domain);$message->setTo($email);
+                $message->setSubject( $template['subject']);
                 $message->setTextBody($template['body']);
 
                 Craft::$app->getMailer()->send($message);

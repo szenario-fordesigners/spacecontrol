@@ -38,20 +38,17 @@
     </div>
 
     <h3 class="blockFix">Notifications</h3>
+    <p class="notice">
+        When the used webspace reaches 90%, 95% and 99% a notification email will be sent to the addresses listed below.
+    </p>
     <div class="fieldset">
     <div class="setting-block setting-block-send-notifications">
 
-
-    <h3 >Status</h3>
-        <p class="notice">
-            As soon as the used web space reaches 90% of the available space, a notification email will be sent to the addresses listed below.
-        </p>
-
+    <h3 class="blockFix">Activate Email Notifications</h3>
 {{ forms.lightswitchField({
     name: 'emailNotificationsEnabled',
     value: settings.emailNotificationsEnabled,
     on: settings.emailNotificationsEnabled,
-    onLabel:'active',
 }) }}
 
     </div>
@@ -59,7 +56,7 @@
         <div class="setting-block">
             <h3>Recipients</h3>
             <p class="notice">
-                Add all the email addresses of the people who should receive the notification message. For example Project Leader, Technical Partner, Webdeveloper, Hosting Provider ...
+                Add email addresses of people who should be informed about webspace issues, e.g. website owner, webadmin, webdeveloper, editor.
             </p>
 
 {{ forms.editableTableField({
@@ -67,6 +64,7 @@
     name: 'emailRecipients',
     allowAdd: true,
     allowDelete: true,
+    allowReorder:true,
     addRowLabel: 'Add Email Address',
     cols: [
         {
@@ -74,7 +72,7 @@
             type: 'email',
         },
     ],
-    rows: settings.emailRecipients
+    rows: settings.emailRecipients,
 }) }}
 </div>
 

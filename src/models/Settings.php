@@ -19,7 +19,7 @@ class Settings extends Model
 
     // notification settings
     public $lastSent = 0;
-    public $notificationTimeThreshold = 86400;
+    public $notificationTimeThreshold = 86400; // = 1 day
     public $notificationLimit = 90;
 
     // email notification settings

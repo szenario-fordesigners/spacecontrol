@@ -4,6 +4,7 @@ namespace szenario\craftspacecontrol\NotificationService;
 
 
 use Craft;
+use craft\helpers\App;
 use szenario\craftspacecontrol\NotificationService\EmailNotification;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
@@ -37,21 +38,30 @@ class NotificationService
     }
 
     private static function notificationTemplate(string $name, int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
+        $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
         return [
-            "subject" => "Your disk space is {$percentUsed}% full",
-            "body" => "Hey {$name},
-                your disk space is {$percentUsed}% full. You have {$usedDiskSpace} of {$totalDiskSpace} left.
+            "subject" => "{$percentUsed}% of webspace (martinschnur.com) used",
+            "body" => "Notification
+            
+Webspace: martinschnur.com
+91% of 1GB used
 
-                Best Regards,
-                spacecontrol"
+To maintain optimal website performance please contact your hosting provider.            
+          
+—
+
+SpaceControl
+Webspace Monitoring On Point for Craft CMS
+developed by szenario"
         ];
     }
+
 
     public static function sendNotifications($settings) {
         Craft::info("Building notification template", "spacecontrol");
         // build notification template
         $template = self::notificationTemplate(
-            "admin",
+            "",
             $settings->diskUsagePercent,
             $settings->diskUsageAbsolute,
             $settings->diskTotalSpace
