@@ -7,9 +7,9 @@ overview of the current webspace usage and displays a warning when it’s time f
 
 A few pixels on your Craft dashboard, a big step for your website.
 <br><br>
-![Screenshot](spacecontrol_demo-full.jpg)
+![Screenshot](spacecontrol-dashboard.jpg)
 
-![Screenshot](spacecontrol_demo-alerts.jpg)
+![Screenshot](spacecontrol-widget.jpg)
 **Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 ## Requirements
 
@@ -36,7 +36,7 @@ To install SpaceControl using Composer, follow these steps:
 
 An initial setup is obligatory to run the widget.
 
-![Screenshot](spacecontrol_demo-full-settings-v2.jpg)
+![Screenshot](spacecontrol-settings.jpg)
 
 <div align="center">
   <sub>Made possible by</sub>
