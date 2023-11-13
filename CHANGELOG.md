@@ -3,6 +3,7 @@
 ## 1.2.0 - 2023-11-13
 ### Added
 - Email notification service
+
 ## 1.1.2 - 2023-10-26
 ### Fixed
 - Widget output bug
