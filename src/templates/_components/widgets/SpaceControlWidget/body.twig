@@ -1,7 +1,9 @@
 {% set settings = plugin('spacecontrol').settings %}
-{% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1000) | filesize  | replace({'GIB': 'GB','MIB':'MB'}) %}
-{% set diskUsageAbsolute = settings.diskUsageAbsolute | filesize(1) | replace({'GIB': 'GB','MIB':'MB'}) %}
+{% set diskTotalSpace = (settings.diskTotalSpace * 1000 * 1000 * 1000)| replace({'GIB': 'GB','MIB':'MB'}) %}
+{% set diskUsageAbsolute = ((settings.diskUsageAbsolute / 1024 / 1024 / 1024) * 1000000000) | round() | replace({'GIB': 'GB','MIB':'MB'}) %}
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
+{% set diskUsagePercentFixed =  (diskUsageAbsolute / diskTotalSpace  * 100)|round %}
+{% set diskUsagePercent = diskUsagePercentFixed %}
 
 {% set isInitialized = settings.isInitialized %}
 
@@ -45,7 +47,7 @@
     {% else %}
         <div class="sCC-topArea">
             <div class="sCC-topArea-left">
-                <div class="sCC-circleContainer" data-usage="{{ diskUsagePercent }}">
+                <div class="sCC-circleContainer" data-usage="{{ diskUsagePercent }}" data-usageFixed="{{ diskUsagePercentFixed }}">
                     <div class="sCC-circle"></div>
                     <div class="sCC-circleInner"></div>
                 </div>
@@ -59,14 +61,14 @@
         <div class="sCC-bottomArea">
             <div class="sCC-bottomArea-left">
                 <div class="sCC-quota">
-                    {{ diskTotalSpace }}
+                    {{ diskTotalSpace / 1000000000}} GB
                 </div>
                 <div class="sCC-webspace">
                     Webspace
                 </div>
             </div>
             <div class="sCC-bottomArea-right">
-                <div class="sCC-used">{{ diskUsageAbsolute }} used</div>
+                <div class="sCC-used">{{ (diskUsageAbsolute / 1000000000 ) | round(2)}} GB used</div>
                 <div class="sCC-info">{{ messages[messageIndex] }}</div>
             </div>
         </div>
