@@ -37,7 +37,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
 
 
-        $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
+        $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1000;
         $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
 
         if ($dbSizeInCalc) {
@@ -47,7 +47,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
         $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpaceBytes * 100;
 
-        SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);
         SettingsHelper::setValue("diskUsageAbsolute", $diskUsageAbsolute);
         SettingsHelper::setValue("diskUsagePercent", $diskUsagePercent);
 

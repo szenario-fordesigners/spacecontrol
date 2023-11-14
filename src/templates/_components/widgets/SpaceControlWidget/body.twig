@@ -1,5 +1,5 @@
 {% set settings = plugin('spacecontrol').settings %}
-{% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1024) | filesize  | replace({'GIB': 'GB','MIB':'MB'}) %}
+{% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1000) | filesize  | replace({'GIB': 'GB','MIB':'MB'}) %}
 {% set diskUsageAbsolute = settings.diskUsageAbsolute | filesize(1) | replace({'GIB': 'GB','MIB':'MB'}) %}
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
 
