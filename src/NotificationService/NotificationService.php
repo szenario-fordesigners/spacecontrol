@@ -81,13 +81,13 @@ class NotificationService
         }
     }
 
-    private static function notificationTemplate(string $name, int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
+    private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
         $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
         return [
-            "subject" => "{$percentUsed}% of webspace (martinschnur.com) used",
+            "subject" => "{$percentUsed}% of webspace ({$domain}) used",
             "body" => "Notification
             
-Webspace: martinschnur.com
+Webspace: {$domain}
 {$percentUsed}% of {$totalDiskSpace}GB used
 
 To maintain optimal website performance please contact your hosting provider.            
@@ -105,7 +105,6 @@ developed by szenario"
         Craft::info("Building notification template", "spacecontrol");
         // build notification template
         $template = self::notificationTemplate(
-            "",
             $settings->diskUsagePercent,
             $settings->diskUsageAbsolute,
             $settings->diskTotalSpace

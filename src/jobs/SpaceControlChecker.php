@@ -41,7 +41,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             $dbSize = DatabaseSizeHelper::getDBSize();
             $diskUsageAbsolute += $dbSize;
         }
-        
+
         $diskUsagePercent = ($diskUsageAbsolute / 1024 / 1024 / 1024 * 1000000000) / ($diskTotalSpace  * 1000 * 1000 * 1000) * 100;
         $diskUsagePercent = round($diskUsagePercent);
 
