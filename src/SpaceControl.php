@@ -10,15 +10,17 @@ use craft\events\PluginEvent;
 use craft\fields\Assets;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
-use szenario\craftspacecontrol\models\Settings;
 use yii\base\Event;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
+use szenario\craftspacecontrol\models\Settings;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
+use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAsset;
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
+
 
 /**
  * spacecontrol plugin
@@ -150,5 +152,30 @@ class SpaceControl extends Plugin
                 }
             }
         );
+
+        // only inject js on control panel requests
+        // Remove the "novalidate" attribute from the form to ensure E-Mail validation.
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            // Load JS before page template is rendered
+
+
+            Event::on(
+                View::class,
+                View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+                function (TemplateEvent $event) {
+                    if ($event->template == 'settings/plugins/_settings.twig') {
+                        // Get view
+                        Craft::$app->getView()->registerAssetBundle(SpaceControlSettingsAsset::class);
+
+
+                        $view = Craft::$app->getView();
+
+
+
+                        //$view->registerJs('let mainForm = document.getElementById("main-form");if (mainForm) {mainForm.removeAttribute("novalidate");}', View::POS_END);
+                    }
+                }
+            );
+        }
     }
 }

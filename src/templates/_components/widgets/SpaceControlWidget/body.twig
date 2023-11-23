@@ -1,6 +1,6 @@
 {% set settings = plugin('spacecontrol').settings %}
-{% set diskTotalSpace = (settings.diskTotalSpace * 1024 * 1024 * 1024) | filesize  | replace({'GIB': 'GB','MIB':'MB'}) %}
-{% set diskUsageAbsolute = settings.diskUsageAbsolute | filesize(1) | replace({'GIB': 'GB','MIB':'MB'}) %}
+{% set diskTotalSpace = (settings.diskTotalSpace * 1000 * 1000 * 1000) %}
+{% set diskUsageAbsolute = ((settings.diskUsageAbsolute / 1024 / 1024 / 1024) * 1000000000) | round()  %}
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
 
 {% set isInitialized = settings.isInitialized %}
@@ -59,14 +59,14 @@
         <div class="sCC-bottomArea">
             <div class="sCC-bottomArea-left">
                 <div class="sCC-quota">
-                    {{ diskTotalSpace }}
+                    {{ diskTotalSpace / 1000000000}} GB
                 </div>
                 <div class="sCC-webspace">
                     Webspace
                 </div>
             </div>
             <div class="sCC-bottomArea-right">
-                <div class="sCC-used">{{ diskUsageAbsolute }} used</div>
+                <div class="sCC-used">{{ (diskUsageAbsolute / 1000000000 ) | round(2)}} GB used</div>
                 <div class="sCC-info">{{ messages[messageIndex] }}</div>
             </div>
         </div>

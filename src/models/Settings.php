@@ -1,63 +1,50 @@
 <?php
 
 namespace szenario\craftspacecontrol\models;
-
 use craft\base\Model;
+use craft\elements\User;
 
 /**
  * spacecontrol settings
  */
 class Settings extends Model
 {
-//    public $lastSent = 0;
-//    // 1 day
-//    public $mailTimeThreshold = 86400;
-//    // 90 %
-//    public $diskLimitPercent = 90;
-//
-//    public $adminRecipients = '';
-//    public $clientRecipients = '';
-//
-//    private $admins = [];
-
-
+    // general settings
     public $diskTotalSpace = 0;
     public $diskUsageAbsolute = 0;
     public $diskUsagePercent = 0;
-
     public bool $dbSizeInCalc = false;
-
     public $isInitialized = false;
 
-//    function __construct($config = [])
-//    {
-//        parent::__construct($config);
-//
-//        $this->admins = User::find()
-//            ->admin(true)
-//            ->all();
-//
-//        foreach ($this->admins as $admin) {
-//            $this->adminRecipients .= $admin->email . ', ';
-//        }
-//
-//        $this->adminRecipients = substr($this->adminRecipients, 0, -2);
-//    }
+
+    // notification settings
+    public $notificationLimitLow = 90;
+    public $notificationLimitMedium = 95;
+    public $notificationLimitHigh = 99;
+
+    public $notificationLowTriggered = false;
+    public $notificationMediumTriggered = false;
+    public $notificationHighTriggered = false;
+
+    // email notification settings
+    public $emailNotificationsEnabled = false;
+    public $emailRecipients = [];
 
     public function defineRules(): array
     {
         return [
             [
                 [
-//                    'lastSent',
-//                    'mailTimeThreshold',
-//                    'diskLimitPercent',
                     'diskTotalSpace',
                     'diskUsageAbsolute',
                     'diskUsagePercent',
-                    'dbSizeInCalc'],
+                    'dbSizeInCalc',
+                    'isInitialized',
+                    'emailNotificationsEnabled',
+                    'emailRecipients',
+                    ],
                 'required'],
-            [['dbSizeInCalc'],'boolean']
+            [['dbSizeInCalc', 'emailNotificationsEnabled'],'boolean'],
         ];
     }
 }

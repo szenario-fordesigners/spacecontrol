@@ -6,17 +6,22 @@ use Craft;
 use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
+use szenario\craftspacecontrol\NotificationService\NotificationService;
 
 class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
     public function execute($queue): void
     {
         self::calculateDiskUsage();
+
+        NotificationService::start();
     }
 
     public static function executeImmediately(): void
     {
         self::calculateDiskUsage();
+
+        NotificationService::start();
     }
 
     // 1. get current disk usage
@@ -30,9 +35,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             return;
         }
 
-
-
-        $diskTotalSpaceBytes = $diskTotalSpace * 1024 * 1024 * 1024;
         $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
 
         if ($dbSizeInCalc) {
@@ -40,9 +42,9 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             $diskUsageAbsolute += $dbSize;
         }
 
-        $diskUsagePercent = $diskUsageAbsolute / $diskTotalSpaceBytes * 100;
+        $diskUsagePercent = ($diskUsageAbsolute / 1024 / 1024 / 1024 * 1000000000) / ($diskTotalSpace  * 1000 * 1000 * 1000) * 100;
+        $diskUsagePercent = round($diskUsagePercent);
 
-        SettingsHelper::setValue("diskTotalSpace", $diskTotalSpace);
         SettingsHelper::setValue("diskUsageAbsolute", $diskUsageAbsolute);
         SettingsHelper::setValue("diskUsagePercent", $diskUsagePercent);
 
@@ -63,6 +65,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
     public function canRetry($attempt, $error)
     {
 //        2 retries
-        return ($attempt < 2) && ($error instanceof TemporaryException);
+        return ($attempt < 2);
     }
 }

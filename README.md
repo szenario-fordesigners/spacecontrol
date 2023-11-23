@@ -3,13 +3,13 @@
 ### Webspace Monitoring On Point.
 
 SpaceControl was made to ensure you never run out of webspace. With its minimal interface the widget provides an easy
-overview of the current webspace usage and displays a warning when it’s time for taking action.  
+overview of the current webspace usage, displays a warning and sends email notifications when it’s time for taking action.  
 
 A few pixels on your Craft dashboard, a big step for your website.
 <br><br>
-![Screenshot](spacecontrol_demo-full.jpg)
+![Screenshot](spacecontrol-dashboard.jpg)
 
-![Screenshot](spacecontrol_demo-alerts.jpg)
+![Screenshot](spacecontrol-widget.jpg)
 **Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 ## Requirements
 
@@ -36,7 +36,7 @@ To install SpaceControl using Composer, follow these steps:
 
 An initial setup is obligatory to run the widget.
 
-![Screenshot](spacecontrol_demo-full-settings-v2.jpg)
+![Screenshot](spacecontrol-settings.jpg)
 
 <div align="center">
   <sub>Made possible by</sub>

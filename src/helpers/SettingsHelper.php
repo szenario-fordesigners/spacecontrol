@@ -18,27 +18,6 @@ class SettingsHelper
         return $settings->$key;
     }
 
-    public static function getAdminRecipientsArray()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        $adminRecipientsStr = $settings->adminRecipients;
-        if (!strlen($adminRecipientsStr)) return [];
-
-        $adminRecipients = explode(', ', $adminRecipientsStr);
-        return ValidationHelper::validateEmailAddresses($adminRecipients);
-    }
-
-    public static function getClientRecipientsArray()
-    {
-        $settings = SettingsHelper::getPluginSettings();
-        $clientRecipientsStr = $settings->clientRecipients;
-        if (!strlen($clientRecipientsStr)) return [];
-
-        $clientRecipients = explode(', ', $clientRecipientsStr);
-        return ValidationHelper::validateEmailAddresses($clientRecipients);
-    }
-
-
     // PLUGIN SETTINGS SETTER
     public static function setValue($key, $value)
     {
