@@ -105,7 +105,7 @@ developed by szenario"
         Craft::info("Building notification template", "spacecontrol");
         // build notification template
         $template = self::notificationTemplate(
-            $settings->diskUsagePercent,
+            min($settings->diskUsagePercent, 100),
             $settings->diskUsageAbsolute,
             $settings->diskTotalSpace
         );
