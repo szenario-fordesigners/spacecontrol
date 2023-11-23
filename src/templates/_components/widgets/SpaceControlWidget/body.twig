@@ -2,8 +2,6 @@
 {% set diskTotalSpace = (settings.diskTotalSpace * 1000 * 1000 * 1000) %}
 {% set diskUsageAbsolute = ((settings.diskUsageAbsolute / 1024 / 1024 / 1024) * 1000000000) | round()  %}
 {% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
-{% set diskUsagePercentFixed =  (diskUsageAbsolute / diskTotalSpace  * 100)|round %}
-{% set diskUsagePercent = diskUsagePercentFixed %}
 
 {% set isInitialized = settings.isInitialized %}
 
