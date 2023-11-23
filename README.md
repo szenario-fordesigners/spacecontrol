@@ -3,7 +3,7 @@
 ### Webspace Monitoring On Point.
 
 SpaceControl was made to ensure you never run out of webspace. With its minimal interface the widget provides an easy
-overview of the current webspace usage and displays a warning when it’s time for taking action.  
+overview of the current webspace usage, displays a warning and sends email notifications when it’s time for taking action.  
 
 A few pixels on your Craft dashboard, a big step for your website.
 <br><br>
