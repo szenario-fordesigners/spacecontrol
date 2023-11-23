@@ -1,6 +1,6 @@
 # Release Notes for SpaceControl
 
-## 1.2.0 - 2023-11-13
+## 1.2.0 - 2023-11-23
 ### Added
 - Email notification service
 
