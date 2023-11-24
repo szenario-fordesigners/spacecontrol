@@ -82,12 +82,14 @@ class NotificationService
     }
 
     private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
-        $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
+
+        $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
+        $truncatedDomain = rtrim($domain, '/') ?: $domain;
         return [
-            "subject" => "{$percentUsed}% of webspace ({$domain}) used",
+            "subject" => "{$percentUsed}% of webspace ({$truncatedDomain}) used",
             "body" => "Notification
             
-Webspace: {$domain}
+Webspace: {$truncatedDomain}
 {$percentUsed}% of {$totalDiskSpace}GB used
 
 To maintain optimal website performance please contact your hosting provider.            
