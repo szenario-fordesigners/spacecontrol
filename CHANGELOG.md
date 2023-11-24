@@ -1,5 +1,9 @@
 # Release Notes for SpaceControl
 
+## 1.2.1.1 - 2023-11-24
+### Fixed
+- missing PRIMARY_SITE_URL throwing exceptions ([#10](https://github.com/szenario-fordesigners/spacecontrol/issues/10))
+
 ## 1.2.1 - 2023-11-24
 ### Fixed
 - A bug where missing PRIMARY_SITE_URL throwing exception ([#10](https://github.com/szenario-fordesigners/spacecontrol/issues/10))
