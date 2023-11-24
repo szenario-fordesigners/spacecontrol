@@ -18,12 +18,14 @@ class EmailNotification {
 
             Craft::info("Email notification recipient: " . $email, "spacecontrol");
 
-            $domain = explode('//', App::env('PRIMARY_SITE_URL'))[1];
+            $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
+            $truncatedDomain = rtrim($domain, '/') ?: $domain;
 
             try {
                 $message = new Message();
-                $message->setFrom(['no-reply@' . $domain => 'SpaceControl']);
-                $message->setSender('no-reply@' . $domain);$message->setTo($email);
+                $message->setFrom(['no-reply@' . $truncatedDomain => 'SpaceControl']);
+                $message->setSender('no-reply@' . $truncatedDomain);
+                $message->setTo($email);
                 $message->setSubject( $template['subject']);
                 $message->setTextBody($template['body']);
 
