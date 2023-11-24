@@ -18,8 +18,13 @@ class EmailNotification {
 
             Craft::info("Email notification recipient: " . $email, "spacecontrol");
 
-            $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
-            $truncatedDomain = rtrim($domain, '/') ?: $domain;
+            try {
+                $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
+                $truncatedDomain = rtrim($domain, '/') ?: $domain;
+            } catch (\Exception $e) {
+                Craft::error("Could not get domain", "spacecontrol");
+                return null;
+            }
 
             try {
                 $message = new Message();

@@ -83,8 +83,14 @@ class NotificationService
 
     private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
 
-        $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
-        $truncatedDomain = rtrim($domain, '/') ?: $domain;
+        try {
+            $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
+            $truncatedDomain = rtrim($domain, '/') ?: $domain;
+        } catch (\Exception $e) {
+            Craft::error("Could not get domain", "spacecontrol");
+            return null;
+        }
+        
         return [
             "subject" => "{$percentUsed}% of webspace ({$truncatedDomain}) used",
             "body" => "Notification
@@ -111,6 +117,11 @@ developed by szenario"
             $settings->diskUsageAbsolute,
             $settings->diskTotalSpace
         );
+
+        if ($template === null) {
+            Craft::warning("Notification Template object not found", "spacecontrol");
+            return;
+        }
 
         // check if notifications are enabled and send them
         if ($settings->emailNotificationsEnabled) {
