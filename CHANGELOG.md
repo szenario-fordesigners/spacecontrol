@@ -1,5 +1,9 @@
 # Release Notes for SpaceControl
 
+## 1.2.3 - 2023-11-27
+### Fixed
+- A bug where it was not possible to save settings
+
 ## 1.2.2 - 2023-11-24
 ### Fixed
 - missing PRIMARY_SITE_URL throwing exceptions ([#10](https://github.com/szenario-fordesigners/spacecontrol/issues/10))
