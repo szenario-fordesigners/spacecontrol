@@ -27,7 +27,7 @@ class Settings extends Model
     public $notificationHighTriggered = false;
 
     // email notification settings
-    public $emailNotificationsEnabled = false;
+    public  bool $emailNotificationsEnabled = false;
     public $emailRecipients = [];
 
     public function defineRules(): array
