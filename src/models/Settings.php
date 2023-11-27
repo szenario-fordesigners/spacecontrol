@@ -41,7 +41,6 @@ class Settings extends Model
                     'dbSizeInCalc',
                     'isInitialized',
                     'emailNotificationsEnabled',
-                    'emailRecipients',
                     ],
                 'required'],
             [['dbSizeInCalc', 'emailNotificationsEnabled'],'boolean'],
