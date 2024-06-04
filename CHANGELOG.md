@@ -1,5 +1,11 @@
 # Release Notes for SpaceControl
 
+## 1.2.4 - 2024-06-04
+### Added
+- Craft 5 compatibility
+### Improvements
+- Better events for calculating used space
+
 ## 1.2.3 - 2023-11-27
 ### Fixed
 - A bug where it was not possible to save settings
