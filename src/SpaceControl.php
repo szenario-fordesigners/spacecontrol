@@ -5,9 +5,9 @@ namespace szenario\craftspacecontrol;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\events\LocateUploadedFilesEvent;
+use craft\elements\Entry;
+use craft\events\ModelEvent;
 use craft\events\PluginEvent;
-use craft\fields\Assets;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
 use yii\base\Event;
@@ -20,7 +20,6 @@ use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAss
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
-
 
 /**
  * spacecontrol plugin
@@ -87,13 +86,13 @@ class SpaceControl extends Plugin
 
 
 //        check disk space after file upload
-        // Event::on(
-        //     Assets::class,
-        //     Assets::EVENT_LOCATE_UPLOADED_FILES,
-        //     function (LocateUploadedFilesEvent $event) {
-        //         \craft\helpers\Queue::push(new SpaceControlChecker());
-        //     }
-        // );
+         Event::on(
+             Entry::class,
+             Entry::EVENT_AFTER_SAVE,
+             function (ModelEvent $event) {
+                 \craft\helpers\Queue::push(new SpaceControlChecker());
+             }
+         );
 
 //        check disk space after user logged in. this is no background job.
         Event::on(\yii\web\User::class,
@@ -109,7 +108,7 @@ class SpaceControl extends Plugin
             View::class,
             View::EVENT_BEFORE_RENDER_TEMPLATE,
             function (TemplateEvent $event) {
-                if ($event->template == "settings" && $event->templateMode == "cp") {
+                if ($event->template == "assets/_index" && $event->templateMode == "cp") {
                     \craft\helpers\Queue::push(new SpaceControlChecker());
                 }
             }
