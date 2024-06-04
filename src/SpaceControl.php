@@ -87,13 +87,13 @@ class SpaceControl extends Plugin
 
 
 //        check disk space after file upload
-        Event::on(
-            Assets::class,
-            Assets::EVENT_LOCATE_UPLOADED_FILES,
-            function (LocateUploadedFilesEvent $event) {
-                \craft\helpers\Queue::push(new SpaceControlChecker());
-            }
-        );
+        // Event::on(
+        //     Assets::class,
+        //     Assets::EVENT_LOCATE_UPLOADED_FILES,
+        //     function (LocateUploadedFilesEvent $event) {
+        //         \craft\helpers\Queue::push(new SpaceControlChecker());
+        //     }
+        // );
 
 //        check disk space after user logged in. this is no background job.
         Event::on(\yii\web\User::class,
