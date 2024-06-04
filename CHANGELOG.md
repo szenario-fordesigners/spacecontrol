@@ -1,5 +1,9 @@
 # Release Notes for SpaceControl
 
+## 1.3.2 - 2024-06-04
+### Removed
+- Craft 5 compatibility, will be added again
+
 ## 1.3.1 - 2024-06-04
 ### Added
 - Craft 5 compatibility
