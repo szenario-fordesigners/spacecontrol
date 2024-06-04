@@ -3,6 +3,7 @@
 ## 1.3.1 - 2024-06-04
 ### Added
 - Craft 5 compatibility
+
 ### Improvements
 - Better events for calculating used space
 
