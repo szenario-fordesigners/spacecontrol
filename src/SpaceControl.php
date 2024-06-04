@@ -7,6 +7,7 @@ use craft\base\Model;
 use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\helpers\ElementHelper;
 use craft\events\PluginEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
@@ -86,13 +87,18 @@ class SpaceControl extends Plugin
 
 
 //        check disk space after file upload
-         Event::on(
-             Entry::class,
-             Entry::EVENT_AFTER_SAVE,
-             function (ModelEvent $event) {
-                 \craft\helpers\Queue::push(new SpaceControlChecker());
-             }
-         );
+        Event::on(
+            Entry::class,
+            Entry::EVENT_AFTER_SAVE,
+            function (ModelEvent $event) {
+                if (
+                    !ElementHelper::isDraft($event->sender) &&
+                    !ElementHelper::rootElement($event->sender)->isProvisionalDraft
+                ) {
+                    \craft\helpers\Queue::push(new SpaceControlChecker());
+                }
+            }
+        );
 
 //        check disk space after user logged in. this is no background job.
         Event::on(\yii\web\User::class,
