@@ -13,7 +13,7 @@ A few pixels on your Craft dashboard, a big step for your website.
 **Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
 ## Requirements
 
-This plugin requires Craft CMS 4.3.5 or later and PHP 8.0.2 or later.
+This plugin requires Craft CMS 5.0.0 or later and PHP 8.2 or later.
 
 ## Installation
 
