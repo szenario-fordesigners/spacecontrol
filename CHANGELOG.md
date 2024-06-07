@@ -1,4 +1,13 @@
 # Release Notes for SpaceControl
+
+## 4.0.2 - 2024-06-07
+### Improvements
+- Align versioning with Craft CMS
+
+## 4.0.1 - 2024-06-07
+### Improvements
+- Align versioning with Craft CMS
+
 ## 4.0.0 - 2024-06-07
 ### Improvements
 - Align versioning with Craft CMS
