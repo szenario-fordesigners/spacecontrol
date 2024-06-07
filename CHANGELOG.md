@@ -1,4 +1,8 @@
 # Release Notes for SpaceControl
+## 4.0.0 - 2024-06-07
+### Improvements
+- Align versioning with Craft CMS
+
 
 ## 1.3.2 - 2024-06-04
 ### Removed
