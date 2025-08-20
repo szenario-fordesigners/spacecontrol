@@ -92,21 +92,15 @@ class SpaceControl extends Plugin
             function (ModelEvent $event) {
                 $asset = $event->sender;
 
-                // Log the asset details for debugging
-                Craft::info("Asset save event triggered for asset ID: " . $asset->id, 'spacecontrol');
-
                 // Check if it's a draft or provisional draft
                 if (ElementHelper::isDraft($asset)) {
-                    Craft::info("Skipping disk usage calculation - asset is a draft", 'spacecontrol');
                     return;
                 }
 
                 if (ElementHelper::rootElement($asset)->isProvisionalDraft) {
-                    Craft::info("Skipping disk usage calculation - asset is a provisional draft", 'spacecontrol');
                     return;
                 }
 
-                Craft::info("Triggering disk usage calculation after asset save (skip throttling)", 'spacecontrol');
                 $job = new SpaceControlChecker();
                 $job->skipThrottling = true;
                 \craft\helpers\Queue::push($job);
@@ -117,7 +111,6 @@ class SpaceControl extends Plugin
             \craft\elements\Asset::class,
             \craft\elements\Asset::EVENT_AFTER_DELETE,
             function (\yii\base\Event $event) {
-                Craft::info("Triggering disk usage calculation after asset delete (skip throttling)", 'spacecontrol');
                 $job = new SpaceControlChecker();
                 $job->skipThrottling = true;
                 \craft\helpers\Queue::push($job);
