@@ -5,7 +5,6 @@ namespace szenario\craftspacecontrol;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
 use craft\events\PluginEvent;
@@ -27,7 +26,7 @@ use putyourlightson\sprig\Sprig;
  *
  * @author szenario.design <support@szenario.design>
  * @copyright szenario.design
- * @license MIT
+ * @license proprietary
  */
 class SpaceControl extends Plugin
 {
@@ -86,48 +85,76 @@ class SpaceControl extends Plugin
         );
 
 
-//        check disk space after file upload
+        // Check disk space after asset operations (upload, move, delete)
         Event::on(
-            Entry::class,
-            Entry::EVENT_AFTER_SAVE,
+            \craft\elements\Asset::class,
+            \craft\elements\Asset::EVENT_AFTER_PROPAGATE,
             function (ModelEvent $event) {
-                if (
-                    !ElementHelper::isDraft($event->sender) &&
-                    !ElementHelper::rootElement($event->sender)->isProvisionalDraft
-                ) {
-                    \craft\helpers\Queue::push(new SpaceControlChecker());
+                $asset = $event->sender;
+
+                // Log the asset details for debugging
+                Craft::info("Asset save event triggered for asset ID: " . $asset->id, 'spacecontrol');
+
+                // Check if it's a draft or provisional draft
+                if (ElementHelper::isDraft($asset)) {
+                    Craft::info("Skipping disk usage calculation - asset is a draft", 'spacecontrol');
+                    return;
                 }
+
+                if (ElementHelper::rootElement($asset)->isProvisionalDraft) {
+                    Craft::info("Skipping disk usage calculation - asset is a provisional draft", 'spacecontrol');
+                    return;
+                }
+
+                Craft::info("Triggering disk usage calculation after asset save (skip throttling)", 'spacecontrol');
+                $job = new SpaceControlChecker();
+                $job->skipThrottling = true;
+                \craft\helpers\Queue::push($job);
             }
         );
 
-//        check disk space after user logged in. this is no background job.
-        Event::on(\yii\web\User::class,
+        Event::on(
+            \craft\elements\Asset::class,
+            \craft\elements\Asset::EVENT_AFTER_DELETE,
+            function (\yii\base\Event $event) {
+                Craft::info("Triggering disk usage calculation after asset delete (skip throttling)", 'spacecontrol');
+                $job = new SpaceControlChecker();
+                $job->skipThrottling = true;
+                \craft\helpers\Queue::push($job);
+            }
+        );
+
+        // Check disk space after CP admin login (but not front-end logins)
+        Event::on(
+            \yii\web\User::class,
             \yii\web\User::EVENT_AFTER_LOGIN,
             function (\yii\web\UserEvent $event) {
-                \craft\helpers\Queue::push(new SpaceControlChecker());
-            });
-
-
-//        check disk space after settings template is rendered
-//        this is gets triggered e.g. when the webspace setting is changed
-        Event::on(
-            View::class,
-            View::EVENT_BEFORE_RENDER_TEMPLATE,
-            function (TemplateEvent $event) {
-                if ($event->template == "assets/_index" && $event->templateMode == "cp") {
+                $request = Craft::$app->getRequest();
+                if ($request->isCpRequest && $event->identity->admin) {
                     \craft\helpers\Queue::push(new SpaceControlChecker());
                 }
             }
         );
 
+
+        // Check disk space after plugin settings are saved
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                    $job = new SpaceControlChecker();
+                    $job->skipThrottling = true;
+                    \craft\helpers\Queue::push($job);
+                }
+            }
+        );
 
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
-                    \craft\helpers\Queue::push(new SpaceControlChecker());
-
                     try {
                         // add widget to dashboard
                         Craft::$app->dashboard->saveWidget(
@@ -158,29 +185,20 @@ class SpaceControl extends Plugin
             }
         );
 
-        // only inject js on control panel requests
-        // Remove the "novalidate" attribute from the form to ensure E-Mail validation.
-        if (Craft::$app->getRequest()->getIsCpRequest()) {
-            // Load JS before page template is rendered
 
-
-            Event::on(
-                View::class,
-                View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-                function (TemplateEvent $event) {
-                    if ($event->template == 'settings/plugins/_settings.twig') {
-                        // Get view
+        // Register settings assets only for our plugin's settings page
+        Event::on(
+            View::class,
+            View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+            function (TemplateEvent $event) {
+                if ($event->template == 'settings/plugins/_settings.twig') {
+                    // Check if this is our plugin's settings page
+                    $request = Craft::$app->getRequest();
+                    if ($request->getSegment(3) === 'spacecontrol') {
                         Craft::$app->getView()->registerAssetBundle(SpaceControlSettingsAsset::class);
-
-
-                        $view = Craft::$app->getView();
-
-
-
-                        //$view->registerJs('let mainForm = document.getElementById("main-form");if (mainForm) {mainForm.removeAttribute("novalidate");}', View::POS_END);
                     }
                 }
-            );
-        }
+            }
+        );
     }
 }

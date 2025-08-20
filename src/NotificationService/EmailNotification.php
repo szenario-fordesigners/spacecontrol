@@ -5,8 +5,10 @@ use Craft;
 use craft\helpers\App;
 use craft\mail\Message;
 
-class EmailNotification {
-    public static function sendEmailNotification($settings, $template) {
+class EmailNotification
+{
+    public static function sendEmailNotification($settings, $template)
+    {
         // get email addresses
         $recipients = $settings->emailRecipients;
 
@@ -28,13 +30,27 @@ class EmailNotification {
 
             try {
                 $message = new Message();
-                $message->setFrom(['no-reply@' . $truncatedDomain => 'SpaceControl']);
-                $message->setSender('no-reply@' . $truncatedDomain);
+
+                // Get the from address from Craft's mailer settings
+                $mailer = Craft::$app->getMailer();
+                $fromAddress = $mailer->from;
+
+                // If no from address is configured in Craft, use a fallback
+                if (empty($fromAddress)) {
+                    $fromAddress = 'noreply@' . $truncatedDomain;
+                }
+
+                $message->setFrom([$fromAddress => 'SpaceControl']);
+                $message->setSender($fromAddress);
                 $message->setTo($email);
-                $message->setSubject( $template['subject']);
+                $message->setSubject($template['subject']);
                 $message->setTextBody($template['body']);
 
-                Craft::$app->getMailer()->send($message);
+                $result = $mailer->send($message);
+
+                if (!$result) {
+                    Craft::error('Mailer returned false when sending email to: ' . $email, "spacecontrol");
+                }
 
             } catch (\Exception $e) {
                 Craft::error('Failed to send email to: ' . $email . ' - ' . $template['subject'], "spacecontrol");

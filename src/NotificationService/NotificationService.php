@@ -10,14 +10,16 @@ use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class NotificationService
 {
-    public static function start() {
+    public static function start()
+    {
         $settings = SettingsHelper::getPluginSettings();
-        $diskUsagePercent = $settings->diskUsagePercent;
 
-        if (!$settings === null) {
+        if ($settings === null) {
             Craft::warning("Settings object not found", "spacecontrol");
             return;
         }
+
+        $diskUsagePercent = $settings->diskUsagePercent;
 
         Craft::info("Starting notification service", "spacecontrol");
         // »»---------------------► HIGH LIMIT ◄---------------------««
@@ -81,7 +83,8 @@ class NotificationService
         }
     }
 
-    private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace) {
+    private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace)
+    {
 
         try {
             $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
@@ -90,7 +93,7 @@ class NotificationService
             Craft::error("Could not get domain", "spacecontrol");
             return null;
         }
-        
+
         return [
             "subject" => "{$percentUsed}% of webspace ({$truncatedDomain}) used",
             "body" => "Notification
@@ -109,7 +112,8 @@ developed by szenario"
     }
 
 
-    public static function sendNotifications($settings) {
+    public static function sendNotifications($settings)
+    {
         Craft::info("Building notification template", "spacecontrol");
         // build notification template
         $template = self::notificationTemplate(

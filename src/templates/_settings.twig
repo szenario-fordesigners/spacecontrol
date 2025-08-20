@@ -2,14 +2,14 @@
 
 <div class="sCS">
 
-    <div class="setting-block">
-<h3>Webspace</h3>
-<p class="notice">
-    Enter available webspace for this project.
-</p>
-    <div class="flexContainer">
-    <div>
-        {{ forms.textField({
+	<div class="setting-block">
+		<h3>Webspace</h3>
+		<p class="notice">
+			Enter available webspace for this project.
+		</p>
+		<div class="flexContainer">
+			<div>
+				{{ forms.textField({
             name: 'diskTotalSpace',
             value: settings.diskTotalSpace,
             class:"diskTotalSpace intField",
@@ -19,47 +19,47 @@
             size: 3,
             step: 0.01,
         }) }}
-    </div>
-        <div class="flexContainer-addon">GB</div>
+			</div>
+			<div class="flexContainer-addon">GB</div>
 
-    </div>
-    </div>
-    <div class="setting-block">
-<h3 class="blockFix">"Used Space" Calculation</h3>
+		</div>
+	</div>
+	<div class="setting-block">
+		<h3 class="blockFix">"Used Space" Calculation</h3>
 
-        <div>
-            {{ forms.lightswitchField({
-                name: 'dbSizeInCalc',
-                value: settings.dbSizeInCalc,
-                on: settings.dbSizeInCalc,
+		<div>
+			{{ forms.lightswitchField({
+                name: 'addDatabaseToTotalSize',
+                value: settings.addDatabaseToTotalSize,
+                on: settings.addDatabaseToTotalSize,
                 onLabel:'include database',
             }) }}
-        </div>
-    </div>
+		</div>
+	</div>
 
-    <h3 class="blockFix">Notifications</h3>
-    <p class="notice">
-        When the used webspace reaches 90%, 95% and 99% a notification email will be sent to the addresses listed below.
-    </p>
-    <div class="fieldset">
-    <div class="setting-block setting-block-send-notifications">
+	<h3 class="blockFix">Notifications</h3>
+	<p class="notice">
+		When the used webspace reaches 90%, 95% and 99% a notification email will be sent to the addresses listed below.
+	</p>
+	<div class="fieldset">
+		<div class="setting-block setting-block-send-notifications">
 
-    <h3 class="blockFix">Activate Email Notifications</h3>
-{{ forms.lightswitchField({
+			<h3 class="blockFix">Activate Email Notifications</h3>
+			{{ forms.lightswitchField({
     name: 'emailNotificationsEnabled',
     value: settings.emailNotificationsEnabled,
     on: settings.emailNotificationsEnabled,
 }) }}
 
-    </div>
+		</div>
 
-        <div class="setting-block">
-            <h3>Recipients</h3>
-            <p class="notice">
-                Add email addresses of people who should be informed about webspace issues, e.g. website owner, webadmin, webdeveloper, editor.
-            </p>
+		<div class="setting-block">
+			<h3>Recipients</h3>
+			<p class="notice">
+				Add email addresses of people who should be informed about webspace issues, e.g. website owner, webadmin, webdeveloper, editor.
+			</p>
 
-{{ forms.editableTableField({
+			{{ forms.editableTableField({
     id: 'emailRecipients',
     name: 'emailRecipients',
     allowAdd: true,
@@ -74,8 +74,7 @@
     ],
     rows: settings.emailRecipients,
 }) }}
-</div>
+		</div>
 
-    </div>
-</div>
-</div>
+	</div>
+</div></div>

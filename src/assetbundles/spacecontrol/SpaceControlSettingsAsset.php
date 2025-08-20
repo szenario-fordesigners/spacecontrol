@@ -27,7 +27,6 @@ class SpaceControlSettingsAsset extends AssetBundle
     ];
 
     public $css = [
-      //  'css/SpaceControl.css',
         'css/SpaceControlSettings.css'
     ];
 }

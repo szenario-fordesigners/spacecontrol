@@ -10,45 +10,73 @@ use szenario\craftspacecontrol\NotificationService\NotificationService;
 
 class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
+    public bool $skipThrottling = false;
+
     public function execute($queue): void
     {
-        self::calculateDiskUsage();
+        self::calculateDiskUsage($this->skipThrottling);
 
         NotificationService::start();
     }
 
     public static function executeImmediately(): void
     {
-        self::calculateDiskUsage();
+        self::calculateDiskUsage(true); // Force calculation
 
         NotificationService::start();
     }
 
     // 1. get current disk usage
     // 2. save to setting
-    private static function calculateDiskUsage()
+    private static function calculateDiskUsage(bool $force = false)
     {
-        $dbSizeInCalc = SettingsHelper::getSetting('dbSizeInCalc');
+        // Check for potential symlink issues
+        $rootPath = Craft::getAlias('@root');
+        if (is_link($rootPath)) {
+            Craft::warning('Root path is a symlink, skipping disk usage calculation to prevent deadlock', 'spacecontrol');
+            return;
+        }
+
+        $addDatabaseToTotalSize = SettingsHelper::getSetting('addDatabaseToTotalSize');
         $diskTotalSpace = SettingsHelper::getSetting('diskTotalSpace');
 
         if ($diskTotalSpace == 0) {
             return;
         }
 
-        $diskUsageAbsolute = FolderSizeHelper::getDirectorySize(CRAFT_BASE_PATH);
+        $currentTime = time();
 
-        if ($dbSizeInCalc) {
+        // Check if we should skip calculation due to throttling (every 5 minutes)
+        $lastCalculation = SettingsHelper::getSetting('lastCalculationTime') ?? 0;
+        $throttleInterval = 300; // 5 minutes
+
+        if (!$force && ($currentTime - $lastCalculation) < $throttleInterval) {
+            Craft::info("Skipping disk usage calculation due to throttling", "spacecontrol");
+            return;
+        }
+
+        $diskUsageAbsolute = self::calculateProjectSize();
+
+        if ($addDatabaseToTotalSize) {
             $dbSize = DatabaseSizeHelper::getDBSize();
             $diskUsageAbsolute += $dbSize;
         }
 
-        $diskUsagePercent = ($diskUsageAbsolute / 1024 / 1024 / 1024 * 1000000000) / ($diskTotalSpace  * 1000 * 1000 * 1000) * 100;
+        $diskUsagePercent = ($diskUsageAbsolute / 1024 / 1024 / 1024 * 1000000000) / ($diskTotalSpace * 1000 * 1000 * 1000) * 100;
         $diskUsagePercent = round($diskUsagePercent);
 
-        SettingsHelper::setValue("diskUsageAbsolute", $diskUsageAbsolute);
-        SettingsHelper::setValue("diskUsagePercent", $diskUsagePercent);
+        SettingsHelper::setValues([
+            "diskUsageAbsolute" => $diskUsageAbsolute,
+            "diskUsagePercent" => $diskUsagePercent,
+            "lastCalculationTime" => $currentTime,
+            "isInitialized" => true,
+        ]);
+    }
 
-        SettingsHelper::setValue("isInitialized", true);
+    private static function calculateProjectSize(): int
+    {
+        $basePath = Craft::getAlias('@root');
+        return FolderSizeHelper::getDirectorySize($basePath);
     }
 
     protected function defaultDescription(): string
@@ -58,13 +86,13 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
     public function getTtr()
     {
-//        max execution time of 30 seconds
-        return 30;
+        // Max execution time of 60 seconds to handle large directories
+        return 60;
     }
 
     public function canRetry($attempt, $error)
     {
-//        2 retries
+        //        2 retries
         return ($attempt < 2);
     }
 }
