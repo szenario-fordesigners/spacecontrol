@@ -70,6 +70,10 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
     align-items: center;
 }
 
+.sCC-quota, .sCC-webspace, .sCC-used, .sCC-info {
+    line-height: 1.2;
+}
+
 .sCC-topArea-right,
 .sCC-bottomArea-right {
     width: calc(100% - 120px);
