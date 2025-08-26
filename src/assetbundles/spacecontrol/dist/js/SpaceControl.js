@@ -36,6 +36,8 @@ let refreshIntervalId = undefined;
                     radiusPercentualCircle = circularRadius;
                 }
 
+                radiusPercentualCircle = Math.floor(radiusPercentualCircle);
+
                 $('.sCC-circleInner').css({
                     'width': radiusPercentualCircle * 2 + 'px',
                     'height': radiusPercentualCircle * 2 + 'px'

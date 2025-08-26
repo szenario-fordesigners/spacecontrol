@@ -7,12 +7,10 @@
 
 {% set isConfigured = settings.diskTotalSpace > 0 %}
 
-{% set addDatabaseToTotalSize = settings.addDatabaseToTotalSize %}
-
 {# only set alert if the plugin has been initialized #}
 {% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}
 
-{% set messages =  ["plenty of space left","still enough space","it's getting tight","time for action: get more space"]%}
+{% set messages =  ["plenty of space left","still enough space","getting a bit tight","out of space – take action"]%}
 {% set messageIndex = 0 %}
 
 {% if diskUsagePercent < 50 %}
@@ -64,8 +62,10 @@
 				</div>
 			</div>
 			<div class="sCC-bottomArea-right">
-				<div class="sCC-used">{{ (diskUsageAbsolute / 1000000000 ) | round(2)}}
-					GB used</div>
+				<div class="sCC-used">
+					{{ ((diskTotalSpace - diskUsageAbsolute) / 1000000000) | round(2)}}
+					GB available
+				</div>
 				<div class="sCC-info">{{ messages[messageIndex] }}</div>
 			</div>
 		</div>

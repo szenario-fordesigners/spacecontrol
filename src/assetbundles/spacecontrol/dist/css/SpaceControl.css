@@ -1,8 +1,15 @@
+:root {
+    --sCC-color-primary: #0041b9;
+    --sCC-color-secondary: #ccdeff;
+    --sCC-color-alert: #f47e52;
+    --sCC-color-alert-secondary: #852300;
+}
+
 /* set widget pane background color */
 div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .pane {
-    background: #0041b9;
-    font-size: 11px;
+    background: var(--sCC-color-primary);
+    font-size: 12px;
     padding: 12px;
     padding-top: 17px;
 }
@@ -11,7 +18,7 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]:has(
     .alert
   )
 .pane {
-    background: #f15a24;
+    background: var(--sCC-color-alert);
 }
 
 /* white widget settings icon */
@@ -21,7 +28,7 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 }
 
 .sCC {
-    background: #0041b9;
+    background: var(--sCC-color-primary);
     color: white;
     display: flex;
     flex-direction: column;
@@ -30,15 +37,13 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
     font-family: Arial, sans-serif;
 }
 
-.sCC.alert {
-    background: #f15a24;
-}
 
 .sCC-label {
     position: absolute;
     right: 0px;
     top: 26px;
     transform: translateX(50%) rotate(-90deg);
+    color: var(--sCC-color-secondary);
 }
 
 .sCC-topArea {
@@ -56,13 +61,12 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .sCC-topArea > *,
 .sCC-bottomArea > * {
     height: 100%;
-    /*border: 1px solid white;*/
 }
 
 .sCC-topArea-left,
 .sCC-bottomArea-left {
-    width: 90px;
-    min-width: 90px;
+    width: 70px;
+    min-width: 70px;
 }
 
 .sCC-topArea-left {
@@ -84,13 +88,17 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
     align-items: center;
 
     font-size: 90px;
-    /*font-weight: bold;*/
+    
+    width: 100%;
 }
 
 .sCC-bottomArea {
     height: 30px;
     display: flex;
     flex-direction: row;
+
+    margin-top: 10px;
+    color: var(--sCC-color-secondary);
 }
 
 .sCC-circleContainer {
@@ -103,7 +111,7 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
 .sCC-circle {
     width: 65px;
     height: 65px;
-    border: 1px solid white;
+    border: 2px solid var(--sCC-color-secondary);
     border-radius: 50%;
     box-sizing: content-box;
 
@@ -146,12 +154,26 @@ div[data-type="szenario\\craftspacecontrol\\widgets\\SpaceControlWidget"]
     height: 95px;
     width: 100%;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
 }
 
 .sCC-configure > a {
     color: white;
-    font-size: 70px;
+    font-size: 64px;
     line-height: 1.1;
+    padding-bottom: 10px;
 }
 
+/* alert */
+.sCC.alert {
+    background: var(--sCC-color-alert);
+}
+
+.sCC.alert .sCC-bottomArea, .sCC.alert .sCC-label {
+    color: var(--sCC-color-alert-secondary);
+}
+
+.sCC.alert .sCC-circle {
+    border-color: var(--sCC-color-alert-secondary);
+}
