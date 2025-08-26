@@ -21,7 +21,10 @@
 .sCS .flexContainer-addon {
     padding-left:6px;
 }
-.sCS .flexContainer {display:flex;align-items:center;}
+.sCS .flexContainer {
+    display:flex;
+    align-items:center;
+}
 
 .sCS .setting-block{
     margin-bottom:2.2rem;
