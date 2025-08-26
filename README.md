@@ -10,14 +10,14 @@ A few pixels on your Craft dashboard, a big step for your website.
 ![Screenshot](spacecontrol-dashboard.jpg)
 
 ![Screenshot](spacecontrol-widget.jpg)
-**Note**: _The license fee for this plugin is $10.00 via the Craft Plugin Store._
+**Note**: _The license fee for this plugin is $10 for the first year plus $5/year after one year via the Craft Plugin Store._
 ## Requirements
 
 This plugin requires Craft CMS 5.0.0 or later and PHP 8.2 or later.
 
 ## Installation
 
-The **easiest way** to install SpaceControl is via the Craft **<a href="https://plugins.craftcms.com/spacecontrol?craft4" target="_blank">Plugin Store</a>** in your control panel.  
+The **easiest way** to install SpaceControl is via the Craft **<a href="https://plugins.craftcms.com/spacecontrol" target="_blank">Plugin Store</a>** in your control panel.  
 <br> 
 To install SpaceControl using Composer, follow these steps:
 
