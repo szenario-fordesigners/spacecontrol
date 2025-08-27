@@ -17,6 +17,7 @@ use szenario\craftspacecontrol\models\Settings;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAsset;
+use szenario\craftspacecontrol\helpers\SettingsHelper;
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
@@ -72,6 +73,44 @@ class SpaceControl extends Plugin
         return Craft::createObject(Settings::class);
     }
 
+    /**
+     * Check if a SpaceControl job is already in the queue
+     */
+    private function isSpaceControlJobInQueue(): bool
+    {
+        try {
+            $queue = Craft::$app->getQueue();
+            $jobs = $queue->getJobInfo();
+
+            foreach ($jobs as $job) {
+                if (isset($job['class']) && $job['class'] === SpaceControlChecker::class) {
+                    return true;
+                }
+            }
+        } catch (\Throwable $e) {
+            Craft::warning('Could not check queue for existing SpaceControl jobs: ' . $e->getMessage(), 'spacecontrol');
+        }
+
+        return false;
+    }
+
+    /**
+     * Add a SpaceControl job to the queue if one doesn't already exist
+     */
+    private function addSpaceControlJobToQueue(bool $skipThrottling = false): void
+    {
+        Craft::info('Adding SpaceControl job to queue', 'spacecontrol');
+        if ($this->isSpaceControlJobInQueue()) {
+            Craft::info('SpaceControl job already in queue, skipping', 'spacecontrol');
+            return;
+        }
+
+        $job = new SpaceControlChecker();
+        $job->skipThrottling = $skipThrottling;
+        \craft\helpers\Queue::push($job);
+        Craft::info('SpaceControl job added to queue', 'spacecontrol');
+    }
+
     private function attachEventHandlers(): void
     {
         // Register event handlers here ...
@@ -101,9 +140,7 @@ class SpaceControl extends Plugin
                     return;
                 }
 
-                $job = new SpaceControlChecker();
-                $job->skipThrottling = true;
-                \craft\helpers\Queue::push($job);
+                $this->addSpaceControlJobToQueue(true);
             }
         );
 
@@ -111,9 +148,7 @@ class SpaceControl extends Plugin
             \craft\elements\Asset::class,
             \craft\elements\Asset::EVENT_AFTER_DELETE,
             function (\yii\base\Event $event) {
-                $job = new SpaceControlChecker();
-                $job->skipThrottling = true;
-                \craft\helpers\Queue::push($job);
+                $this->addSpaceControlJobToQueue(true);
             }
         );
 
@@ -124,7 +159,7 @@ class SpaceControl extends Plugin
             function (\yii\web\UserEvent $event) {
                 $request = Craft::$app->getRequest();
                 if ($request->isCpRequest && $event->identity->admin) {
-                    \craft\helpers\Queue::push(new SpaceControlChecker());
+                    $this->addSpaceControlJobToQueue();
                 }
             }
         );
@@ -133,12 +168,11 @@ class SpaceControl extends Plugin
         // Check disk space after plugin settings are saved
         Event::on(
             Plugins::class,
+                // Plugins::EVENT_BEFORE_SAVE_PLUGIN_SETTINGS,
             Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
-                    $job = new SpaceControlChecker();
-                    $job->skipThrottling = true;
-                    \craft\helpers\Queue::push($job);
+                    $this->addSpaceControlJobToQueue();
                 }
             }
         );

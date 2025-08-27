@@ -12,6 +12,17 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 {
     public bool $skipThrottling = false;
 
+    public function getTtr()
+    {
+        // Max execution time of 60 seconds to handle large directories
+        return 60;
+    }
+
+    public function canRetry($attempt, $error)
+    {
+        // 2 retries
+        return ($attempt < 2);
+    }
     public function execute($queue): void
     {
         self::calculateDiskUsage($this->skipThrottling);
@@ -82,17 +93,5 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
     protected function defaultDescription(): string
     {
         return Craft::t('app', 'SpaceControl Disk Usage Check');
-    }
-
-    public function getTtr()
-    {
-        // Max execution time of 60 seconds to handle large directories
-        return 60;
-    }
-
-    public function canRetry($attempt, $error)
-    {
-        //        2 retries
-        return ($attempt < 2);
     }
 }
