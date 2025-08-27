@@ -3,7 +3,7 @@
   "description": "Webspace Monitoring On Point.",
   "type": "craft-plugin",
   "license": "proprietary",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "keywords": [
     "monitoring",
     "diskspace"
