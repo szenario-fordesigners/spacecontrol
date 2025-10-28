@@ -13,7 +13,6 @@ use craft\services\Plugins;
 use yii\base\Event;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
-use szenario\craftspacecontrol\models\Settings;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAsset;
@@ -21,6 +20,7 @@ use szenario\craftspacecontrol\helpers\SettingsHelper;
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
+use szenario\craftspacecontrol\models\Settings;
 
 /**
  * spacecontrol plugin
@@ -32,7 +32,7 @@ use putyourlightson\sprig\Sprig;
 class SpaceControl extends Plugin
 {
     public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = false;
+    public bool $hasCpSettings = true;
 
 
 
@@ -43,6 +43,42 @@ class SpaceControl extends Plugin
                 'spaceControl' => \szenario\craftspacecontrol\services\SpaceControlService::class,
             ],
         ];
+    }
+
+    /**
+     * Get plugin settings for use in templates
+     */
+    public function getSettings(): ?\craft\base\Model
+    {
+        return new Settings();
+    }
+
+    /**
+     * Returns the rendered settings HTML
+     */
+    public function settingsHtml(): string
+    {
+        $settings = $this->getSettings();
+
+        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings', [
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Handle settings save
+     */
+    public function beforeSaveSettings(): bool
+    {
+        $request = Craft::$app->getRequest();
+        $settings = $request->getBodyParam('settings', []);
+
+        if (!empty($settings)) {
+            $service = $this->get('spaceControl');
+            return $service->setSettings($settings);
+        }
+
+        return true;
     }
 
     public function init()
