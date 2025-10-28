@@ -3,53 +3,39 @@
 namespace szenario\craftspacecontrol\helpers;
 
 use Craft;
+use szenario\craftspacecontrol\services\SpaceControlService;
 
 class SettingsHelper
 {
+    private static ?SpaceControlService $_service = null;
+
+    private static function getService(): SpaceControlService
+    {
+        if (self::$_service === null) {
+            self::$_service = new SpaceControlService();
+        }
+        return self::$_service;
+    }
+
     // PLUGIN SETTINGS GETTER
     public static function getPluginSettings()
     {
-        return Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        return self::getService()->getAllSettings();
     }
 
     public static function getSetting($key)
     {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->$key;
+        return self::getService()->getSetting($key);
     }
 
     // PLUGIN SETTINGS SETTER
     public static function setValue($key, $value)
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-        if ($plugin === null) {
-            Craft::warning('SpaceControl plugin not found when trying to save setting: ' . $key, 'spacecontrol');
-            return;
-        }
-
-        $settings = $plugin->getSettings();
-        $settings->$key = $value;
-
-        // Create a safe array with only the properties we want to save
-        $settingsArray = [
-            'diskTotalSpace' => $settings->diskTotalSpace,
-            'diskUsageAbsolute' => $settings->diskUsageAbsolute,
-            'diskUsagePercent' => $settings->diskUsagePercent,
-            'addDatabaseToTotalSize' => $settings->addDatabaseToTotalSize,
-            'isInitialized' => $settings->isInitialized,
-            'lastCalculationTime' => $settings->lastCalculationTime,
-            'notificationLimitLow' => $settings->notificationLimitLow,
-            'notificationLimitMedium' => $settings->notificationLimitMedium,
-            'notificationLimitHigh' => $settings->notificationLimitHigh,
-            'notificationLowTriggered' => $settings->notificationLowTriggered,
-            'notificationMediumTriggered' => $settings->notificationMediumTriggered,
-            'notificationHighTriggered' => $settings->notificationHighTriggered,
-            'emailNotificationsEnabled' => $settings->emailNotificationsEnabled,
-            'emailRecipients' => $settings->emailRecipients,
-        ];
-
         try {
-            Craft::$app->getPlugins()->savePluginSettings($plugin, $settingsArray);
+            $success = self::getService()->setSetting($key, $value);
+            if (!$success) {
+                Craft::error('Failed to save SpaceControl setting: ' . $key, 'spacecontrol');
+            }
         } catch (\Throwable $e) {
             Craft::error('Failed to save SpaceControl setting ' . $key . ': ' . $e->getMessage(), 'spacecontrol');
         }
@@ -58,39 +44,11 @@ class SettingsHelper
     // PLUGIN SETTINGS BATCH SETTER
     public static function setValues(array $values)
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-        if ($plugin === null) {
-            Craft::warning('SpaceControl plugin not found when trying to save settings', 'spacecontrol');
-            return;
-        }
-
-        $settings = $plugin->getSettings();
-
-        // Update the settings object with new values
-        foreach ($values as $key => $value) {
-            $settings->$key = $value;
-        }
-
-        // Create a safe array with only the properties we want to save
-        $settingsArray = [
-            'diskTotalSpace' => $settings->diskTotalSpace,
-            'diskUsageAbsolute' => $settings->diskUsageAbsolute,
-            'diskUsagePercent' => $settings->diskUsagePercent,
-            'addDatabaseToTotalSize' => $settings->addDatabaseToTotalSize,
-            'isInitialized' => $settings->isInitialized,
-            'lastCalculationTime' => $settings->lastCalculationTime,
-            'notificationLimitLow' => $settings->notificationLimitLow,
-            'notificationLimitMedium' => $settings->notificationLimitMedium,
-            'notificationLimitHigh' => $settings->notificationLimitHigh,
-            'notificationLowTriggered' => $settings->notificationLowTriggered,
-            'notificationMediumTriggered' => $settings->notificationMediumTriggered,
-            'notificationHighTriggered' => $settings->notificationHighTriggered,
-            'emailNotificationsEnabled' => $settings->emailNotificationsEnabled,
-            'emailRecipients' => $settings->emailRecipients,
-        ];
-
         try {
-            Craft::$app->getPlugins()->savePluginSettings($plugin, $settingsArray);
+            $success = self::getService()->setSettings($values);
+            if (!$success) {
+                Craft::error('Failed to save some SpaceControl settings', 'spacecontrol');
+            }
         } catch (\Throwable $e) {
             Craft::error('Failed to save SpaceControl settings: ' . $e->getMessage(), 'spacecontrol');
         }

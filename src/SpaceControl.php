@@ -32,23 +32,15 @@ use putyourlightson\sprig\Sprig;
 class SpaceControl extends Plugin
 {
     public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = true;
+    public bool $hasCpSettings = false;
 
 
-    protected function settingsHtml(): ?string
-    {
-
-        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
-            'plugin' => $this,
-            'settings' => $this->getSettings(),
-        ]);
-    }
 
     public static function config(): array
     {
         return [
             'components' => [
-                // Define component configs here...
+                'spaceControl' => \szenario\craftspacecontrol\services\SpaceControlService::class,
             ],
         ];
     }
@@ -68,10 +60,6 @@ class SpaceControl extends Plugin
         });
     }
 
-    protected function createSettingsModel(): ?Model
-    {
-        return Craft::createObject(Settings::class);
-    }
 
     /**
      * Check if a SpaceControl job is already in the queue
@@ -158,7 +146,7 @@ class SpaceControl extends Plugin
             \yii\web\User::EVENT_AFTER_LOGIN,
             function (\yii\web\UserEvent $event) {
                 $request = Craft::$app->getRequest();
-                if ($request->isCpRequest && $event->identity->admin) {
+                if ($request->isCpRequest && $event->identity instanceof \craft\elements\User && $event->identity->admin) {
                     $this->addSpaceControlJobToQueue();
                 }
             }
