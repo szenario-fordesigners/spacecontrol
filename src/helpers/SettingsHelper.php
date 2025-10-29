@@ -3,16 +3,16 @@
 namespace szenario\craftspacecontrol\helpers;
 
 use Craft;
-use szenario\craftspacecontrol\services\SpaceControlService;
+use szenario\craftspacecontrol\services\SettingsService;
 
 class SettingsHelper
 {
-    private static ?SpaceControlService $_service = null;
+    private static ?SettingsService $_service = null;
 
-    private static function getService(): SpaceControlService
+    private static function getService(): SettingsService
     {
         if (self::$_service === null) {
-            self::$_service = new SpaceControlService();
+            self::$_service = new SettingsService();
         }
         return self::$_service;
     }

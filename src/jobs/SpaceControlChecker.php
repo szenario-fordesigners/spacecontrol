@@ -7,6 +7,7 @@ use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
 use szenario\craftspacecontrol\NotificationService\NotificationService;
+use szenario\craftspacecontrol\services\FileScanningService;
 
 class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
@@ -66,7 +67,13 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             return;
         }
 
-        $diskUsageAbsolute = self::calculateProjectSize();
+        $basePath = Craft::getAlias('@root');
+
+        // Scan files and sync with database
+        $fileScanningService = Craft::$app->getPlugins()->getPlugin('spacecontrol')->get('fileScanning');
+        $scanResults = $fileScanningService->scanAndSyncFiles($basePath, 1000);
+
+        $diskUsageAbsolute = $scanResults['totalSize'];
 
         if ($addDatabaseToTotalSize) {
             $dbSize = DatabaseSizeHelper::getDBSize();
@@ -82,12 +89,8 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             "lastCalculationTime" => $currentTime,
             "isInitialized" => true,
         ]);
-    }
 
-    private static function calculateProjectSize(): int
-    {
-        $basePath = Craft::getAlias('@root');
-        return FolderSizeHelper::getDirectorySize($basePath);
+        Craft::info("SpaceControl scan completed: {$scanResults['totalFiles']} files, {$scanResults['deletedFiles']} deleted, {$scanResults['duration']}s", 'spacecontrol');
     }
 
     protected function defaultDescription(): string

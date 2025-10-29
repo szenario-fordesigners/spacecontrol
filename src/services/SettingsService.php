@@ -6,9 +6,9 @@ use Craft;
 use szenario\craftspacecontrol\records\SettingsRecord;
 
 /**
- * SpaceControl service
+ * Settings service for managing plugin settings
  */
-class SpaceControlService
+class SettingsService
 {
     /**
      * Get a setting value
@@ -116,51 +116,4 @@ class SpaceControlService
         return $settingsObject;
     }
 
-    /**
-     * Migrate settings from Craft plugin settings
-     */
-    public function migrateFromCraftSettings(): bool
-    {
-        try {
-            $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-            if (!$plugin) {
-                return false;
-            }
-
-            $craftSettings = $plugin->getSettings();
-            if (!$craftSettings) {
-                return true;
-            }
-
-            $settingsToMigrate = [
-                'diskTotalSpace',
-                'diskUsageAbsolute',
-                'diskUsagePercent',
-                'addDatabaseToTotalSize',
-                'isInitialized',
-                'lastCalculationTime',
-                'notificationLimitLow',
-                'notificationLimitMedium',
-                'notificationLimitHigh',
-                'notificationLowTriggered',
-                'notificationMediumTriggered',
-                'notificationHighTriggered',
-                'emailNotificationsEnabled',
-                'emailRecipients',
-            ];
-
-            foreach ($settingsToMigrate as $key) {
-                if (isset($craftSettings->$key)) {
-                    $this->setSetting($key, $craftSettings->$key);
-                }
-            }
-
-            return true;
-
-        } catch (\Throwable $e) {
-            Craft::error('Failed to migrate settings: ' . $e->getMessage(), 'spacecontrol');
-            return false;
-        }
-    }
 }
-

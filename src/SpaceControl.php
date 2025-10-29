@@ -30,16 +30,16 @@ use craft\base\Model;
  */
 class SpaceControl extends Plugin
 {
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.1.0';
     public bool $hasCpSettings = true;
-
 
 
     public static function config(): array
     {
         return [
             'components' => [
-                'spaceControl' => \szenario\craftspacecontrol\services\SpaceControlService::class,
+                'settings' => \szenario\craftspacecontrol\services\SettingsService::class,
+                'fileScanning' => \szenario\craftspacecontrol\services\FileScanningService::class,
             ],
         ];
     }
@@ -177,7 +177,7 @@ class SpaceControl extends Plugin
             Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
-                    $this->addSpaceControlJobToQueue();
+                    $this->addSpaceControlJobToQueue(true);
                 }
             }
         );

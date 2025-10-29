@@ -107,6 +107,7 @@ class Install extends Migration
             ]);
 
             $this->createIndex(null, $this->tableNameFileSizes, ['lastChecked']);
+            $this->createIndex(null, $this->tableNameFileSizes, ['pathHash']);
         }
 
         return true;
