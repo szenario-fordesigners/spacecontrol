@@ -5,59 +5,43 @@ namespace szenario\craftspacecontrol\models;
 use craft\base\Model;
 
 /**
- * SpaceControl settings model
+ * SpaceControl user-editable settings model
  */
 class Settings extends Model
 {
-    // General settings
+    // User-editable settings
     public float $diskTotalSpace = 0.0;
-    public int $diskUsageAbsolute = 0;
-    public float $diskUsagePercent = 0.0;
     public bool $addDatabaseToTotalSize = false;
-    public bool $isInitialized = false;
-    public int $lastCalculationTime = 0;
-
-    // Notification settings
-    public int $notificationLimitLow = 90;
-    public int $notificationLimitMedium = 95;
-    public int $notificationLimitHigh = 99;
-    public bool $notificationLowTriggered = false;
-    public bool $notificationMediumTriggered = false;
-    public bool $notificationHighTriggered = false;
-
-    // Email notification settings
     public bool $emailNotificationsEnabled = false;
     public array $emailRecipients = [];
 
-    public function __construct($config = [])
+    public function defineRules(): array
     {
-        parent::__construct($config);
-
-        // Load settings from database after parent constructor
-        $this->loadFromDatabase();
+        return [
+            [['diskTotalSpace'], 'required'],
+            [['diskTotalSpace'], 'number', 'min' => 0],
+            [['addDatabaseToTotalSize', 'emailNotificationsEnabled'], 'boolean'],
+            [['emailRecipients'], 'validateEmailRecipients'],
+        ];
     }
 
-    /**
-     * Load settings from database
-     */
-    private function loadFromDatabase(): void
+    public function validateEmailRecipients($attribute, $params)
     {
-        try {
-            $plugin = \Craft::$app->getPlugins()->getPlugin('spacecontrol');
-            if ($plugin) {
-                $service = $plugin->get('spaceControl');
-                $dbSettings = $service->getAllSettings();
+        if (!is_array($this->$attribute)) {
+            $this->addError($attribute, 'Email recipients must be an array.');
+            return;
+        }
 
-                // Set properties from database
-                foreach ($dbSettings as $key => $value) {
-                    if (property_exists($this, $key)) {
-                        $this->$key = $value;
-                    }
-                }
+        foreach ($this->$attribute as $index => $recipient) {
+            if (!is_array($recipient) || !isset($recipient[0])) {
+                $this->addError($attribute, "Invalid email recipient format at index {$index}.");
+                continue;
             }
-        } catch (\Throwable $e) {
-            // If database isn't ready, use default values
-            \Craft::warning('Could not load SpaceControl settings from database: ' . $e->getMessage(), 'spacecontrol');
+
+            $email = $recipient[0];
+            if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->addError($attribute, "Invalid email address '{$email}' at index {$index}.");
+            }
         }
     }
 }

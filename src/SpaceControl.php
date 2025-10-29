@@ -3,7 +3,6 @@
 namespace szenario\craftspacecontrol;
 
 use Craft;
-use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
@@ -20,6 +19,7 @@ use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
 use szenario\craftspacecontrol\models\Settings;
+use craft\base\Model;
 
 /**
  * spacecontrol plugin
@@ -45,9 +45,9 @@ class SpaceControl extends Plugin
     }
 
     /**
-     * Get plugin settings for use in templates
+     * Creates and returns the plugin's settings model
      */
-    public function getSettings(): ?Model
+    public function createSettingsModel(): ?Model
     {
         return new Settings();
     }
@@ -57,27 +57,9 @@ class SpaceControl extends Plugin
      */
     public function settingsHtml(): string
     {
-        $settings = $this->getSettings();
-
         return Craft::$app->getView()->renderTemplate('spacecontrol/_settings', [
-            'settings' => $settings,
+            'settings' => $this->getSettings(),
         ]);
-    }
-
-    /**
-     * Handle settings save
-     */
-    public function beforeSaveSettings(): bool
-    {
-        $request = Craft::$app->getRequest();
-        $settings = $request->getBodyParam('settings', []);
-
-        if (!empty($settings)) {
-            $service = $this->get('spaceControl');
-            $service->setSettings($settings);
-        }
-
-        return true;
     }
 
     public function init()

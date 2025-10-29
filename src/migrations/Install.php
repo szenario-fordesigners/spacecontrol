@@ -3,126 +3,95 @@
 namespace szenario\craftspacecontrol\migrations;
 
 use craft\db\Migration;
+
 class Install extends Migration
 {
-    private $tableNameSettings = 'spacecontrol_settings';
+    private $tableNamePluginData = 'spacecontrol_plugin_data';
     private $tableNameFileSizes = 'spacecontrol_file_sizes';
+
     public function safeUp(): bool
     {
-        // create settings table
-        if (!$this->db->tableExists($this->tableNameSettings)) {
-            $this->createTable($this->tableNameSettings, [
+        // create plugin data table
+        if (!$this->db->tableExists($this->tableNamePluginData)) {
+            $this->createTable($this->tableNamePluginData, [
                 'id' => $this->primaryKey(),
-                'setting' => $this->string()->notNull()->unique(),
+                'key' => $this->string()->notNull()->unique(),
                 'value' => $this->text()->notNull(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
             ]);
 
+            // Insert default plugin data
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'diskUsageAbsolute',
+                'value' => '0',
+                'dateCreated' => new \yii\db\Expression('NOW()'),
+                'dateUpdated' => new \yii\db\Expression('NOW()'),
+            ]);
 
-            // Insert default settings
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'diskTotalSpace',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'diskUsagePercent',
                 'value' => '0.0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'diskUsageAbsolute',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'isInitialized',
                 'value' => '0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'diskUsagePercent',
-                'value' => '0.0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'addDatabaseToTotalSize',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'lastCalculationTime',
                 'value' => '0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'isInitialized',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'lastCalculationTime',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationLimitLow',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationLimitLow',
                 'value' => '90',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationLimitMedium',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationLimitMedium',
                 'value' => '95',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationLimitHigh',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationLimitHigh',
                 'value' => '99',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationLowTriggered',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationLowTriggered',
                 'value' => '0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationMediumTriggered',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationMediumTriggered',
                 'value' => '0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
 
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'notificationHighTriggered',
+            $this->insert($this->tableNamePluginData, [
+                'key' => 'notificationHighTriggered',
                 'value' => '0',
                 'dateCreated' => new \yii\db\Expression('NOW()'),
                 'dateUpdated' => new \yii\db\Expression('NOW()'),
             ]);
-
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'emailNotificationsEnabled',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNameSettings, [
-                'setting' => 'emailRecipients',
-                'value' => '[]',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
         }
-
-
-
 
         // create file sizes table
         if (!$this->db->tableExists($this->tableNameFileSizes)) {
@@ -145,7 +114,7 @@ class Install extends Migration
 
     public function safeDown(): bool
     {
-        $this->dropTableIfExists($this->tableNameSettings);
+        $this->dropTableIfExists($this->tableNamePluginData);
         $this->dropTableIfExists($this->tableNameFileSizes);
         return true;
     }
