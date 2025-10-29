@@ -1,11 +1,14 @@
-{% set settings = plugin('spacecontrol').settings %}
-{% set diskTotalSpace = (settings.diskTotalSpace * 1000 * 1000 * 1000) %}
-{% set diskUsageAbsolute = ((settings.diskUsageAbsolute / 1024 / 1024 / 1024) * 1000000000) | round()  %}
-{% set diskUsagePercent = ceil(settings.diskUsagePercent) %}
+{% set userSettings = plugin('spacecontrol').getSettings() %}
+{% set plugin = plugin('spacecontrol') %}
+{% set pluginData = plugin.get('settings').getAllPluginData() %}
 
-{% set isInitialized = settings.isInitialized %}
+{% set diskTotalSpace = (userSettings.diskTotalSpace * 1000 * 1000 * 1000) %}
+{% set diskUsageAbsolute = ((pluginData.diskUsageAbsolute / 1024 / 1024 / 1024) * 1000000000) | round()  %}
+{% set diskUsagePercent = ceil(pluginData.diskUsagePercent) %}
 
-{% set isConfigured = settings.diskTotalSpace > 0 %}
+{% set isInitialized = pluginData.isInitialized %}
+
+{% set isConfigured = userSettings.diskTotalSpace > 0 %}
 
 {# only set alert if the plugin has been initialized #}
 {% set alert = diskUsagePercent >= 90 and isInitialized and isConfigured %}

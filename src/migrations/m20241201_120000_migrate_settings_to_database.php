@@ -73,11 +73,11 @@ class m20241201_120000_migrate_settings_to_database extends Migration
                     }
 
                     // Check if record already exists
-                    $existingRecord = PluginDataRecord::findOne(['setting' => $key]);
+                    $existingRecord = PluginDataRecord::findOne(['key' => $key]);
 
                     if (!$existingRecord) {
                         $record = new PluginDataRecord();
-                        $record->setting = $key;
+                        $record->key = $key;
                         $record->value = $value;
                         $record->dateCreated = $now;
                         $record->dateUpdated = $now;
