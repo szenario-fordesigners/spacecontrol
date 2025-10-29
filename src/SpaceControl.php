@@ -16,7 +16,6 @@ use craft\services\Dashboard;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAsset;
-use szenario\craftspacecontrol\helpers\SettingsHelper;
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
@@ -48,7 +47,7 @@ class SpaceControl extends Plugin
     /**
      * Get plugin settings for use in templates
      */
-    public function getSettings(): ?\craft\base\Model
+    public function getSettings(): ?Model
     {
         return new Settings();
     }
@@ -75,7 +74,7 @@ class SpaceControl extends Plugin
 
         if (!empty($settings)) {
             $service = $this->get('spaceControl');
-            return $service->setSettings($settings);
+            $service->setSettings($settings);
         }
 
         return true;
