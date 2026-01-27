@@ -4,6 +4,7 @@ namespace szenario\craftspacecontrol\helpers;
 
 use Craft;
 use szenario\craftspacecontrol\services\SettingsService;
+use szenario\craftspacecontrol\SpaceControl;
 
 class SettingsHelper
 {
@@ -20,7 +21,24 @@ class SettingsHelper
     // PLUGIN SETTINGS GETTER
     public static function getPluginSettings()
     {
-        return self::getService()->getAllSettings();
+        // Start with default/user settings
+        $settings = new \stdClass();
+        
+        $plugin = SpaceControl::getInstance();
+        if ($plugin) {
+            $userSettings = $plugin->getSettings();
+            foreach ($userSettings as $key => $value) {
+                $settings->$key = $value;
+            }
+        }
+
+        // Merge in dynamic plugin data
+        $pluginData = self::getService()->getAllPluginData();
+        foreach ($pluginData as $key => $value) {
+            $settings->$key = $value;
+        }
+
+        return $settings;
     }
 
     public static function getSetting($key)
@@ -43,8 +61,8 @@ class SettingsHelper
             return self::getService()->getPluginData($key);
         }
 
-        // Otherwise, try to get from Craft's built-in settings first
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
+        // Otherwise, get from Craft's built-in settings
+        $plugin = SpaceControl::getInstance();
         if ($plugin) {
             $userSettings = $plugin->getSettings();
             if (isset($userSettings->$key)) {
@@ -52,8 +70,7 @@ class SettingsHelper
             }
         }
 
-        // Fall back to database settings (for legacy support)
-        return self::getService()->getSetting($key);
+        return null;
     }
 
     // PLUGIN SETTINGS SETTER
@@ -77,9 +94,12 @@ class SettingsHelper
             if (in_array($key, $pluginDataKeys)) {
                 $success = self::getService()->setPluginData($key, $value);
             } else {
-                // For user settings, Craft handles saving automatically
-                // But we can also save to database for legacy support
-                $success = self::getService()->setSetting($key, $value);
+                // For user settings, use Craft's savePluginSettings
+                $plugin = SpaceControl::getInstance();
+                $settings = $plugin->getSettings()->toArray();
+                $settings[$key] = $value;
+                
+                $success = Craft::$app->getPlugins()->savePluginSettings($plugin, $settings);
             }
 
             if (!$success) {
@@ -123,7 +143,11 @@ class SettingsHelper
 
             // Save user settings
             if (!empty($userSettings)) {
-                if (!self::getService()->setSettings($userSettings)) {
+                $plugin = SpaceControl::getInstance();
+                $currentSettings = $plugin->getSettings()->toArray();
+                $newSettings = array_merge($currentSettings, $userSettings);
+                
+                if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $newSettings)) {
                     $success = false;
                     Craft::error('Failed to save some SpaceControl settings', 'spacecontrol');
                 }
