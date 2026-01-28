@@ -18,10 +18,13 @@ class m20241201_120000_migrate_settings_to_database extends Migration
                 return true;
             }
 
-            // Get existing Craft plugin settings
-            $craftSettings = $plugin->getSettings();
-            if (!$craftSettings) {
-                echo "No existing settings found. Migration skipped.\n";
+            // Get existing Craft plugin settings from Project Config directly
+            // We cannot use $plugin->getSettings() because the Settings model has already been updated
+            // and no longer contains the fields we want to migrate.
+            $rawSettings = \Craft::$app->getProjectConfig()->get('plugins.spacecontrol.settings') ?? [];
+
+            if (empty($rawSettings)) {
+                echo "No existing settings found in Project Config. Migration skipped.\n";
                 return true;
             }
 
@@ -50,9 +53,9 @@ class m20241201_120000_migrate_settings_to_database extends Migration
             ];
 
             // Migrate user-editable settings to Craft's settings system
-            // (These are already handled by Craft's built-in system, so we just log them)
+            // (These are already handled by Craft's settings system, so we just log them)
             foreach ($userSettings as $key) {
-                if (isset($craftSettings->$key)) {
+                if (array_key_exists($key, $rawSettings)) {
                     echo "User setting '{$key}' is already handled by Craft's settings system.\n";
                     $migratedCount++;
                 }
@@ -60,8 +63,8 @@ class m20241201_120000_migrate_settings_to_database extends Migration
 
             // Migrate internal plugin data to spacecontrol_plugin_data table
             foreach ($pluginDataSettings as $key) {
-                if (isset($craftSettings->$key)) {
-                    $value = $craftSettings->$key;
+                if (array_key_exists($key, $rawSettings)) {
+                    $value = $rawSettings[$key];
 
                     // Handle special data types
                     if (in_array($key, ['emailRecipients'])) {
