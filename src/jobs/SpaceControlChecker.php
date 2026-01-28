@@ -3,11 +3,9 @@
 namespace szenario\craftspacecontrol\jobs;
 
 use Craft;
-use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
 use szenario\craftspacecontrol\NotificationService\NotificationService;
-use szenario\craftspacecontrol\services\FileScanningService;
 
 class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\RetryableJobInterface
 {
@@ -95,6 +93,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
     protected function defaultDescription(): string
     {
-        return Craft::t('app', 'SpaceControl Disk Usage Check');
+        return Craft::t('app', '[SpaceControl] Disk Usage Check');
     }
 }

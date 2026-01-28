@@ -88,7 +88,11 @@ class SpaceControl extends Plugin
             $jobs = $queue->getJobInfo();
 
             foreach ($jobs as $job) {
-                if (isset($job['class']) && $job['class'] === SpaceControlChecker::class) {
+                if (
+                    isset($job['description']) &&
+                    strpos($job['description'], '[SpaceControl]') !== false &&
+                    $job['status'] === \craft\queue\Queue::STATUS_WAITING
+                ) {
                     return true;
                 }
             }
