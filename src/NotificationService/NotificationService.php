@@ -87,8 +87,8 @@ class NotificationService
     {
 
         try {
-            $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
-            $truncatedDomain = rtrim($domain, '/') ?: $domain;
+            $parsedUrl = parse_url(\craft\helpers\UrlHelper::siteUrl());
+            $truncatedDomain = $parsedUrl['host'] ?? 'unknown-domain';
         } catch (\Exception $e) {
             Craft::error("Could not get domain", "spacecontrol");
             return null;
