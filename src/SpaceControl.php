@@ -85,6 +85,9 @@ class SpaceControl extends Plugin
     {
         try {
             $queue = Craft::$app->getQueue();
+
+            // Get waiting jobs only (not delayed, not reserved)
+            // Note: getJobInfo() can be expensive on large queues (Redis/DB)
             $jobs = $queue->getJobInfo();
 
             foreach ($jobs as $job) {
@@ -108,15 +111,31 @@ class SpaceControl extends Plugin
      */
     private function addSpaceControlJobToQueue(bool $skipThrottling = false): void
     {
+        // Debounce: Check cache lock to prevent spamming the queue check itself
+        $cache = Craft::$app->getCache();
+        $cacheKey = 'spacecontrol_job_queued_recently';
+
+        if ($cache->get($cacheKey)) {
+            Craft::info('SpaceControl job debounced (recently queued)', 'spacecontrol');
+            return;
+        }
+
         Craft::info('Adding SpaceControl job to queue', 'spacecontrol');
+
         if ($this->isSpaceControlJobInQueue()) {
             Craft::info('SpaceControl job already in queue, skipping', 'spacecontrol');
+            // Extend debounce since it's already there
+            $cache->set($cacheKey, true, 15);
             return;
         }
 
         $job = new SpaceControlChecker();
         $job->skipThrottling = $skipThrottling;
         \craft\helpers\Queue::push($job);
+
+        // Set debounce lock
+        $cache->set($cacheKey, true, 15);
+
         Craft::info('SpaceControl job added to queue', 'spacecontrol');
     }
 
