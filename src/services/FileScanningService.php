@@ -23,6 +23,7 @@ class FileScanningService
         $startTime = microtime(true);
         $scannedFiles = [];
         $totalSize = 0;
+        $fileCount = 0;
 
         // Scan all files
         $iterator = new \RecursiveIteratorIterator(
@@ -30,8 +31,8 @@ class FileScanningService
             \RecursiveIteratorIterator::LEAVES_ONLY
         );
 
+        // This timestamp acts as our "Mark"
         $now = new \DateTime();
-        $scannedPathHashes = [];
 
         foreach ($iterator as $file) {
             // Skip symlinks to prevent infinite loops
@@ -65,8 +66,8 @@ class FileScanningService
                 'lastChecked' => $now->format('Y-m-d H:i:s'),
             ];
 
-            $scannedPathHashes[] = $pathHash;
             $totalSize += $fileSize;
+            $fileCount++;
 
             // Process in chunks to avoid memory issues
             if (count($scannedFiles) >= $chunkSize) {
@@ -80,14 +81,14 @@ class FileScanningService
             $this->batchUpsertFiles($scannedFiles);
         }
 
-        // Clean up deleted files
-        $deletedCount = $this->cleanupDeletedFiles($scannedPathHashes);
+        // Clean up deleted files using the "Sweep" strategy (Timestamp based)
+        $deletedCount = $this->cleanupDeletedFiles($now, $basePath);
 
         $endTime = microtime(true);
         $duration = round($endTime - $startTime, 2);
 
         return [
-            'totalFiles' => count($scannedPathHashes),
+            'totalFiles' => $fileCount,
             'totalSize' => $totalSize,
             'deletedFiles' => $deletedCount,
             'duration' => $duration,
@@ -95,7 +96,7 @@ class FileScanningService
     }
 
     /**
-     * Batch upsert files to database using direct SQL for performance
+     * Batch upsert files to database with optimization for unchanged files
      * 
      * @param array $files Array of file data to upsert
      */
@@ -107,42 +108,55 @@ class FileScanningService
 
         $db = Craft::$app->getDb();
         $tableName = FileSizeRecord::tableName();
-        $now = new Expression('NOW()');
 
-        // Get existing path hashes for this batch to determine inserts vs updates
+        // 1. Get existing records to determine what needs to be done
         $pathHashes = array_column($files, 'pathHash');
-        $existingHashes = FileSizeRecord::find()
-            ->select('pathHash')
+        $existingRecords = FileSizeRecord::find()
+            ->select(['pathHash', 'mtime'])
             ->where(['in', 'pathHash', $pathHashes])
-            ->column();
+            ->asArray()
+            ->all();
 
-        $existingHashesSet = array_flip($existingHashes);
+        // Index by hash for fast lookup
+        $existingMap = [];
+        foreach ($existingRecords as $record) {
+            $existingMap[$record['pathHash']] = (int) $record['mtime'];
+        }
 
-        // Separate inserts and updates
         $inserts = [];
         $updates = [];
+        $touchOnlyHashes = [];
 
         foreach ($files as $file) {
-            $fileData = [
-                'pathHash' => $file['pathHash'],
-                'path' => $file['path'],
-                'sizeInBytes' => $file['sizeInBytes'],
-                'mtime' => $file['mtime'] ?? null,
-                'lastChecked' => $file['lastChecked'],
-                'dateCreated' => $now,
-                'dateUpdated' => $now,
-            ];
+            $hash = $file['pathHash'];
 
-            if (isset($existingHashesSet[$file['pathHash']])) {
-                // Update existing record
-                $updates[] = $fileData;
+            if (!isset($existingMap[$hash])) {
+                // New file -> Insert
+                $inserts[] = [
+                    $file['pathHash'],
+                    $file['path'],
+                    $file['sizeInBytes'],
+                    $file['mtime'] ?? 0,
+                    $file['lastChecked'],
+                    new Expression('NOW()'),
+                    new Expression('NOW()'),
+                ];
             } else {
-                // Insert new record
-                $inserts[] = $fileData;
+                // Existing file
+                $existingMtime = $existingMap[$hash];
+                $newMtime = (int) ($file['mtime'] ?? 0);
+
+                if ($existingMtime === $newMtime) {
+                    // File hasn't changed -> Just update lastChecked (Batchable)
+                    $touchOnlyHashes[] = $hash;
+                } else {
+                    // File changed -> Full Update needed
+                    $updates[] = $file;
+                }
             }
         }
 
-        // Batch insert new records
+        // 2. Perform Batch Insert
         if (!empty($inserts)) {
             $db->createCommand()
                 ->batchInsert($tableName, [
@@ -157,64 +171,58 @@ class FileScanningService
                 ->execute();
         }
 
-        // Batch update existing records
+        // 3. Perform Batch "Touch" (Update lastChecked only)
+        if (!empty($touchOnlyHashes)) {
+            // We can update all these in ONE query
+            $db->createCommand()
+                ->update(
+                    $tableName,
+                    ['lastChecked' => $files[0]['lastChecked']], // Use current batch timestamp
+                    ['in', 'pathHash', $touchOnlyHashes]
+                )
+                ->execute();
+        }
+
+        // 4. Perform Full Updates (Only for actually modified files)
         if (!empty($updates)) {
-            foreach ($updates as $updateData) {
+            foreach ($updates as $file) {
                 $db->createCommand()
                     ->update($tableName, [
-                        'path' => $updateData['path'],
-                        'sizeInBytes' => $updateData['sizeInBytes'],
-                        'mtime' => $updateData['mtime'],
-                        'lastChecked' => $updateData['lastChecked'],
-                        'dateUpdated' => $updateData['dateUpdated'],
-                    ], ['pathHash' => $updateData['pathHash']])
+                        'path' => $file['path'],
+                        'sizeInBytes' => $file['sizeInBytes'],
+                        'mtime' => $file['mtime'] ?? 0,
+                        'lastChecked' => $file['lastChecked'],
+                        'dateUpdated' => new Expression('NOW()'),
+                    ], ['pathHash' => $file['pathHash']])
                     ->execute();
             }
         }
     }
 
     /**
-     * Clean up files that no longer exist
+     * Clean up files that no longer exist using Mark and Sweep
      * 
-     * @param array $scannedPathHashes Array of path hashes from current scan
+     * @param \DateTime $scanTime The timestamp of the current scan
+     * @param string $basePath The base path that was scanned
      * @return int Number of deleted records
      */
-    private function cleanupDeletedFiles(array $scannedPathHashes): int
+    private function cleanupDeletedFiles(\DateTime $scanTime, string $basePath): int
     {
-        if (empty($scannedPathHashes)) {
-            // If no files scanned, delete all records (likely a fresh scan or error)
-            return FileSizeRecord::deleteAll();
-        }
-
-        // For large datasets, delete in chunks to avoid memory issues
-        $chunkSize = 10000;
-        $totalDeleted = 0;
-
-        // Get all existing path hashes from database
-        $existingHashes = FileSizeRecord::find()
-            ->select('pathHash')
-            ->column();
-
-        // Find hashes that exist in DB but not in scanned files
-        $hashesToDelete = array_diff($existingHashes, $scannedPathHashes);
-
-        if (empty($hashesToDelete)) {
-            return 0;
-        }
-
-        // Delete in chunks using direct SQL
-        $chunks = array_chunk($hashesToDelete, $chunkSize);
-        $db = Craft::$app->getDb();
         $tableName = FileSizeRecord::tableName();
 
-        foreach ($chunks as $chunk) {
-            $deleted = $db->createCommand()
-                ->delete($tableName, ['in', 'pathHash', $chunk])
-                ->execute();
-            $totalDeleted += $deleted;
-        }
+        // Ensure base path ends with a directory separator for the LIKE query
+        $basePath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $formattedTime = $scanTime->format('Y-m-d H:i:s');
 
-        return $totalDeleted;
+        // Delete files within the scanned path that have an older timestamp
+        // (meaning they were not found/updated in the current scan)
+        return Craft::$app->getDb()->createCommand()
+            ->delete($tableName, [
+                'and',
+                ['<', 'lastChecked', $formattedTime],
+                ['like', 'path', $basePath . '%']
+            ])
+            ->execute();
     }
 
     /**
