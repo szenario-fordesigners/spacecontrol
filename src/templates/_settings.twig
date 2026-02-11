@@ -42,14 +42,12 @@
 	</p>
 	<div class="fieldset">
 		<div class="setting-block setting-block-send-notifications">
-
 			<h3 class="blockFix">Activate Email Notifications</h3>
 			{{ forms.lightswitchField({
-    name: 'emailNotificationsEnabled',
-    value: settings.emailNotificationsEnabled,
-    on: settings.emailNotificationsEnabled,
-}) }}
-
+				name: 'emailNotificationsEnabled',
+				value: settings.emailNotificationsEnabled,
+				on: settings.emailNotificationsEnabled,
+			}) }}
 		</div>
 
 		<div class="setting-block">
@@ -59,21 +57,20 @@
 			</p>
 
 			{{ forms.editableTableField({
-    id: 'emailRecipients',
-    name: 'emailRecipients',
-    allowAdd: true,
-    allowDelete: true,
-    allowReorder:true,
-    addRowLabel: 'Add Email Address',
-    cols: [
-        {
-            heading : 'Email Address',
-            type: 'email',
-        },
-    ],
-    rows: settings.emailRecipients,
-}) }}
+				id: 'emailRecipients',
+				name: 'emailRecipients',
+				allowAdd: true,
+				allowDelete: true,
+				allowReorder:true,
+				addRowLabel: 'Add Email Address',
+				cols: [
+					{
+						heading : 'Email Address',
+						type: 'email',
+					},
+				],
+				rows: settings.emailRecipients,
+			}) }}
 		</div>
-
 	</div>
-</div></div>
+</div>
