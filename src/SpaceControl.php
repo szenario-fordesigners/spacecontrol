@@ -125,7 +125,7 @@ class SpaceControl extends Plugin
         if ($this->isSpaceControlJobInQueue()) {
             Craft::info('SpaceControl job already in queue, skipping', 'spacecontrol');
             // Extend debounce since it's already there
-            $cache->set($cacheKey, true, 15);
+            $cache->set($cacheKey, true, 5);
             return;
         }
 
@@ -134,7 +134,7 @@ class SpaceControl extends Plugin
         \craft\helpers\Queue::push($job);
 
         // Set debounce lock
-        $cache->set($cacheKey, true, 15);
+        $cache->set($cacheKey, true, 5);
 
         Craft::info('SpaceControl job added to queue', 'spacecontrol');
     }
