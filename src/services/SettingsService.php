@@ -16,22 +16,7 @@ class SettingsService
     public function getPluginData(string $key, $default = null)
     {
         $record = PluginDataRecord::findOne(['key' => $key]);
-
-        if (!$record) {
-            return $default;
-        }
-
-        // Handle boolean values
-        if (in_array($key, ['isInitialized', 'notificationLowTriggered', 'notificationMediumTriggered', 'notificationHighTriggered'])) {
-            return (bool) $record->value;
-        }
-
-        // Handle numeric values
-        if (in_array($key, ['diskUsageAbsolute', 'diskUsagePercent', 'lastCalculationTime', 'notificationLimitLow', 'notificationLimitMedium', 'notificationLimitHigh'])) {
-            return is_numeric($record->value) ? (float) $record->value : 0;
-        }
-
-        return $record->value;
+        return $this->castValue($record);
     }
 
     /**
@@ -65,6 +50,26 @@ class SettingsService
         return $success;
     }
 
+
+    public function castValue($record)
+    {
+        if (!$record) {
+            return null;
+        }
+
+        // Handle boolean values
+        if (in_array($record->key, ['isInitialized', 'notificationLowTriggered', 'notificationMediumTriggered', 'notificationHighTriggered'])) {
+            return (bool) $record->value;
+        }
+
+        // Handle numeric values
+        if (in_array($record->key, ['diskUsageAbsolute', 'diskUsagePercent', 'lastCalculationTime', 'notificationLimitLow', 'notificationLimitMedium', 'notificationLimitHigh'])) {
+            return is_numeric($record->value) ? (float) $record->value : 0;
+        }
+
+        return $record->value;
+    }
+
     /**
      * Get all plugin data as an object
      */
@@ -75,7 +80,7 @@ class SettingsService
 
         foreach ($records as $record) {
             $key = $record->key;
-            $dataObject->$key = $this->getPluginData($key);
+            $dataObject->$key = $this->castValue($record);
         }
 
         // Set default values for any missing plugin data
