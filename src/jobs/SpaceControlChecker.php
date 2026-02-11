@@ -13,8 +13,8 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
     public function getTtr()
     {
-        // Max execution time of 60 seconds to handle large directories
-        return 60;
+        // Max execution time of 30 minutes to handle large directories
+        return 600;
     }
 
     public function canRetry($attempt, $error)
