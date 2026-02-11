@@ -13,7 +13,7 @@ class SettingsService
     /**
      * Get plugin data value (internal plugin data from spacecontrol_plugin_data table)
      */
-    public function getPluginData(string $key, $default = null)
+    public function getPluginData(string $key)
     {
         $record = PluginDataRecord::findOne(['key' => $key]);
         return $this->castValue($record);
