@@ -10,11 +10,17 @@ use szenario\craftspacecontrol\records\PluginDataRecord;
  */
 class SettingsService
 {
+    private const TABLE_NAME_PLUGIN_DATA = '{{%spacecontrol_plugin_data}}';
+
     /**
      * Get plugin data value (internal plugin data from spacecontrol_plugin_data table)
      */
     public function getPluginData(string $key)
     {
+        if (!$this->pluginDataTableExists()) {
+            return null;
+        }
+
         $record = PluginDataRecord::findOne(['key' => $key]);
         return $this->castValue($record);
     }
@@ -24,6 +30,11 @@ class SettingsService
      */
     public function setPluginData(string $key, $value): bool
     {
+        if (!$this->pluginDataTableExists()) {
+            Craft::warning('Cannot save plugin data because spacecontrol_plugin_data table does not exist yet.', 'spacecontrol');
+            return false;
+        }
+
         $record = PluginDataRecord::findOne(['key' => $key]);
 
         if (!$record) {
@@ -75,15 +86,34 @@ class SettingsService
      */
     public function getAllPluginData(): object
     {
-        $records = PluginDataRecord::find()->all();
         $dataObject = new \stdClass();
+
+        if (!$this->pluginDataTableExists()) {
+            return $this->applyDefaults($dataObject);
+        }
+
+        $records = PluginDataRecord::find()->all();
 
         foreach ($records as $record) {
             $key = $record->key;
             $dataObject->$key = $this->castValue($record);
         }
 
-        // Set default values for any missing plugin data
+        return $this->applyDefaults($dataObject);
+    }
+
+    private function pluginDataTableExists(): bool
+    {
+        try {
+            return Craft::$app->getDb()->tableExists(self::TABLE_NAME_PLUGIN_DATA);
+        } catch (\Throwable $e) {
+            Craft::warning('Could not verify plugin data table existence: ' . $e->getMessage(), 'spacecontrol');
+            return false;
+        }
+    }
+
+    private function applyDefaults(object $dataObject): object
+    {
         $defaults = [
             'diskUsageAbsolute' => 0,
             'diskUsagePercent' => 0.0,
