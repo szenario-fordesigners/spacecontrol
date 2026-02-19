@@ -88,11 +88,15 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             "isInitialized" => true,
         ]);
 
-        Craft::info("SpaceControl scan completed: {$scanResults['totalFiles']} files, {$scanResults['deletedFiles']} deleted, {$scanResults['duration']}s", 'spacecontrol');
+        $scanDurationMs = $scanResults['durationMs'] ?? round(($scanResults['duration'] ?? 0) * 1000, 2);
+        Craft::info(
+            "spacecontrol scan completed: {$scanResults['totalFiles']} files, {$scanResults['deletedFiles']} deleted, {$scanResults['duration']}s ({$scanDurationMs}ms)",
+            'spacecontrol'
+        );
     }
 
     protected function defaultDescription(): string
     {
-        return Craft::t('app', '[SpaceControl] Disk Usage Check');
+        return Craft::t('app', '[spacecontrol] Disk Usage Check');
     }
 }

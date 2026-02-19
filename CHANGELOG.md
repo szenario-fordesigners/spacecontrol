@@ -1,4 +1,4 @@
-# Release Notes for SpaceControl
+# Release Notes for spacecontrol
 
 ## 5.1.3 - 2025-08-27
 ### Improved

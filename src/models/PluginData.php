@@ -5,7 +5,7 @@ namespace szenario\craftspacecontrol\models;
 use craft\base\Model;
 
 /**
- * SpaceControl internal plugin data model
+ * spacecontrol internal plugin data model
  */
 class PluginData extends Model
 {

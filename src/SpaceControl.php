@@ -93,14 +93,14 @@ class SpaceControl extends Plugin
             foreach ($jobs as $job) {
                 if (
                     isset($job['description']) &&
-                    strpos($job['description'], '[SpaceControl]') !== false &&
+                    strpos($job['description'], '[spacecontrol]') !== false &&
                     $job['status'] === \craft\queue\Queue::STATUS_WAITING
                 ) {
                     return true;
                 }
             }
         } catch (\Throwable $e) {
-            Craft::warning('Could not check queue for existing SpaceControl jobs: ' . $e->getMessage(), 'spacecontrol');
+            Craft::warning('Could not check queue for existing spacecontrol jobs: ' . $e->getMessage(), 'spacecontrol');
         }
 
         return false;
@@ -116,14 +116,14 @@ class SpaceControl extends Plugin
         $cacheKey = 'spacecontrol_job_queued_recently';
 
         if ($cache->get($cacheKey)) {
-            Craft::info('SpaceControl job debounced (recently queued)', 'spacecontrol');
+            Craft::info('spacecontrol job debounced (recently queued)', 'spacecontrol');
             return;
         }
 
-        Craft::info('Adding SpaceControl job to queue', 'spacecontrol');
+        Craft::info('Adding spacecontrol job to queue', 'spacecontrol');
 
         if ($this->isSpaceControlJobInQueue()) {
-            Craft::info('SpaceControl job already in queue, skipping', 'spacecontrol');
+            Craft::info('spacecontrol job already in queue, skipping', 'spacecontrol');
             // Extend debounce since it's already there
             $cache->set($cacheKey, true, 5);
             return;
@@ -136,7 +136,7 @@ class SpaceControl extends Plugin
         // Set debounce lock
         $cache->set($cacheKey, true, 5);
 
-        Craft::info('SpaceControl job added to queue', 'spacecontrol');
+        Craft::info('spacecontrol job added to queue', 'spacecontrol');
     }
 
     private function attachEventHandlers(): void

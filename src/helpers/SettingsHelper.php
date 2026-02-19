@@ -23,7 +23,7 @@ class SettingsHelper
     {
         // Start with default/user settings
         $settings = new \stdClass();
-        
+
         $plugin = SpaceControl::getInstance();
         if ($plugin) {
             $userSettings = $plugin->getSettings();
@@ -98,15 +98,15 @@ class SettingsHelper
                 $plugin = SpaceControl::getInstance();
                 $settings = $plugin->getSettings()->toArray();
                 $settings[$key] = $value;
-                
+
                 $success = Craft::$app->getPlugins()->savePluginSettings($plugin, $settings);
             }
 
             if (!$success) {
-                Craft::error('Failed to save SpaceControl setting: ' . $key, 'spacecontrol');
+                Craft::error('Failed to save spacecontrol setting: ' . $key, 'spacecontrol');
             }
         } catch (\Throwable $e) {
-            Craft::error('Failed to save SpaceControl setting ' . $key . ': ' . $e->getMessage(), 'spacecontrol');
+            Craft::error('Failed to save spacecontrol setting ' . $key . ': ' . $e->getMessage(), 'spacecontrol');
         }
     }
 
@@ -146,10 +146,10 @@ class SettingsHelper
                 $plugin = SpaceControl::getInstance();
                 $currentSettings = $plugin->getSettings()->toArray();
                 $newSettings = array_merge($currentSettings, $userSettings);
-                
+
                 if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $newSettings)) {
                     $success = false;
-                    Craft::error('Failed to save some SpaceControl settings', 'spacecontrol');
+                    Craft::error('Failed to save some spacecontrol settings', 'spacecontrol');
                 }
             }
 
@@ -157,13 +157,13 @@ class SettingsHelper
             if (!empty($pluginData)) {
                 if (!self::getService()->setPluginDataValues($pluginData)) {
                     $success = false;
-                    Craft::error('Failed to save some SpaceControl plugin data', 'spacecontrol');
+                    Craft::error('Failed to save some spacecontrol plugin data', 'spacecontrol');
                 }
             }
 
             return $success;
         } catch (\Throwable $e) {
-            Craft::error('Failed to save SpaceControl settings: ' . $e->getMessage(), 'spacecontrol');
+            Craft::error('Failed to save spacecontrol settings: ' . $e->getMessage(), 'spacecontrol');
             return false;
         }
     }

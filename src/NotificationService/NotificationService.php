@@ -4,7 +4,6 @@ namespace szenario\craftspacecontrol\NotificationService;
 
 
 use Craft;
-use craft\helpers\App;
 use szenario\craftspacecontrol\NotificationService\EmailNotification;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 
@@ -105,7 +104,7 @@ To maintain optimal website performance please contact your hosting provider.
           
 —
 
-SpaceControl
+spacecontrol
 Webspace Monitoring On Point for Craft CMS
 developed by szenario"
         ];

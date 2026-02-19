@@ -5,7 +5,7 @@ namespace szenario\craftspacecontrol\models;
 use craft\base\Model;
 
 /**
- * SpaceControl user-editable settings model
+ * spacecontrol user-editable settings model
  */
 class Settings extends Model
 {

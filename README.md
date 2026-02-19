@@ -1,8 +1,8 @@
-# SpaceControl
+# spacecontrol
 
 ### Webspace Monitoring On Point.
 
-SpaceControl was made to ensure you never run out of webspace. With its minimal interface the widget provides an easy
+spacecontrol was made to ensure you never run out of webspace. With its minimal interface the widget provides an easy
 overview of the current webspace usage, displays a warning and sends email notifications when it’s time for taking action.  
 
 A few pixels on your Craft dashboard, a big step for your website.
@@ -17,9 +17,9 @@ This plugin requires Craft CMS 5.0.0 or later and PHP 8.2 or later.
 
 ## Installation
 
-The **easiest way** to install SpaceControl is via the Craft **<a href="https://plugins.craftcms.com/spacecontrol" target="_blank">Plugin Store</a>** in your control panel.  
+The **easiest way** to install spacecontrol is via the Craft **<a href="https://plugins.craftcms.com/spacecontrol" target="_blank">Plugin Store</a>** in your control panel.  
 <br> 
-To install SpaceControl using Composer, follow these steps:
+To install spacecontrol using Composer, follow these steps:
 
 1. Open your terminal and go to your Craft project:
 
@@ -30,7 +30,7 @@ To install SpaceControl using Composer, follow these steps:
        composer require szenario/craft-spacecontrol
 
 3. Install the plugin via `craft install/plugin spacecontrol` via the CLI, or in the Control Panel, go to Settings →
-   Plugins and click the “Install” button for SpaceControl.
+   Plugins and click the “Install” button for spacecontrol.
 
 ## Settings
 
