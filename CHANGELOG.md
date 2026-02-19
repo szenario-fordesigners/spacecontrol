@@ -5,18 +5,12 @@
 - Prevent the Craft queue from locking up with spacecontrol jobs
 
 ## 5.1.2 - 2025-08-27
-### Fixed
-- Versioning fix
-
-## 5.1.1 - 2025-08-27
-### Fixed
-- Versioning fix
-
-## 5.1.0 - 2025-08-26
 ### Improved
 - Cleaned up design
 - More focused information
 - Improved reliability
+### Fixed
+- Versioning fix
 
 ## 5.0.0 - 2024-06-07
 ### Added
