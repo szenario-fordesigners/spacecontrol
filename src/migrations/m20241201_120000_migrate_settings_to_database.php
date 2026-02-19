@@ -8,9 +8,13 @@ use yii\db\Expression;
 
 class m20241201_120000_migrate_settings_to_database extends Migration
 {
+    private const TABLE_NAME_PLUGIN_DATA = '{{%spacecontrol_plugin_data}}';
+
     public function safeUp(): bool
     {
         try {
+            $this->ensurePluginDataTableExists();
+
             // Get the plugin instance
             $plugin = \Craft::$app->getPlugins()->getPlugin('spacecontrol');
             if (!$plugin) {
@@ -111,6 +115,46 @@ class m20241201_120000_migrate_settings_to_database extends Migration
         // This migration is not reversible as we don't want to lose database settings
         echo "This migration cannot be reversed. Database settings will be preserved.\n";
         return true;
+    }
+
+    private function ensurePluginDataTableExists(): void
+    {
+        if ($this->db->tableExists(self::TABLE_NAME_PLUGIN_DATA)) {
+            return;
+        }
+
+        $this->createTable(self::TABLE_NAME_PLUGIN_DATA, [
+            'id' => $this->primaryKey(),
+            'key' => $this->string()->notNull()->unique(),
+            'value' => $this->text()->notNull(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+        ]);
+
+        $now = new Expression('NOW()');
+        $defaults = [
+            'diskUsageAbsolute' => '0',
+            'diskUsagePercent' => '0.0',
+            'isInitialized' => '0',
+            'lastCalculationTime' => '0',
+            'notificationLimitLow' => '90',
+            'notificationLimitMedium' => '95',
+            'notificationLimitHigh' => '99',
+            'notificationLowTriggered' => '0',
+            'notificationMediumTriggered' => '0',
+            'notificationHighTriggered' => '0',
+        ];
+
+        foreach ($defaults as $key => $value) {
+            $this->insert(self::TABLE_NAME_PLUGIN_DATA, [
+                'key' => $key,
+                'value' => $value,
+                'dateCreated' => $now,
+                'dateUpdated' => $now,
+            ]);
+        }
+
+        echo "Created missing table spacecontrol_plugin_data with default values.\n";
     }
 }
 
