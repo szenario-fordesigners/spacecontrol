@@ -20,6 +20,9 @@ use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
 use szenario\craftspacecontrol\models\Settings;
 use craft\base\Model;
+use craft\log\MonologTarget;
+use craft\helpers\App;
+use Psr\Log\LogLevel;
 
 /**
  * spacecontrol plugin
@@ -74,6 +77,7 @@ class SpaceControl extends Plugin
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function () {
             $this->attachEventHandlers();
+            $this->registerLogTarget();
         });
     }
 
@@ -255,5 +259,38 @@ class SpaceControl extends Plugin
                 }
             }
         );
+    }
+
+    /**
+     * Register a custom log target for SpaceControl plugin messages.
+     */
+    private function registerLogTarget(): void
+    {
+        $log = Craft::$app->getLog();
+        $targets = $log->targets;
+
+        // Check if the target already exists to avoid duplicates
+        $targetExists = false;
+        foreach ($targets as $target) {
+            if ($target instanceof MonologTarget && $target->name === 'spacecontrol') {
+                $targetExists = true;
+                break;
+            }
+        }
+
+        if (!$targetExists) {
+            $target = Craft::createObject([
+                'class' => MonologTarget::class,
+                'name' => 'spacecontrol',
+                'extractExceptionTrace' => !App::devMode(),
+                'allowLineBreaks' => App::devMode(),
+                'level' => App::devMode() ? LogLevel::DEBUG : LogLevel::INFO,
+                'categories' => ['spacecontrol'],
+                'logContext' => App::devMode(),
+            ]);
+
+            $targets[] = $target;
+            $log->targets = $targets;
+        }
     }
 }
