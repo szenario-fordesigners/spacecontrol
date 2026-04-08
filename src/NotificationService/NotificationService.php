@@ -31,7 +31,7 @@ class NotificationService
                 SettingsHelper::setValue("notificationHighTriggered", true);
                 SettingsHelper::setValue("notificationMediumTriggered", true);
                 SettingsHelper::setValue("notificationLowTriggered", true);
-                self::sendNotifications($settings);
+                self::sendNotifications($settings, 'Critical', $settings->notificationLimitHigh);
                 return;
             }
         }
@@ -51,7 +51,7 @@ class NotificationService
                 Craft::info("Medium notification not triggered yet.", "spacecontrol");
                 SettingsHelper::setValue("notificationMediumTriggered", true);
                 SettingsHelper::setValue("notificationLowTriggered", true);
-                self::sendNotifications($settings);
+                self::sendNotifications($settings, 'Warning', $settings->notificationLimitMedium);
                 return;
             }
         }
@@ -70,7 +70,7 @@ class NotificationService
             if (!$settings->notificationLowTriggered) {
                 Craft::info("Low notification not triggered yet.", "spacecontrol");
                 SettingsHelper::setValue("notificationLowTriggered", true);
-                self::sendNotifications($settings);
+                self::sendNotifications($settings, 'Notice', $settings->notificationLimitLow);
                 return;
             }
         }
@@ -82,9 +82,8 @@ class NotificationService
         }
     }
 
-    private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace)
+    private static function notificationTemplate(int $percentUsed, string $usedDiskSpace, string $totalDiskSpace, string $severity, int $threshold)
     {
-
         try {
             $parsedUrl = parse_url(\craft\helpers\UrlHelper::siteUrl());
             $truncatedDomain = $parsedUrl['host'] ?? 'unknown-domain';
@@ -94,14 +93,14 @@ class NotificationService
         }
 
         return [
-            "subject" => "{$percentUsed}% of webspace ({$truncatedDomain}) used",
-            "body" => "Notification
-            
-Webspace: {$truncatedDomain}
-{$percentUsed}% of {$totalDiskSpace}GB used
+            "subject" => "[{$severity}] {$percentUsed}% of webspace ({$truncatedDomain}) used",
+            "body" => "{$severity}: Disk usage exceeded {$threshold}% threshold
 
-To maintain optimal website performance please contact your hosting provider.            
-          
+Webspace: {$truncatedDomain}
+Usage:    {$percentUsed}% of {$totalDiskSpace} GB used
+
+To maintain optimal website performance please contact your hosting provider.
+
 —
 
 spacecontrol
@@ -111,14 +110,16 @@ developed by szenario"
     }
 
 
-    public static function sendNotifications($settings)
+    public static function sendNotifications($settings, string $severity, int $threshold)
     {
-        Craft::info("Building notification template", "spacecontrol");
-        // build notification template
+        Craft::info("Building notification template (severity: {$severity}, threshold: {$threshold}%)", "spacecontrol");
+
         $template = self::notificationTemplate(
             min($settings->diskUsagePercent, 100),
             $settings->diskUsageAbsolute,
-            $settings->diskTotalSpace
+            $settings->diskTotalSpace,
+            $severity,
+            $threshold
         );
 
         if ($template === null) {

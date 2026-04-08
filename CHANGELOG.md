@@ -2,12 +2,14 @@
 
 ## 5.2.0 - 2026-04-08
 ### Added
-- Cached scan results for better performance
 - Faster file scans with smarter database updates
 - Dedicated database tables instead of plugin settings
 - Better cleanup of removed files after scans
-- More robust URL parsing for email notifications
 - Dedicated log target for spacecontrol
+
+### Improved
+- Email notifications convey more urgency
+- More robust URL parsing for email notifications
 
 ## 5.1.3 - 2025-08-27
 ### Improved
