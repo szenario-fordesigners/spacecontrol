@@ -96,7 +96,7 @@ class SpaceControl extends Plugin
 
             foreach ($jobs as $job) {
                 if (
-                    isset($job['description']) &&
+                    isset($job['description'], $job['status']) &&
                     strpos($job['description'], '[spacecontrol]') !== false &&
                     $job['status'] === \craft\queue\Queue::STATUS_WAITING
                 ) {
