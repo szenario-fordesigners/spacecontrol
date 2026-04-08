@@ -1,5 +1,17 @@
 # Release Notes for spacecontrol
 
+## 5.2.0 - 2026-04-08
+### Added
+- Runtime state (disk usage, notification thresholds, initialization flag) is now stored in dedicated database tables (`spacecontrol_plugin_data`, `spacecontrol_file_sizes`) instead of Craft's plugin settings / project config
+- New `SettingsService` for typed read/write access to the `spacecontrol_plugin_data` table
+- New `FileScanningService` for recursive directory scanning with chunked DB upserts and staleness pruning
+- Migration (`m260408_120000_migrate_settings_to_database`) to carry existing project-config values into the new tables on first run
+### Improved
+- Disk usage now reflects actual allocated disk space (`stat()['blocks'] * 512`) rather than logical file size
+- Queue job TTR increased to 1800 s (30 minutes) to prevent long scans from being killed and retried prematurely
+- Table names in `Install.php` use Craft's `{{%...}}` prefix syntax so installs with a custom `tablePrefix` work correctly
+- Plugin instance null-guards added to `SettingsHelper::setValue()` and `setValues()` to prevent fatal errors during early bootstrap
+
 ## 5.1.3 - 2025-08-27
 ### Improved
 - Prevent the Craft queue from locking up with spacecontrol jobs
