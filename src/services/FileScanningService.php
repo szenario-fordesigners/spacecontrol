@@ -56,7 +56,9 @@ class FileScanningService
             }
 
             $pathHash = hash('sha256', $path);
-            $fileSize = $stats['size'] ?? $file->getSize();
+            $fileSize = isset($stats['blocks']) && is_numeric($stats['blocks'])
+                ? (int) $stats['blocks'] * 512
+                : ($stats['size'] ?? $file->getSize());
 
             $scannedFiles[] = [
                 'pathHash' => $pathHash,
