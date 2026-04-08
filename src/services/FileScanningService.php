@@ -24,7 +24,6 @@ class FileScanningService
         $scannedFiles = [];
         $totalSize = 0;
         $fileCount = 0;
-
         // Scan all files
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($basePath, \FilesystemIterator::SKIP_DOTS),
@@ -199,6 +198,7 @@ class FileScanningService
                     ->execute();
             }
         }
+
     }
 
     /**
@@ -212,19 +212,26 @@ class FileScanningService
     {
         $tableName = FileSizeRecord::tableName();
 
-        // Ensure base path ends with a directory separator for the LIKE query
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $formattedTime = $scanTime->format('Y-m-d H:i:s');
 
-        // Delete files within the scanned path that have an older timestamp
-        // (meaning they were not found/updated in the current scan)
-        return Craft::$app->getDb()->createCommand()
+        $db = Craft::$app->getDb();
+
+
+
+
+        $escapedPath = str_replace(['%', '_'], ['\%', '\_'], $basePath);
+
+        $deletedCount = $db->createCommand()
             ->delete($tableName, [
                 'and',
                 ['<', 'lastChecked', $formattedTime],
-                ['like', 'path', $basePath . '%']
-            ])
-            ->execute();
+                ['like', 'path', $escapedPath . '%', false]
+            ])->execute();
+
+        Craft::info("Sweep result: {$deletedCount} stale records deleted", 'spacecontrol');
+
+        return $deletedCount;
     }
 
     /**
