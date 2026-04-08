@@ -6,8 +6,8 @@ use craft\db\Migration;
 
 class Install extends Migration
 {
-    private $tableNamePluginData = 'spacecontrol_plugin_data';
-    private $tableNameFileSizes = 'spacecontrol_file_sizes';
+    private $tableNamePluginData = '{{%spacecontrol_plugin_data}}';
+    private $tableNameFileSizes = '{{%spacecontrol_file_sizes}}';
 
     public function safeUp(): bool
     {
