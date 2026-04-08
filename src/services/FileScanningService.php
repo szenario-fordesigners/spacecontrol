@@ -229,8 +229,6 @@ class FileScanningService
                 ['like', 'path', $escapedPath . '%', false]
             ])->execute();
 
-        Craft::info("Sweep result: {$deletedCount} stale records deleted", 'spacecontrol');
-
         return $deletedCount;
     }
 

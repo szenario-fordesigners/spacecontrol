@@ -12,15 +12,8 @@ class NotificationService
     public static function start()
     {
         $settings = SettingsHelper::getPluginSettings();
-
-        if ($settings === null) {
-            Craft::warning("Settings object not found", "spacecontrol");
-            return;
-        }
-
         $diskUsagePercent = $settings->diskUsagePercent;
 
-        Craft::info("Starting notification service", "spacecontrol");
         // »»---------------------► HIGH LIMIT ◄---------------------««
 
         if ($diskUsagePercent >= $settings->notificationLimitHigh) {
