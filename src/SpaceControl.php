@@ -33,7 +33,7 @@ use Psr\Log\LogLevel;
  */
 class SpaceControl extends Plugin
 {
-    public string $schemaVersion = '1.1.0';
+    public string $schemaVersion = '2.0.0';
     public bool $hasCpSettings = true;
 
 
