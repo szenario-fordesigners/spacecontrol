@@ -1,27 +1,31 @@
-# Release Notes for SpaceControl
+# Release Notes for spacecontrol
+
+## 5.2.0 - 2026-04-08
+### Added
+- Faster file scans with smarter database updates
+- Dedicated database tables instead of plugin settings
+- Better cleanup of removed files after scans
+- Dedicated log target for spacecontrol
+
+### Improved
+- Email notifications convey more urgency
+- More robust URL parsing for email notifications
 
 ## 5.1.3 - 2025-08-27
 ### Improved
 - Prevent the Craft queue from locking up with spacecontrol jobs
 
 ## 5.1.2 - 2025-08-27
-### Fixed
-- Versioning fix
-
-## 5.1.1 - 2025-08-27
-### Fixed
-- Versioning fix
-
-## 5.1.0 - 2025-08-26
 ### Improved
 - Cleaned up design
 - More focused information
 - Improved reliability
+### Fixed
+- Versioning fix
 
 ## 5.0.0 - 2024-06-07
 ### Added
 - Craft 5 compatibility
-
 ## 1.3.2 - 2024-06-04
 ### Removed
 - Craft 5 compatibility, will be added again
@@ -75,3 +79,4 @@
 
 ## 1.0.0 - 2023-07-27
 - Initial release 🎉
+

@@ -3,7 +3,6 @@
 namespace szenario\craftspacecontrol\jobs;
 
 use Craft;
-use szenario\craftspacecontrol\helpers\FolderSizeHelper;
 use szenario\craftspacecontrol\helpers\SettingsHelper;
 use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
 use szenario\craftspacecontrol\NotificationService\NotificationService;
@@ -14,7 +13,7 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
 
     public function getTtr()
     {
-        // Max execution time of 60 seconds to handle large directories
+        // Max execution time of 1 minute to handle large directories
         return 60;
     }
 
@@ -62,11 +61,16 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
         $throttleInterval = 300; // 5 minutes
 
         if (!$force && ($currentTime - $lastCalculation) < $throttleInterval) {
-            Craft::info("Skipping disk usage calculation due to throttling", "spacecontrol");
             return;
         }
 
-        $diskUsageAbsolute = self::calculateProjectSize();
+        $basePath = Craft::getAlias('@root');
+
+        // Scan files and sync with database
+        $fileScanningService = Craft::$app->getPlugins()->getPlugin('spacecontrol')->get('fileScanning');
+        $scanResults = $fileScanningService->scanAndSyncFiles($basePath, 1000);
+
+        $diskUsageAbsolute = $scanResults['totalSize'];
 
         if ($addDatabaseToTotalSize) {
             $dbSize = DatabaseSizeHelper::getDBSize();
@@ -82,16 +86,16 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
             "lastCalculationTime" => $currentTime,
             "isInitialized" => true,
         ]);
-    }
 
-    private static function calculateProjectSize(): int
-    {
-        $basePath = Craft::getAlias('@root');
-        return FolderSizeHelper::getDirectorySize($basePath);
+        $scanDurationMs = $scanResults['durationMs'] ?? round(($scanResults['duration'] ?? 0) * 1000, 2);
+        Craft::info(
+            "spacecontrol scan completed: {$scanResults['totalFiles']} files, {$scanResults['deletedFiles']} deleted, {$scanResults['duration']}s ({$scanDurationMs}ms)",
+            'spacecontrol'
+        );
     }
 
     protected function defaultDescription(): string
     {
-        return Craft::t('app', 'SpaceControl Disk Usage Check');
+        return Craft::t('app', '[spacecontrol] Disk Usage Check');
     }
 }

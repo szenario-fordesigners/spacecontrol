@@ -2,14 +2,12 @@
 namespace szenario\craftspacecontrol\NotificationService;
 
 use Craft;
-use craft\helpers\App;
 use craft\mail\Message;
 
 class EmailNotification
 {
     public static function sendEmailNotification($settings, $template)
     {
-        // get email addresses
         $recipients = $settings->emailRecipients;
 
         foreach ($recipients as $recipient) {
@@ -18,30 +16,31 @@ class EmailNotification
                 continue;
             }
 
-            Craft::info("Email notification recipient: " . $email, "spacecontrol");
-
             try {
-                $domain = explode('//', \craft\helpers\UrlHelper::siteUrl())[1];
-                $truncatedDomain = rtrim($domain, '/') ?: $domain;
+                $parsedUrl = parse_url(\craft\helpers\UrlHelper::siteUrl());
+                $truncatedDomain = $parsedUrl['host'] ?? 'unknown-domain';
             } catch (\Exception $e) {
-                Craft::error("Could not get domain", "spacecontrol");
-                return null;
+                Craft::error("Could not resolve site URL for email sender", "spacecontrol");
+                return;
             }
 
             try {
-                $message = new Message();
-
-                // Get the from address from Craft's mailer settings
                 $mailer = Craft::$app->getMailer();
-                $fromAddress = $mailer->from;
+                $fromRaw = $mailer->from;
 
-                // If no from address is configured in Craft, use a fallback
-                if (empty($fromAddress)) {
-                    $fromAddress = 'noreply@' . $truncatedDomain;
+                if (is_array($fromRaw)) {
+                    $fromEmail = array_key_first($fromRaw);
+                } else {
+                    $fromEmail = $fromRaw;
                 }
 
-                $message->setFrom([$fromAddress => 'SpaceControl']);
-                $message->setSender($fromAddress);
+                if (empty($fromEmail)) {
+                    $fromEmail = 'noreply@' . $truncatedDomain;
+                }
+
+                $message = new Message();
+                $message->setFrom([$fromEmail => 'SpaceControl']);
+                $message->setSender($fromEmail);
                 $message->setTo($email);
                 $message->setSubject($template['subject']);
                 $message->setTextBody($template['body']);
@@ -49,12 +48,10 @@ class EmailNotification
                 $result = $mailer->send($message);
 
                 if (!$result) {
-                    Craft::error('Mailer returned false when sending email to: ' . $email, "spacecontrol");
+                    Craft::error("Failed to send email to {$email}", "spacecontrol");
                 }
-
             } catch (\Exception $e) {
-                Craft::error('Failed to send email to: ' . $email . ' - ' . $template['subject'], "spacecontrol");
-                Craft::error($e->getMessage(), "spacecontrol");
+                Craft::error("Failed to send email to {$email}: {$e->getMessage()}", "spacecontrol");
                 continue;
             }
         }

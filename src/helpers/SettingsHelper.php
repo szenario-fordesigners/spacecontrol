@@ -3,96 +3,168 @@
 namespace szenario\craftspacecontrol\helpers;
 
 use Craft;
+use szenario\craftspacecontrol\services\SettingsService;
+use szenario\craftspacecontrol\SpaceControl;
 
 class SettingsHelper
 {
+    private static ?SettingsService $_service = null;
+
+    private static function getService(): SettingsService
+    {
+        if (self::$_service === null) {
+            self::$_service = new SettingsService();
+        }
+        return self::$_service;
+    }
+
     // PLUGIN SETTINGS GETTER
     public static function getPluginSettings()
     {
-        return Craft::$app->getPlugins()->getPlugin('spacecontrol')->getSettings();
+        // Start with default/user settings
+        $settings = new \stdClass();
+
+        $plugin = SpaceControl::getInstance();
+        if ($plugin) {
+            $userSettings = $plugin->getSettings();
+            foreach ($userSettings as $key => $value) {
+                $settings->$key = $value;
+            }
+        }
+
+        // Merge in dynamic plugin data
+        $pluginData = self::getService()->getAllPluginData();
+        foreach ($pluginData as $key => $value) {
+            $settings->$key = $value;
+        }
+
+        return $settings;
     }
 
     public static function getSetting($key)
     {
-        $settings = SettingsHelper::getPluginSettings();
-        return $settings->$key;
+        // Check if this is a plugin data key
+        $pluginDataKeys = [
+            'diskUsageAbsolute',
+            'diskUsagePercent',
+            'isInitialized',
+            'lastCalculationTime',
+            'notificationLimitLow',
+            'notificationLimitMedium',
+            'notificationLimitHigh',
+            'notificationLowTriggered',
+            'notificationMediumTriggered',
+            'notificationHighTriggered',
+        ];
+
+        if (in_array($key, $pluginDataKeys)) {
+            return self::getService()->getPluginData($key);
+        }
+
+        // Otherwise, get from Craft's built-in settings
+        $plugin = SpaceControl::getInstance();
+        if ($plugin) {
+            $userSettings = $plugin->getSettings();
+            if (isset($userSettings->$key)) {
+                return $userSettings->$key;
+            }
+        }
+
+        return null;
     }
 
     // PLUGIN SETTINGS SETTER
     public static function setValue($key, $value)
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-        if ($plugin === null) {
-            Craft::warning('SpaceControl plugin not found when trying to save setting: ' . $key, 'spacecontrol');
-            return;
-        }
-
-        $settings = $plugin->getSettings();
-        $settings->$key = $value;
-
-        // Create a safe array with only the properties we want to save
-        $settingsArray = [
-            'diskTotalSpace' => $settings->diskTotalSpace,
-            'diskUsageAbsolute' => $settings->diskUsageAbsolute,
-            'diskUsagePercent' => $settings->diskUsagePercent,
-            'addDatabaseToTotalSize' => $settings->addDatabaseToTotalSize,
-            'isInitialized' => $settings->isInitialized,
-            'lastCalculationTime' => $settings->lastCalculationTime,
-            'notificationLimitLow' => $settings->notificationLimitLow,
-            'notificationLimitMedium' => $settings->notificationLimitMedium,
-            'notificationLimitHigh' => $settings->notificationLimitHigh,
-            'notificationLowTriggered' => $settings->notificationLowTriggered,
-            'notificationMediumTriggered' => $settings->notificationMediumTriggered,
-            'notificationHighTriggered' => $settings->notificationHighTriggered,
-            'emailNotificationsEnabled' => $settings->emailNotificationsEnabled,
-            'emailRecipients' => $settings->emailRecipients,
-        ];
-
         try {
-            Craft::$app->getPlugins()->savePluginSettings($plugin, $settingsArray);
+            // Check if this is a plugin data key
+            $pluginDataKeys = [
+                'diskUsageAbsolute',
+                'diskUsagePercent',
+                'isInitialized',
+                'lastCalculationTime',
+                'notificationLimitLow',
+                'notificationLimitMedium',
+                'notificationLimitHigh',
+                'notificationLowTriggered',
+                'notificationMediumTriggered',
+                'notificationHighTriggered',
+            ];
+
+            if (in_array($key, $pluginDataKeys)) {
+                $success = self::getService()->setPluginData($key, $value);
+            } else {
+                // For user settings, use Craft's savePluginSettings
+                $plugin = SpaceControl::getInstance();
+                $settings = $plugin->getSettings()->toArray();
+                $settings[$key] = $value;
+
+                $success = Craft::$app->getPlugins()->savePluginSettings($plugin, $settings);
+            }
+
+            if (!$success) {
+                Craft::error('Failed to save spacecontrol setting: ' . $key, 'spacecontrol');
+            }
         } catch (\Throwable $e) {
-            Craft::error('Failed to save SpaceControl setting ' . $key . ': ' . $e->getMessage(), 'spacecontrol');
+            Craft::error('Failed to save spacecontrol setting ' . $key . ': ' . $e->getMessage(), 'spacecontrol');
         }
     }
 
     // PLUGIN SETTINGS BATCH SETTER
     public static function setValues(array $values)
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('spacecontrol');
-        if ($plugin === null) {
-            Craft::warning('SpaceControl plugin not found when trying to save settings', 'spacecontrol');
-            return;
-        }
-
-        $settings = $plugin->getSettings();
-
-        // Update the settings object with new values
-        foreach ($values as $key => $value) {
-            $settings->$key = $value;
-        }
-
-        // Create a safe array with only the properties we want to save
-        $settingsArray = [
-            'diskTotalSpace' => $settings->diskTotalSpace,
-            'diskUsageAbsolute' => $settings->diskUsageAbsolute,
-            'diskUsagePercent' => $settings->diskUsagePercent,
-            'addDatabaseToTotalSize' => $settings->addDatabaseToTotalSize,
-            'isInitialized' => $settings->isInitialized,
-            'lastCalculationTime' => $settings->lastCalculationTime,
-            'notificationLimitLow' => $settings->notificationLimitLow,
-            'notificationLimitMedium' => $settings->notificationLimitMedium,
-            'notificationLimitHigh' => $settings->notificationLimitHigh,
-            'notificationLowTriggered' => $settings->notificationLowTriggered,
-            'notificationMediumTriggered' => $settings->notificationMediumTriggered,
-            'notificationHighTriggered' => $settings->notificationHighTriggered,
-            'emailNotificationsEnabled' => $settings->emailNotificationsEnabled,
-            'emailRecipients' => $settings->emailRecipients,
-        ];
-
         try {
-            Craft::$app->getPlugins()->savePluginSettings($plugin, $settingsArray);
+            // Separate user settings from plugin data
+            $pluginDataKeys = [
+                'diskUsageAbsolute',
+                'diskUsagePercent',
+                'isInitialized',
+                'lastCalculationTime',
+                'notificationLimitLow',
+                'notificationLimitMedium',
+                'notificationLimitHigh',
+                'notificationLowTriggered',
+                'notificationMediumTriggered',
+                'notificationHighTriggered',
+            ];
+
+            $userSettings = [];
+            $pluginData = [];
+
+            foreach ($values as $key => $value) {
+                if (in_array($key, $pluginDataKeys)) {
+                    $pluginData[$key] = $value;
+                } else {
+                    $userSettings[$key] = $value;
+                }
+            }
+
+            $success = true;
+
+            // Save user settings
+            if (!empty($userSettings)) {
+                $plugin = SpaceControl::getInstance();
+                $currentSettings = $plugin->getSettings()->toArray();
+                $newSettings = array_merge($currentSettings, $userSettings);
+
+                if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $newSettings)) {
+                    $success = false;
+                    Craft::error('Failed to save some spacecontrol settings', 'spacecontrol');
+                }
+            }
+
+            // Save plugin data
+            if (!empty($pluginData)) {
+                if (!self::getService()->setPluginDataValues($pluginData)) {
+                    $success = false;
+                    Craft::error('Failed to save some spacecontrol plugin data', 'spacecontrol');
+                }
+            }
+
+            return $success;
         } catch (\Throwable $e) {
-            Craft::error('Failed to save SpaceControl settings: ' . $e->getMessage(), 'spacecontrol');
+            Craft::error('Failed to save spacecontrol settings: ' . $e->getMessage(), 'spacecontrol');
+            return false;
         }
     }
 }

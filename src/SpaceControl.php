@@ -3,7 +3,6 @@
 namespace szenario\craftspacecontrol;
 
 use Craft;
-use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\ModelEvent;
 use craft\helpers\ElementHelper;
@@ -13,14 +12,17 @@ use craft\services\Plugins;
 use yii\base\Event;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Dashboard;
-use szenario\craftspacecontrol\models\Settings;
 use szenario\craftspacecontrol\widgets\SpaceControlWidget;
 use szenario\craftspacecontrol\jobs\SpaceControlChecker;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlSettingsAsset;
-use szenario\craftspacecontrol\helpers\SettingsHelper;
 use craft\web\View;
 use craft\events\TemplateEvent;
 use putyourlightson\sprig\Sprig;
+use szenario\craftspacecontrol\models\Settings;
+use craft\base\Model;
+use craft\log\MonologTarget;
+use craft\helpers\App;
+use Psr\Log\LogLevel;
 
 /**
  * spacecontrol plugin
@@ -31,26 +33,36 @@ use putyourlightson\sprig\Sprig;
  */
 class SpaceControl extends Plugin
 {
-    public string $schemaVersion = '1.0.0';
+    public string $schemaVersion = '2.0.0';
     public bool $hasCpSettings = true;
 
-
-    protected function settingsHtml(): ?string
-    {
-
-        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings.twig', [
-            'plugin' => $this,
-            'settings' => $this->getSettings(),
-        ]);
-    }
 
     public static function config(): array
     {
         return [
             'components' => [
-                // Define component configs here...
+                'settings' => \szenario\craftspacecontrol\services\SettingsService::class,
+                'fileScanning' => \szenario\craftspacecontrol\services\FileScanningService::class,
             ],
         ];
+    }
+
+    /**
+     * Creates and returns the plugin's settings model
+     */
+    public function createSettingsModel(): ?Model
+    {
+        return new Settings();
+    }
+
+    /**
+     * Returns the rendered settings HTML
+     */
+    public function settingsHtml(): string
+    {
+        return Craft::$app->getView()->renderTemplate('spacecontrol/_settings', [
+            'settings' => $this->getSettings(),
+        ]);
     }
 
     public function init()
@@ -65,13 +77,10 @@ class SpaceControl extends Plugin
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function () {
             $this->attachEventHandlers();
+            $this->registerLogTarget();
         });
     }
 
-    protected function createSettingsModel(): ?Model
-    {
-        return Craft::createObject(Settings::class);
-    }
 
     /**
      * Check if a SpaceControl job is already in the queue
@@ -80,15 +89,22 @@ class SpaceControl extends Plugin
     {
         try {
             $queue = Craft::$app->getQueue();
+
+            // Get waiting jobs only (not delayed, not reserved)
+            // Note: getJobInfo() can be expensive on large queues (Redis/DB)
             $jobs = $queue->getJobInfo();
 
             foreach ($jobs as $job) {
-                if (isset($job['class']) && $job['class'] === SpaceControlChecker::class) {
+                if (
+                    isset($job['description'], $job['status']) &&
+                    strpos($job['description'], '[spacecontrol]') !== false &&
+                    $job['status'] === \craft\queue\Queue::STATUS_WAITING
+                ) {
                     return true;
                 }
             }
         } catch (\Throwable $e) {
-            Craft::warning('Could not check queue for existing SpaceControl jobs: ' . $e->getMessage(), 'spacecontrol');
+            Craft::warning('Could not check queue for existing spacecontrol jobs: ' . $e->getMessage(), 'spacecontrol');
         }
 
         return false;
@@ -99,16 +115,30 @@ class SpaceControl extends Plugin
      */
     private function addSpaceControlJobToQueue(bool $skipThrottling = false): void
     {
-        Craft::info('Adding SpaceControl job to queue', 'spacecontrol');
+        // Debounce: Check cache lock to prevent spamming the queue check itself
+        $cache = Craft::$app->getCache();
+        $cacheKey = 'spacecontrol_job_queued_recently';
+
+        if ($cache->get($cacheKey)) {
+            Craft::info('spacecontrol job debounced (recently queued)', 'spacecontrol');
+            return;
+        }
+
+        Craft::info('Adding spacecontrol job to queue', 'spacecontrol');
+
         if ($this->isSpaceControlJobInQueue()) {
-            Craft::info('SpaceControl job already in queue, skipping', 'spacecontrol');
+            Craft::info('spacecontrol job already in queue, skipping', 'spacecontrol');
+            // Extend debounce since it's already there
+            $cache->set($cacheKey, true, 5);
             return;
         }
 
         $job = new SpaceControlChecker();
         $job->skipThrottling = $skipThrottling;
         \craft\helpers\Queue::push($job);
-        Craft::info('SpaceControl job added to queue', 'spacecontrol');
+
+        // Set debounce lock
+        $cache->set($cacheKey, true, 5);
     }
 
     private function attachEventHandlers(): void
@@ -158,7 +188,7 @@ class SpaceControl extends Plugin
             \yii\web\User::EVENT_AFTER_LOGIN,
             function (\yii\web\UserEvent $event) {
                 $request = Craft::$app->getRequest();
-                if ($request->isCpRequest && $event->identity->admin) {
+                if ($request->isCpRequest && $event->identity instanceof \craft\elements\User && $event->identity->admin) {
                     $this->addSpaceControlJobToQueue();
                 }
             }
@@ -172,7 +202,7 @@ class SpaceControl extends Plugin
             Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
-                    $this->addSpaceControlJobToQueue();
+                    $this->addSpaceControlJobToQueue(true);
                 }
             }
         );
@@ -227,5 +257,38 @@ class SpaceControl extends Plugin
                 }
             }
         );
+    }
+
+    /**
+     * Register a custom log target for SpaceControl plugin messages.
+     */
+    private function registerLogTarget(): void
+    {
+        $log = Craft::$app->getLog();
+        $targets = $log->targets;
+
+        // Check if the target already exists to avoid duplicates
+        $targetExists = false;
+        foreach ($targets as $target) {
+            if ($target instanceof MonologTarget && $target->name === 'spacecontrol') {
+                $targetExists = true;
+                break;
+            }
+        }
+
+        if (!$targetExists) {
+            $target = Craft::createObject([
+                'class' => MonologTarget::class,
+                'name' => 'spacecontrol',
+                'extractExceptionTrace' => !App::devMode(),
+                'allowLineBreaks' => App::devMode(),
+                'level' => App::devMode() ? LogLevel::DEBUG : LogLevel::INFO,
+                'categories' => ['spacecontrol'],
+                'logContext' => App::devMode(),
+            ]);
+
+            $targets[] = $target;
+            $log->targets = $targets;
+        }
     }
 }

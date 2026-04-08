@@ -1,68 +1,27 @@
 <?php
 
 namespace szenario\craftspacecontrol\models;
+
 use craft\base\Model;
-use craft\elements\User;
 
 /**
- * spacecontrol settings
+ * spacecontrol user-editable settings model
  */
 class Settings extends Model
 {
-    // general settings
+    // User-editable settings
     public float $diskTotalSpace = 0.0;
-    public int $diskUsageAbsolute = 0;
-    public float $diskUsagePercent = 0.0;
     public bool $addDatabaseToTotalSize = false;
-    public bool $isInitialized = false;
-    public int $lastCalculationTime = 0;
-
-    // notification settings
-    public int $notificationLimitLow = 90;
-    public int $notificationLimitMedium = 95;
-    public int $notificationLimitHigh = 99;
-
-    public bool $notificationLowTriggered = false;
-    public bool $notificationMediumTriggered = false;
-    public bool $notificationHighTriggered = false;
-
-    // email notification settings
     public bool $emailNotificationsEnabled = false;
     public array $emailRecipients = [];
 
     public function defineRules(): array
     {
         return [
-            [
-                ['diskTotalSpace'],
-                'required'
-            ],
-            [
-                ['diskTotalSpace'],
-                'number',
-                'min' => 0
-            ],
-            [
-                ['notificationLimitLow', 'notificationLimitMedium', 'notificationLimitHigh'],
-                'number',
-                'min' => 0,
-                'max' => 100
-            ],
-            [
-                ['notificationLimitLow'],
-                'number',
-                'max' => 'notificationLimitMedium'
-            ],
-            [
-                ['notificationLimitMedium'],
-                'number',
-                'max' => 'notificationLimitHigh'
-            ],
+            [['diskTotalSpace'], 'required'],
+            [['diskTotalSpace'], 'number', 'min' => 0],
             [['addDatabaseToTotalSize', 'emailNotificationsEnabled'], 'boolean'],
-            [
-                ['emailRecipients'],
-                'validateEmailRecipients'
-            ],
+            [['emailRecipients'], 'validateEmailRecipients'],
         ];
     }
 
