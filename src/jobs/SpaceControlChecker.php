@@ -61,7 +61,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
         $throttleInterval = 300; // 5 minutes
 
         if (!$force && ($currentTime - $lastCalculation) < $throttleInterval) {
-            Craft::info("Skipping disk usage calculation due to throttling", "spacecontrol");
             return;
         }
 

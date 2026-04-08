@@ -39,7 +39,6 @@ class DatabaseSizeHelper
                 $dbSize = 0;
             }
         } catch (\Exception $e) {
-            Craft::info("spacecontrol: Could not get database size.", "spacecontrol");
             $dbSize = 0;
         }
 

@@ -122,7 +122,10 @@ developed by szenario"
 
         // check if notifications are enabled and send them
         if ($settings->emailNotificationsEnabled) {
-            Craft::info("Start sending email notifications", "spacecontrol");
+            Craft::info(
+                "Sending {$severity} disk usage notification ({$settings->diskUsagePercent}% >= {$threshold}%)",
+                'spacecontrol'
+            );
             EmailNotification::sendEmailNotification($settings, $template);
         }
 

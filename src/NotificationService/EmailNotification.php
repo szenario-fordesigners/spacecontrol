@@ -49,8 +49,6 @@ class EmailNotification
 
                 if (!$result) {
                     Craft::error("Failed to send email to {$email}", "spacecontrol");
-                } else {
-                    Craft::info("Email sent to {$email}", "spacecontrol");
                 }
             } catch (\Exception $e) {
                 Craft::error("Failed to send email to {$email}: {$e->getMessage()}", "spacecontrol");

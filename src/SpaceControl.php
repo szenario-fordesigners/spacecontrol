@@ -139,8 +139,6 @@ class SpaceControl extends Plugin
 
         // Set debounce lock
         $cache->set($cacheKey, true, 5);
-
-        Craft::info('spacecontrol job added to queue', 'spacecontrol');
     }
 
     private function attachEventHandlers(): void
