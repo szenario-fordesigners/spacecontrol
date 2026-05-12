@@ -9,5 +9,7 @@
   "ignoreDeps": [
     "php",
     "craftcms/cms"
-  ]
+  ],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict"
 }
