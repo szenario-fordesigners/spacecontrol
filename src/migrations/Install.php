@@ -20,77 +20,7 @@ class Install extends Migration
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
             ]);
-
-            // Insert default plugin data
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'diskUsageAbsolute',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'diskUsagePercent',
-                'value' => '0.0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'isInitialized',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'lastCalculationTime',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationLimitLow',
-                'value' => '90',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationLimitMedium',
-                'value' => '95',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationLimitHigh',
-                'value' => '99',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationLowTriggered',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationMediumTriggered',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
-
-            $this->insert($this->tableNamePluginData, [
-                'key' => 'notificationHighTriggered',
-                'value' => '0',
-                'dateCreated' => new \yii\db\Expression('NOW()'),
-                'dateUpdated' => new \yii\db\Expression('NOW()'),
-            ]);
+            // Defaults are applied on read by SettingsService::applyDefaults(), no seed rows needed
         }
 
         // create file sizes table

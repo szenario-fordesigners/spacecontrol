@@ -8,6 +8,19 @@ use szenario\craftspacecontrol\SpaceControl;
 
 class SettingsHelper
 {
+    private const PLUGIN_DATA_KEYS = [
+        'diskUsageAbsolute',
+        'diskUsagePercent',
+        'isInitialized',
+        'lastCalculationTime',
+        'notificationLimitLow',
+        'notificationLimitMedium',
+        'notificationLimitHigh',
+        'notificationLowTriggered',
+        'notificationMediumTriggered',
+        'notificationHighTriggered',
+    ];
+
     private static ?SettingsService $_service = null;
 
     private static function getService(): SettingsService
@@ -44,20 +57,7 @@ class SettingsHelper
     public static function getSetting($key)
     {
         // Check if this is a plugin data key
-        $pluginDataKeys = [
-            'diskUsageAbsolute',
-            'diskUsagePercent',
-            'isInitialized',
-            'lastCalculationTime',
-            'notificationLimitLow',
-            'notificationLimitMedium',
-            'notificationLimitHigh',
-            'notificationLowTriggered',
-            'notificationMediumTriggered',
-            'notificationHighTriggered',
-        ];
-
-        if (in_array($key, $pluginDataKeys)) {
+        if (in_array($key, self::PLUGIN_DATA_KEYS)) {
             return self::getService()->getPluginData($key);
         }
 
@@ -78,20 +78,7 @@ class SettingsHelper
     {
         try {
             // Check if this is a plugin data key
-            $pluginDataKeys = [
-                'diskUsageAbsolute',
-                'diskUsagePercent',
-                'isInitialized',
-                'lastCalculationTime',
-                'notificationLimitLow',
-                'notificationLimitMedium',
-                'notificationLimitHigh',
-                'notificationLowTriggered',
-                'notificationMediumTriggered',
-                'notificationHighTriggered',
-            ];
-
-            if (in_array($key, $pluginDataKeys)) {
+            if (in_array($key, self::PLUGIN_DATA_KEYS)) {
                 $success = self::getService()->setPluginData($key, $value);
             } else {
                 // For user settings, use Craft's savePluginSettings
@@ -115,24 +102,11 @@ class SettingsHelper
     {
         try {
             // Separate user settings from plugin data
-            $pluginDataKeys = [
-                'diskUsageAbsolute',
-                'diskUsagePercent',
-                'isInitialized',
-                'lastCalculationTime',
-                'notificationLimitLow',
-                'notificationLimitMedium',
-                'notificationLimitHigh',
-                'notificationLowTriggered',
-                'notificationMediumTriggered',
-                'notificationHighTriggered',
-            ];
-
             $userSettings = [];
             $pluginData = [];
 
             foreach ($values as $key => $value) {
-                if (in_array($key, $pluginDataKeys)) {
+                if (in_array($key, self::PLUGIN_DATA_KEYS)) {
                     $pluginData[$key] = $value;
                 } else {
                     $userSettings[$key] = $value;

@@ -231,49 +231,4 @@ class FileScanningService
 
         return $deletedCount;
     }
-
-    /**
-     * Get total file count from database
-     */
-    public function getTotalFileCount(): int
-    {
-        return (int) Craft::$app->getDb()
-            ->createCommand()
-            ->select('COUNT(*)')
-            ->from(FileSizeRecord::tableName())
-            ->queryScalar();
-    }
-
-    /**
-     * Get total size from database
-     */
-    public function getTotalSize(): int
-    {
-        return (int) Craft::$app->getDb()
-            ->createCommand()
-            ->select('SUM(sizeInBytes)')
-            ->from(FileSizeRecord::tableName())
-            ->queryScalar() ?: 0;
-    }
-
-    /**
-     * Get files by path pattern
-     */
-    public function getFilesByPath(string $pattern): array
-    {
-        return FileSizeRecord::find()
-            ->where(['like', 'path', $pattern])
-            ->all();
-    }
-
-    /**
-     * Get largest files
-     */
-    public function getLargestFiles(int $limit = 10): array
-    {
-        return FileSizeRecord::find()
-            ->orderBy(['sizeInBytes' => SORT_DESC])
-            ->limit($limit)
-            ->all();
-    }
 }

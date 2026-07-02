@@ -29,13 +29,6 @@ class SpaceControlChecker extends \craft\queue\BaseJob implements \yii\queue\Ret
         NotificationService::start();
     }
 
-    public static function executeImmediately(): void
-    {
-        self::calculateDiskUsage(true); // Force calculation
-
-        NotificationService::start();
-    }
-
     // 1. get current disk usage
     // 2. save to setting
     private static function calculateDiskUsage(bool $force = false)

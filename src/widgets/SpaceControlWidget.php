@@ -6,10 +6,6 @@ namespace szenario\craftspacecontrol\widgets;
 use Craft;
 use craft\base\Widget;
 use szenario\craftspacecontrol\assetbundles\spacecontrol\SpaceControlAsset;
-use szenario\craftspacecontrol\helpers\ConversionHelper;
-use szenario\craftspacecontrol\helpers\DatabaseSizeHelper;
-use szenario\craftspacecontrol\helpers\FolderSizeHelper;
-use szenario\craftspacecontrol\helpers\SettingsHelper;
 
 class SpaceControlWidget extends Widget
 {
